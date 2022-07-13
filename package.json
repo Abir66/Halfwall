@@ -1,0 +1,28 @@
+{
+  "name": "halfwall",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abir66/Halfwall.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abir66/Halfwall/issues"
+  },
+  "homepage": "https://github.com/Abir66/Halfwall#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "oracledb": "^5.4.0",
+    "uuid": "^8.3.2"
+  }
+}

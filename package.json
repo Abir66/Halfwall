@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/Abir66/Halfwall#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
     "oracledb": "^5.4.0",
     "uuid": "^8.3.2"
   }

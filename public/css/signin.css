@@ -1,0 +1,58 @@
+.images {
+    width: 50vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.top-left {
+    position: absolute;
+    top: 1em;
+    left: 1.5em;
+    color: white;
+    font-size: 2em;
+    font-family: sans-serif;
+    
+}
+
+.container-fluid{
+    padding-left: 0px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+
+.box{
+    width: 20em;
+    margin-top: 20px;
+    font-size: 1.1em;
+    height: 50px;
+}
+.smolbox{
+    width: 10em;
+    margin-top: 20px;
+    font-size: 1.1em;
+    height: 50px;
+    display: inline-block;
+}
+
+.forgot-pass a{
+    color : grey;
+    text-decoration-line: none;
+}
+
+
+h1{
+    border-bottom: 5px solid;
+    display: inline-block;
+}
+row{
+    width: 20em;
+}
+
+.inline{
+    display: inline-block;
+}
+
+.hidden_message{
+    color: red;
+}

@@ -1,0 +1,49 @@
+<div class="post">
+
+    <div class="head">
+        <div class="user">
+            <div class="profile-picture">
+                <!------Need to use user's profile pic later-->
+                <img src="images/pfp.jpg" alt="pfp">
+            </div>
+            <div class="ingo">
+                <p class="username">
+                    <%= postData.NAME %>
+                </p>
+
+                <!--Convert timestamp to proper date time format-->
+                <small>
+                    <%= postData.TIMESTAMP %>
+                </small>
+            </div>
+        </div>
+        <span class="edit"><i class="uil uil-ellipsis-h"></i></span>
+    </div>
+
+    <div class="post-text">
+        <!--- Need to split the string by paragraphs and make individual paragraph tags for each ones -->
+        <p><%= postData.DESCRIPTION %></p>
+    </div>
+
+    <% if (postData.IMAGES) { %>
+        <!--- Need convert this into a image sidebar. Should be implemented in another ejs -->
+        <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
+            <div class="photo"><img src=<%=postData.IMAGES[index] %> alt="pfp2"></div>
+        <% } %>
+    <% } %>
+
+
+    <div class="action-buttons">
+        <div class="interaction-buttons">
+            <span><i class="uil uil-thumbs-up"></i></span>
+            <span class="likes-count">10</span>
+            <i class="uil uil-thumbs-down"></i>
+            <span class="likes-count">10</span>
+        </div>
+
+        <div class="comments">
+            <p>15 comments</p>
+        </div>
+    </div>
+
+</div>

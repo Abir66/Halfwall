@@ -17,7 +17,19 @@
                 </small>
             </div>
         </div>
-        <span class="edit"><i class="uil uil-ellipsis-h"></i></span>
+        <span class="edit dropdown show">
+            <!-- <button class="fa-solid fa-ellipsis" style="background-color: transparent;"></button> -->
+            <button class="fa-solid fa-ellipsis dropdown-toggle" style="background-color: transparent;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a id="copy-link" class="dropdown-item" href="#"><i class="fa-solid fa-link"></i> &nbsp Copy Link</a>
+                <% if (currentUser.USER_ID != postData.USER_ID) { %> 
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#"><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</a>
+                    <a class="dropdown-item" href="#"><i class="fa-solid fa-trash"></i>&nbsp Delete Post</a>
+                <% } %> 
+              </div>
+        </span>
     </div>
 
     <div class="post-text">

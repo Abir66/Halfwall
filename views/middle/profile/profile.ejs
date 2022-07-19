@@ -1,0 +1,59 @@
+<div class="post">
+    <div class="profile">
+        <div class="profile-picture" style="display: flex; height: 80px ; width: 80px;border-radius:100px; outline: 4px solid hsl(252, 75%, 60%);
+                        outline-offset: 4px; ">
+                    <!------Need to use user's profile pic later-->
+                    <img src="images/pfp.jpg" alt="pfp" >
+        </div>
+        <div class="pfofile-small">
+            <div class="profile-small">
+                <div style="text-align: center;">
+                    <p class="follow-number">230</p>
+                    <p class="follow-text">Posts</p>           
+                </div>
+                <div style="text-align: center;">
+                    <p class="follow-number">230</p>
+                    <p class="follow-text">Follows</p>           
+                </div>
+                <div style="text-align: center;">
+                    <p class="follow-number">230</p>
+                    <p class="follow-text">Followers</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button class="btn btn-primary" style="width: 80%;">Edit Profile</button>
+            </div>
+        </div>
+        
+    
+    </div>
+    <div class="user-content">
+        <p><b style="color: black;"><%- currentUser.NAME %></b>( @<%- currentUser.USER_ID %> ) </p>
+        <p>Department of <%- currentUser.DEPARTMENT %> </p>
+        <% if(currentUser.HALL){ %>
+            <p><%- currentUser.HALL %> Hall
+                <% if(currentUser.HALL_ATTACHMENT){ %>
+                    <% if(currentUser.HALL_ATTACHMENT=='A') {%>
+                        ( Attached )
+                    <% } else { %>
+                        ( Resident )
+                    <% } %>  
+                <% } %> 
+            </p> 
+        <% } %>
+        <% if(currentUser.STREET || currentUser.CITY) { %>
+            <p><%- currentUser.STREET %> <%- currentUser.CITY %> 
+                <% if(currentUser.POSTCODE) { %>
+                    - <%- currentUser.POSTCODE %> 
+                <% } %>
+            </p>
+        <% } %>
+        <% const month = ["January","February","March","April","May","June","July","August","September","October","November","December"]; %> 
+        <% if(currentUser.DATE_OF_BIRTH){ %>
+            <p><i class="fa-solid fa-cake-candles"></i>&nbsp<%- (currentUser.DATE_OF_BIRTH).getDate() %>  <%- month[(currentUser.DATE_OF_BIRTH).getMonth()] %> </p>  
+        <% } %>
+           
+    </div>
+    
+</div>
+

@@ -8,8 +8,12 @@
     <title><%= title %> </title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-   
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/680fc33537.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="css/style.css">
 
@@ -32,8 +36,8 @@
 
             <div class="middle">
 
+                <%- include('middle/profile/profile', {postData : currentUser}); -%>
                 
-
                 <% for( let index = 0; index < middle.length; index++ ) { %>
                     
                     <% if (middle[index].type === 'post') { %>

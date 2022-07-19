@@ -9,19 +9,8 @@ router.get('/', verify, async (req, res) => {
     const currentUser = {
         USER_ID : req.user.USER_ID,
         NAME : req.user.NAME,
-        DEPARTMENT: req.user.DEPARTMENT,
-        DATE_OF_BIRTH: req.user.DATE_OF_BIRTH,
-        HALL: req.user.HALL,
-        HALL_ATTACHMENT: req.user.HALL_ATTACHMENT,
-        BATCH: req.user.BATCH,
-        STREET: req.user.STREET,
-        CITY: req.user.CITY,
-        POSTCODE: req.user.POSTCODE,
-
         PROFILE_PIC : 'images/pfp.jpg', // will change it later
     }
-    console.log("--------------djdsb-------------")
-    console.log(currentUser);
     
     const posts = await DB_newsfeed.getPostsForUserID(req.user.USER_ID);
 
@@ -36,9 +25,9 @@ router.get('/', verify, async (req, res) => {
     }
     console.log("rendering");
     res.render('index', {
-        type : "newsfeed",
+        type : "profile",
         currentUser : currentUser,
-        profileOwner: currentUser, // delete dis latter 
+        profileOwner : currentUser, //edit that latter
         title : 'Newsfeed',
         left : ['left-profile', 'sidebar'],
         right : ['newsfeed-search'],

@@ -1,0 +1,34 @@
+<style>
+
+
+.middle .create-post {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-white);
+    padding: 0.6rem var(--card-padding);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
+
+.middle .create-post input[type='text'] {
+    justify-self: start;
+    width: 100%;
+    padding-left: 1rem;
+    background: transparent;
+    color: var(--color-dark);
+    margin-right: 1rem;
+    font-size: 1rem;
+}
+
+
+
+</style>
+
+
+<form action="" class="create-post">
+    <input type="text" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>">
+    <input type="submit" value="post" class="btn btn-primary" placeholder="post">
+</form>
+>

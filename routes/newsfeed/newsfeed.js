@@ -6,7 +6,6 @@ const { verify } = require('../../middlewares/user-verification');
 
 router.get('/', verify, async (req, res) => {
     
-    console.log('req.user', req.user);
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -20,26 +19,23 @@ router.get('/', verify, async (req, res) => {
         CITY: req.user.CITY,
         POSTCODE: req.user.POSTCODE,
 
-        PROFILE_PIC : 'images/pfp.jpg', // will change it later
+        PROFILE_PIC : '/images/pfp.jpg', // will change it later
     }
-    
-    console.log("newsfeed.js, get(/) : ", currentUser);
     
     const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID);
 
 
-    let middle = [];
+    let middle = [{type : 'create-post'}];
     for (let i = 0; i < posts.length; i++) {
-
         // Images should be included in the post from the database after implementing FILES SCHEMA
         const IMAGES = ['images/pfp2.png']
         posts[i].IMAGES = IMAGES;
         middle.push({type : 'post', content : posts[i]});
     }
+    console.log(middle)
     res.render('index', {
         type : "newsfeed",
         currentUser : currentUser,
-        profileOwner: currentUser, // delete dis latter 
         title : 'Newsfeed',
         left : ['left-profile', 'sidebar'],
         right : ['newsfeed-search'],

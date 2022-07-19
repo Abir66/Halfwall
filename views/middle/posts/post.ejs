@@ -4,12 +4,11 @@
         <div class="user">
             <div class="profile-picture">
                 <!------Need to use user's profile pic later-->
-                <img src="images/pfp.jpg" alt="pfp">
+                <a href="/user/<%= postData.USER_ID %> "> <img src="/images/pfp.jpg" alt="pfp"> </a>
+                
             </div>
             <div class="ingo">
-                <p class="username">
-                    <%= postData.NAME %>
-                </p>
+                <p class="username"><a href="/user/<%= postData.USER_ID %> "> <%= postData.NAME %> </a></p>
 
                 <!--Convert timestamp to proper date time format-->
                 <small>

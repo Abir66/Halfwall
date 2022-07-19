@@ -1,71 +1,146 @@
 <style>
-/* prifile box */
-.follow-text{
-    font-size: 0.8rem;
-    font-weight: 500;
+.view-user-profile {
+    background: var(--color-white);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    margin: 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    width: 100%; 
 }
-.follow-number{
-    font-size: 1.7em;
-    font-weight: 700;
-}
-.profile{
-    padding-left: 2rem;
-    padding-right: 2rem;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-.profile-small{
+
+.view-user-profile .head{
     padding-left: 1rem;
     padding-right: 1rem;
     display: flex;
-    width: 250px;
-    justify-content: space-around;
+    justify-content: space-between;
 }
-.user-content{
-    padding-top: 1.5em;
-    padding-left: 2.1em;
-    color: #636363;
+
+
+.view-user-profile .user {
+    width: 25%;
+    aspect-ratio: 1/1;
 }
+
+.view-user-profile .profile-picture{
+    width: 100%;
+    border-radius: 100%;
+    border: 5px solid hsl(252, 75%, 60%);
+    padding: 4px;
+}
+
+.view-user-profile .profile-picture img{
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+}
+
+.view-user-profile .side{
+    width: 60%;
+    margin-right: 2rem;
+
+}
+.view-user-profile .popularity {
+    width: 100%;
+    padding : 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+
+.view-user-profile .followers{
+    text-align: center;
+}
+
+.view-user-profile .follow-number{
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.view-user-profile .buttons{
+    display: flex;
+    gap : 1rem;
+}
+
+.view-user-profile .buttons .btn{
+    width: 100%;
+}
+
+.view-user-profile .user-info{
+    padding: 1rem;
+}
+
+.view-user-profile .name{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.view-user-profile .other-text{
+    font-size: 0.9rem;
+}
+
+.view-user-profile .user-info p{
+    font-size: 0.9rem;
+}
+
 </style>
 
+<div class="view-user-profile">
+    <div class="head">
+        <div class="user">
+            <div class="profile-picture">
+                <!------Need to use user's profile pic later-->
+                <img src="/images/pfp.jpg" alt="pfp" >
+            </div>
+        </div>
+        <div class="side">
+            <div class="popularity">
+                <div class="followers">
+                    <p class="follow-number"><%=user.post_count%></p>
+                    <p class="follow-text">Posts</p>
+                </div>
+                <div class="followers">
+                    <p class="follow-number"><%=user.follower_count%></p>
+                    <p class="follow-text">Follower</p>
+                </div>
 
-<div class="post">
-    <div class="profile">
-        <div class="profile-picture" style="display: flex; height: 80px ; width: 80px;border-radius:100px; outline: 4px solid hsl(252, 75%, 60%);
-                        outline-offset: 4px; ">
-                    <!------Need to use user's profile pic later-->
-                    <img src="images/pfp.jpg" alt="pfp" >
-        </div>
-        <div class="profile-small">
-            <div class="profile-small">
-                <div style="text-align: center;">
-                    <p class="follow-number">230</p>
-                    <p class="follow-text">Posts</p>           
-                </div>
-                <div style="text-align: center;">
-                    <p class="follow-number">230</p>
-                    <p class="follow-text">Follows</p>           
-                </div>
-                <div style="text-align: center;">
-                    <p class="follow-number">230</p>
-                    <p class="follow-text">Followers</p>
+                <div class="followers">
+                    <p class="follow-number"><%=user.following_count%></p>
+                    <p class="follow-text">Following</p>
                 </div>
             </div>
-            <div style="text-align: center;">
-                <button class="btn btn-primary" style="width: 80%;">Edit Profile</button>
+
+            <div class="buttons">
+
+                <% if (currentUser.USER_ID != user.USER_ID) { %>
+                    <!--------- Need to check if already following ------->
+                    <% if (user.followed) { %>
+                        <button class="btn btn-blank" onclick="unfollowUser(<%=user.USER_ID%>)">Unfollow</button>
+                    <% } else { %>
+                        <button class="btn btn-primary" onclick="followUser(<%=user.USER_ID%>)">Follow</button>
+                    <% } %>
+                    <button class="edit-profile btn btn-primary">Message</button>
+                <% } else { %>
+                    <button class="edit-profile btn btn-primary">edit-profile</button>
+                <% } %>
+                                   
             </div>
         </div>
-        
-    
     </div>
-    <div class="user-content">
-        <p><b style="color: black;"><%- currentUser.NAME %></b>( @<%- currentUser.USER_ID %> ) </p>
-        <p>Department of <%- currentUser.DEPARTMENT %> </p>
-        <% if(currentUser.HALL){ %>
-            <p><%- currentUser.HALL %> Hall
-                <% if(currentUser.HALL_ATTACHMENT){ %>
-                    <% if(currentUser.HALL_ATTACHMENT=='A') {%>
+    <div class="user-info">
+        <p><span class="name"><%= user.NAME %></span><span class="text-muted other-text student_id">&nbsp;(@<%= user.STUDENT_ID %>)</span></p>
+        <p class="text-muted">Department of <%- user.DEPARTMENT %> </p>
+
+        <% if(user.HALL){ %>
+            <p class="text-muted" ><%- user.HALL %> Hall
+                <% if(user.HALL_ATTACHMENT){ %>
+                    <% if(user.HALL_ATTACHMENT=='A') {%>
                         ( Attached )
                     <% } else { %>
                         ( Resident )
@@ -73,19 +148,24 @@
                 <% } %> 
             </p> 
         <% } %>
-        <% if(currentUser.STREET || currentUser.CITY) { %>
-            <p><%- currentUser.STREET %> <%- currentUser.CITY %> 
-                <% if(currentUser.POSTCODE) { %>
-                    - <%- currentUser.POSTCODE %> 
+
+        <% if(user.STREET || user.CITY) { %>
+            <p class="text-muted"><%- user.STREET %>
+                <% if (user.STREET || user.CITY)  { %>
+                 ,
+                <% } %>
+                <%- user.CITY %> 
+                <% if(user.POSTCODE) { %>
+                    - <%- user.POSTCODE %> 
                 <% } %>
             </p>
         <% } %>
         <% const month = ["January","February","March","April","May","June","July","August","September","October","November","December"]; %> 
-        <% if(currentUser.DATE_OF_BIRTH){ %>
-            <p><i class="fa-solid fa-cake-candles"></i>&nbsp<%- (currentUser.DATE_OF_BIRTH).getDate() %>  <%- month[(currentUser.DATE_OF_BIRTH).getMonth()] %> </p>  
+        <% if(user.DATE_OF_BIRTH){ %>
+            <p class="text-muted"><i class="fa-solid fa-cake-candles"></i>&nbsp<%- (user.DATE_OF_BIRTH).getDate() %>  <%- month[(user.DATE_OF_BIRTH).getMonth()] %> </p>  
         <% } %>
-           
     </div>
-    
 </div>
+
+
 

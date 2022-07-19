@@ -52,6 +52,17 @@ a:active {
     text-decoration: none;
 }
 
+.btn{
+    border : none;
+}
+
+.btn:hover{
+    background-color: hsl(252, 75%, 60%);;
+    color: var(--color-white);
+    border-color:var(--color-primary);
+}
+
+
 p{
     margin: 0;
 }
@@ -83,8 +94,6 @@ img {
     width: 100%;
 }
 
-
-
 .btn {
     display: inline-block;
     padding: var(--btn-padding);
@@ -102,6 +111,13 @@ img {
 .btn-primary {
     background: var(--color-primary);
     color: white;
+}
+
+.btn-blank {
+    background: var(--color-white);
+    color: rgb(28, 26, 26);
+    border: 1px solid var(--color-primary);
+    
 }
 
 .text-bold {
@@ -269,26 +285,6 @@ main .container .left .profile {
 }
 
 /* ========================== Middle ============================= */
-
-.middle .create-post {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--color-white);
-    padding: 0.6rem var(--card-padding);
-    border-radius: var(--border-radius);
-}
-
-.middle .create-post input[type='text'] {
-    justify-self: start;
-    width: 100%;
-    padding-left: 1rem;
-    background: transparent;
-    color: var(--color-dark);
-    margin-right: 1rem;
-    font-size: 1rem;
-}
 
 .middle .post {
     background: var(--color-white);

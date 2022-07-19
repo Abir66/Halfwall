@@ -3,8 +3,6 @@ const router = require('express').Router();
 const DB_user = require('../../db-codes/users/db-user-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
-const { validate } = require('uuid');
-const { DATE } = require('oracledb');
 
 
 router.post('/signin', async (req, res) => {

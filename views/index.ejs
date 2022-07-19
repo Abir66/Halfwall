@@ -15,7 +15,7 @@
     <script src="https://kit.fontawesome.com/680fc33537.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 
 </head>
 
@@ -40,19 +40,25 @@
 
             <div class="middle">
 
-                <%- include('middle/profile/profile', {postData : currentUser}); -%>
+                
                 
                 <% for( let index = 0; index < middle.length; index++ ) { %>
-                    <% if (middle[index].type === 'post') { %>
+
+                    <% if (middle[index].type === 'profile') { %>
+                        <%- include('middle/profile/profile', {currentUser}); -%>
+                    <% } else if (middle[index].type === 'create-post') { %>
+                        <%- include('middle/posts/create_post', {currentUser}); -%>
+                    <% } else if (middle[index].type === 'post') { %>
                         <% 
                             if(!bodyObjects.post){
                                 console.log("posts exist")
-                                bodyObjects.post = 'js/posts/post.js'
+                                bodyObjects.post = '/js/posts/post.js'
                             }
                         %>
                         <%- include('middle/posts/post', {postData : middle[index].content}); -%>
                     <% } %>
-                <% } %>  
+                <% } %> 
+                
             </div>
 
             <div class="right">
@@ -62,8 +68,6 @@
             </div>
 
             
-
-
         </div>
     </main>
 

@@ -4,25 +4,31 @@ const DB_user = require('../../db-codes/users/db-user-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
 const { validate } = require('uuid');
+const { DATE } = require('oracledb');
 
 
 router.post('/signin', async (req, res) => {
     let result = [], errors = [], userID, email;
-    let { userIDorEmail, password } = req.body;
-
+    console.log("In the post routes!");
+    let userIDorEmail = req.body.user_id_or_email;
+    let password = req.body.password;
     if (userIDorEmail.length === 7 && !userIDorEmail.includes('.') && !isNaN(userIDorEmail)) userID = parseInt(userIDorEmail);
     else email = userIDorEmail;
 
     console.log(userID, email, password);
 
+
     if (userID) result = await DB_user.getUserById(userID);
     else if (email) result = await DB_user.getUserByEmail(email);
 
-    console.log(result);
+
+
+
 
     if (result === undefined || result.length === 0) {
-        errors.push("Email or userID not found");
+        errors.push("Email or UserID not found");
     }
+
 
     else {
 
@@ -41,16 +47,15 @@ router.post('/signin', async (req, res) => {
         }
     }
 
-
+    console.log("in route");
     if (errors.length > 0) {
         // redirect to login page with errors
-        res.status(400).render('auth/signin', { error: errors[0] })
-        console.log(errors);
+        res.send(errors[0]);
     }
 
     else {
         // redirect to home page
-        res.redirect('/newsfeed')
+        res.send('done')
     }
 
 })
@@ -75,18 +80,39 @@ router.get('/signup', (req, res) => {
     res.render('auth/signup');
 })
 
+function parseId(id){
+    let yr = parseInt(id.slice(0,2));
+    let today = new Date();
+    let depts = ['NA','Arch','ChE','NA','CE','CSE','EEE','NA','IPE','NA','ME',
+                 'MME','NAME','NA','NA','URP','WRE','NA','BME','NA','NA'];
+    let dept = depts[parseInt(id.slice(2,4))];
+    if(yr <= today.getFullYear()%1000){
+        yr = Math.floor(today.getFullYear()/1000)*1000+yr;
+    }else{
+        yr = (Math.floor(today.getFullYear()/1000)-1)*1000+yr;
+    }
+
+    return {
+        year : yr,
+        department : dept,
+    }
+}
 
 router.post('/signup', async (req, res) => {
-
     let user;
+    let idInfo = parseId(req.body.user_id.replace(/ +(?= )/g, '').trim());
     try {
         user = {
             user_id: req.body.user_id.replace(/ +(?= )/g, '').trim(),
             name: req.body.name.replace(/\s+/g, " ").trim(),
             email: req.body.email.replace(/ +(?= )/g, '').trim(),
-            password: req.body.password.replace(/ +(?= )/g, '').trim()
+            password: req.body.password.replace(/ +(?= )/g, '').trim(),
+            department: idInfo.department,
+            batch: idInfo.year,
+
         }
     } catch (err) {
+        console.log("yooo");
         res.send("Invalid input");
         return;
     }
@@ -94,9 +120,11 @@ router.post('/signup', async (req, res) => {
 
     // validate data
     // will make a funtion to validate data later
+    // upre likhsi
 
 
     result = await DB_user.insertUser(user);
+
     if (result != "success") {
         res.send(result);
         return;

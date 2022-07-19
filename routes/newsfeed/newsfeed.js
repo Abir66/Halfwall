@@ -23,7 +23,7 @@ router.get('/', verify, async (req, res) => {
         posts[i].IMAGES = IMAGES;
         middle.push({type : 'post', content : posts[i]});
     }
-    
+    console.log("rendering");
     res.render('index', {
         currentUser : currentUser,
         title : 'Newsfeed',

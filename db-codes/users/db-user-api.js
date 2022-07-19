@@ -16,7 +16,7 @@ async function insertUser(user){
         name : user.name,
         email : user.email,
         password : user.password,
-        department : "css",
+        department : user.department,
         date_of_birth : user.date_of_birth,
         hall : user.hall,
         hall_attachment : user.hall_attachment,

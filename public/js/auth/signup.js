@@ -1,10 +1,10 @@
-const form = document.getElementById('signup_form');
+const form = document.getElementById('submit');
 const message_field = document.getElementById('hidden_message');
 
 let error_message;
 
-
-form.addEventListener('submit', (e) => {
+form.addEventListener('click', (e) => {
+    console.log("hello world");
     e.preventDefault();
     signup();
 })
@@ -31,7 +31,8 @@ async function signup(){
     const name = document.getElementById('name').value.replace(/ +(?= )/g,'');
     const password1= document.getElementById('pass1').value.replace(/ +(?= )/g,'');
     const password2= document.getElementById('pass2').value.replace(/ +(?= )/g,'');
-
+    console.log(email+" "+userId+" "+name+" "+password1);
+    
     if(!check_inputs(email, userId, name, password1, password2)){
         message_field.innerHTML = error_message;
         message_field.setAttribute('visibility','visible');
@@ -44,7 +45,6 @@ async function signup(){
         name : name,
         password : password1
     }
-    
     const res = await axios.post("/auth/signup", data)
     
     message_field.innerHTML = res.data;

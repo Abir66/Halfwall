@@ -20,6 +20,10 @@
 </head>
 
 <body>
+
+    <% let bodyObjects = {} %>
+
+
     <!--- Navbar -->
     <%- include('navbar/navbar'); -%>
 
@@ -39,13 +43,16 @@
                 <%- include('middle/profile/profile', {postData : currentUser}); -%>
                 
                 <% for( let index = 0; index < middle.length; index++ ) { %>
-                    
                     <% if (middle[index].type === 'post') { %>
+                        <% 
+                            if(!bodyObjects.post){
+                                console.log("posts exist")
+                                bodyObjects.post = 'js/posts/post.js'
+                            }
+                        %>
                         <%- include('middle/posts/post', {postData : middle[index].content}); -%>
                     <% } %>
-
-                <% } %>
-                
+                <% } %>  
             </div>
 
             <div class="right">
@@ -59,6 +66,12 @@
 
         </div>
     </main>
+
+    
+    <% for( let scriptPath of Object.values(bodyObjects) ) { %>
+        <script src=" <%= scriptPath %>  "></script>
+        
+    <% } %>
 
 </body>
 </html>

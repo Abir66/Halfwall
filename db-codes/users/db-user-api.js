@@ -4,7 +4,7 @@ const database = new Database();
 
 async function insertUser(user){
     const sql = `BEGIN
-                    CREATE_USER(:user_id, :name, :email, :password, :department, 
+                    CREATE_USER(:student_id, :name, :email, :password, :department, 
                         :date_of_birth, :hall, :hall_attachment, :batch, 
                         :profile_picture, :street, :city, :post_code, :result);
                 END;`;
@@ -12,7 +12,7 @@ async function insertUser(user){
 
     
     const binds={
-        user_id : user.user_id,
+        student_id : user.student_id,
         name : user.name,
         email : user.email,
         password : user.password,
@@ -36,6 +36,18 @@ async function insertUser(user){
     return result.result;
 }
 
+async function getUserByStudentId(student_id){
+    const sql = `SELECT * FROM users
+                WHERE student_id = :student_id`;
+    const binds ={
+        student_id : student_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    console.log("result : ", result)
+    return result[0];
+}
+
+
 async function getUserById(user_id){
     const sql = `SELECT * FROM users
                 WHERE user_id = :user_id`;
@@ -46,6 +58,7 @@ async function getUserById(user_id){
     console.log("result : ", result)
     return result[0];
 }
+
 
 async function getUserByEmail(email){
     const sql = `SELECT * FROM users 
@@ -59,6 +72,7 @@ async function getUserByEmail(email){
 
 module.exports = {
     getUserById,
+    getUserByStudentId,
     getUserByEmail,
     insertUser
 }

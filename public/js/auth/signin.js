@@ -9,16 +9,13 @@ form.addEventListener('click', (e) => {
     signin();
 })
 
-function check_inputs(userIdorEmail, password){
-    
-    if(userIdorEmail === '' || password === '') return false;
+function check_inputs(studentIdorEmail, password){
+    if(studentIdorEmail === '' || password === '') return false;
     else return true;
 }
 
 async function signin(){
-
-
-    const IDorEmail = document.getElementById('userIDorEmail').value.replace(/ +(?= )/g,'');
+    const IDorEmail = document.getElementById('studentIDorEmail').value.replace(/ +(?= )/g,'');
     const pass= document.getElementById('pass').value.replace(/ +(?= )/g,'');
     
     if(!check_inputs(IDorEmail,pass)){
@@ -27,13 +24,12 @@ async function signin(){
         return;
     }
     const data = {
-        user_id_or_email : IDorEmail,
+        student_id_or_email : IDorEmail,
         password : pass
     }
-    console.log(IDorEmail+" "+pass);
+    // console.log(IDorEmail+" "+pass);
     const res = await axios.post("/auth/signin", data)
-    console.log(data);
-    if(res.data === "done"){
+    if(res.data === "success"){
         window.location.replace("/newsfeed");
     }else{
         message_field.innerHTML = res.data;

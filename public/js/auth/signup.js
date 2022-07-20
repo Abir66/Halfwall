@@ -46,7 +46,11 @@ async function signup(){
     }
     const res = await axios.post("/auth/signup", data)
     
-    message_field.innerHTML = res.data;
-    message_field.setAttribute('visibility','visible');
+    if(res.data === "success"){
+        window.location.replace("/newsfeed");
+    }else{
+        message_field.innerHTML = res.data;
+        message_field.setAttribute('visibility','visible');
+    }
 
 }

@@ -79,37 +79,6 @@ async function getPostCount(user_id){
     return result[0];
 }
 
-async function getFollowerCount(user_id){
-    const sql = `SELECT count(*) as follower_count FROM follows 
-                WHERE followee_id = :user_id`;
-    const binds ={
-        user_id : user_id
-    };
-    const result = (await database.execute(sql, binds)).rows;
-    return result[0];
-}
-
-async function getFollowingCount(user_id){
-    const sql = `SELECT count(*) as following_count FROM follows 
-                WHERE follower_id = :user_id`;
-    const binds ={
-        user_id : user_id
-    };
-    const result = (await database.execute(sql, binds)).rows;
-    return result[0];
-}
-
-async function followedUser(follower_id, followee_id){
-    const sql = `SELECT * FROM follows
-                WHERE follower_id = :follower_id AND followee_id = :followee_id`;
-    const binds ={
-        follower_id : follower_id,
-        followee_id : followee_id
-    };
-    const result = (await database.execute(sql, binds)).rows;
-    return result[0];
-}
-
 async function getUserProfilePosts(user_id){
 
     const sql = `SELECT *
@@ -133,8 +102,6 @@ module.exports = {
     getUserByEmail,
     insertUser,
     getPostCount,
-    getFollowerCount,
-    getFollowingCount,
     getUserProfilePosts,
-    followedUser
+   
 }

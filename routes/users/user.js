@@ -1,11 +1,12 @@
 require('dotenv').config();
 const router = require('express').Router();
 const DB_user = require('../../db-codes/users/db-user-api');
+const DB_follow = require('../../db-codes/users/db-follow-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
 
 
-router.get('/:user_id', verify, async (req, res) => {
+router.get('/user_id=:user_id', verify, async (req, res) => {
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -24,11 +25,11 @@ router.get('/:user_id', verify, async (req, res) => {
     
 
     const user = await DB_user.getUserById(req.params.user_id);
-    const follower_cout = await DB_user.getFollowerCount(req.params.user_id);
-    const following_count = await DB_user.getFollowingCount(req.params.user_id);
+    const follower_cout = await DB_follow.getFollowerCount(req.params.user_id);
+    const following_count = await DB_follow.getFollowingCount(req.params.user_id);
     const post_count = await DB_user.getPostCount(req.params.user_id);
     const posts = await DB_user.getUserProfilePosts(req.params.user_id);
-    const followed = await DB_user.followedUser(req.user.USER_ID, req.params.user_id);
+    const followed = await DB_follow.followedUser(req.user.USER_ID, req.params.user_id);
     
 
     user.post_count = post_count.POST_COUNT;
@@ -60,6 +61,11 @@ router.get('/:user_id', verify, async (req, res) => {
         middle : middle
     });
 
+});
+
+
+router.get('/profile', verify, async (req, res) => {
+    res.redirect('/user/user_id='+req.user.USER_ID);
 });
 
 

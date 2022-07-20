@@ -168,4 +168,36 @@
 </div>
 
 
+<script>
+    async function followUser(USER_ID){
+        const data = {
+        USER_ID : USER_ID
+        }
+        const res = await axios.post("/follow/follow", data)
+        console.log(res)
+
+        if(res.data === "success"){
+            window.location.reload();
+        }else{
+            console.log("error in follow")
+        }
+    }
+
+
+    async function unfollowUser(USER_ID){
+        const data = {
+            USER_ID : USER_ID
+        }
+        const res = await axios.post("/follow/unfollow", data)
+        console.log(res)
+        if(res.data === "success"){
+            window.location.reload();
+        }else{
+            console.log("error in unfollow")
+        }
+    }
+
+</script>
+
+
 

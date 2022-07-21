@@ -37,9 +37,25 @@
     </div> 
     <% if (postData.IMAGES) { %>
         <!--- Need convert this into a image sidebar. Should be implemented in another ejs -->
-        <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
-            <div class="photo"><img src=<%=postData.IMAGES[index] %> alt="pfp2"></div>
-        <% } %>
+        <div id="imageSlider<%= postData.POST_ID %>" class="carousel slide" data-ride="carousel">
+            <div class="container-fluid">
+                <div class="carousel-indicators">
+                    <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
+                        <button type="button" data-bs-target="#imageSlider<%= postData.POST_ID %>" data-bs-slide-to="<%=index %>" <% if(index == 0){ %> class="active" <% } %> ></button>
+                    
+                    <% } %> 
+                </div>
+                <div class="carousel-inner">  
+                    <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
+                        <div class="carousel-item <% if(index == 0){ %> active <% } %>  ">
+                            <div class="photo"><img src=<%=postData.IMAGES[index] %> alt="pfp2"></div>
+                        </div>
+                    <% } %>  
+                </div>
+                <a  href="#imageSlider<%= postData.POST_ID %>" class="carousel-control-prev" role="button" data-bs-slide="prev"></a>
+                <a  href="#imageSlider<%= postData.POST_ID %>" class="carousel-control-next" role="button" data-bs-slide="next"></a>
+            </div>
+        </div>
     <% } %>
 
 

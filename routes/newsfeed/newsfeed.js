@@ -27,7 +27,7 @@ router.get('/', verify, async (req, res) => {
     let middle = [{type : "create-post"}];
     for (let i = 0; i < posts.length; i++) {
         // Images should be included in the post from the database after implementing FILES SCHEMA
-        const IMAGES = ['/images/pfp2.png']
+        const IMAGES = ['/images/pfp2.png','/images/pfp.jpg']
         posts[i].IMAGES = IMAGES;
         middle.push({type : 'post', content : posts[i]});
     }

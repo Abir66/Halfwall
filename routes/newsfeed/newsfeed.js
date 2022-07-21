@@ -5,7 +5,6 @@ const { verify } = require('../../middlewares/user-verification');
 // const { verifyAccessToUpdatePost, verifyAccessToDeletePost } = require('../../middlewares/post-verification');
 
 router.get('/', verify, async (req, res) => {
-    
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,

@@ -49,6 +49,10 @@
 
                     <% if (middle[index].type === 'profile') { %>
                         <%- include('middle/profile/profile', {currentUser}); -%>
+                    
+                    <% } else if (middle[index].type === 'editProfile') { %>
+                        <%- include('middle/profile/editProfile', {currentUser}); -%>
+                    
                     <% } else if (middle[index].type === 'create-post') { %>
                         <%- include('middle/posts/create_post', {currentUser}); -%>
                     <% } else if (middle[index].type === 'post') { %>

@@ -42,8 +42,8 @@
             </div>
 
             <div class="middle">
-
-                
+                <% console.log("inde middle") %> 
+                <% console.log(middle) %> 
                 
                 <% for( let index = 0; index < middle.length; index++ ) { %>
 
@@ -58,7 +58,7 @@
                     <% } else if (middle[index].type === 'post') { %>
                         <% 
                             if(!bodyObjects.post){
-                                console.log("posts exist")
+                                console.log("posts exist");
                                 bodyObjects.post = '/js/posts/post.js'
                             }
                         %>

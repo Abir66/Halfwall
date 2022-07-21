@@ -4,6 +4,7 @@ const DB_user = require('../../db-codes/users/db-user-api');
 const DB_follow = require('../../db-codes/users/db-follow-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
+const { response } = require('express');
 
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
@@ -101,10 +102,12 @@ router.get('/editProfile', verify, async(req,res)=>{
 
 router.post('/editProfile', verify, async(req,res)=>{
     //save update
-    console.log("--------------inside newsfeed.js /editProfile");
-    console.log(req.user);
-    await DB_user.updateUser(req.body, req.user.USER_ID);
-    res.redirect('/user/user_id='+req.user.USER_ID);
+    let response = await DB_user.updateUser(req.body, req.user.USER_ID);
+    if (response.result === 'Student ID or email already exists' || response.result === 'Something went wrong') {
+        res.send(response.result);
+        return;
+    }
+    res.send("success");
 });
 
 

@@ -100,6 +100,12 @@ async function updateUser(user, user_id){
                          :street, :city, :postcode,:result
                         );
                 end;`;
+    let temp = user.postcode;
+    if(temp == ''){
+        temp = null;
+    }else{
+        temp = parseInt(temp);
+    }
     const binds={
         user_id : user_id,
         student_id : parseInt(user.student_id),
@@ -110,12 +116,14 @@ async function updateUser(user, user_id){
         hall_attachment : user.attachment,
         street : user.street,
         city : user.city,
-        postcode : parseInt(user.postcode),
+        postcode : temp,
         result: {
             dir: oracledb.BIND_OUT, 
             type: oracledb.VARCHAR2
         }
     }
+    console.log("inside db-user-api");
+    console.log(binds);
     return (await database.execute(sql, binds)).outBinds;
 }
 

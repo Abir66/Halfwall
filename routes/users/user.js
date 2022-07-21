@@ -23,8 +23,6 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
         PROFILE_PIC : '/images/pfp.jpg', // will change it later
     }
 
-    
-
     const user = await DB_user.getUserById(req.params.user_id);
     const follower_cout = await DB_follow.getFollowerCount(req.params.user_id);
     const following_count = await DB_follow.getFollowingCount(req.params.user_id);
@@ -70,8 +68,6 @@ router.get('/profile', verify, async (req, res) => {
 });
 
 router.get('/editProfile', verify, async(req,res)=>{
-    //save update
-    console.log("--------------inside newsfeed.js /editProfile");
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -101,7 +97,11 @@ router.get('/editProfile', verify, async(req,res)=>{
 
 
 router.post('/editProfile', verify, async(req,res)=>{
-    //save update
+    if(req.user.PASSWORD != req.body.password){
+        res.send('Incorrect Password');
+        return;
+    }
+    if(req.body.new_password) req.body.password = req.body.new_password
     let response = await DB_user.updateUser(req.body, req.user.USER_ID);
     if (response.result === 'Student ID or email already exists' || response.result === 'Something went wrong') {
         res.send(response.result);
@@ -110,7 +110,5 @@ router.post('/editProfile', verify, async(req,res)=>{
     res.send("success");
     
 });
-
-
 
 module.exports = router;

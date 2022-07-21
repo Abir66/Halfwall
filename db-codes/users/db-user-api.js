@@ -52,7 +52,7 @@ async function getUserById(user_id){
         user_id : user_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    console.log("result : ", result)
+    console.log("in middlewire, verified user - ", result[0])
     return result[0];
 }
 
@@ -95,35 +95,28 @@ async function getUserProfilePosts(user_id){
 
 async function updateUser(user, user_id){
     const sql =`BEGIN
-                    UPDATE_USER(:user_id, :student_id, :name, :email,
+                    UPDATE_USER(:user_id, :student_id, :name, :email, :password,
                         :date_of_birth,  :hall, :hall_attachment,
                          :street, :city, :postcode,:result
                         );
                 end;`;
-    let temp = user.postcode;
-    if(temp == ''){
-        temp = null;
-    }else{
-        temp = parseInt(temp);
-    }
     const binds={
         user_id : user_id,
-        student_id : parseInt(user.student_id),
+        student_id : user.student_id,
         name: user.name,
         email: user.email,
+        password : user.password,
         date_of_birth : user.dof,
         hall : user.hall,
         hall_attachment : user.attachment,
         street : user.street,
         city : user.city,
-        postcode : temp,
+        postcode : user.post_code,
         result: {
             dir: oracledb.BIND_OUT, 
             type: oracledb.VARCHAR2
         }
     }
-    console.log("inside db-user-api");
-    console.log(binds);
     return (await database.execute(sql, binds)).outBinds;
 }
 

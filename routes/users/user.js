@@ -68,6 +68,45 @@ router.get('/profile', verify, async (req, res) => {
     res.redirect('/user/user_id='+req.user.USER_ID);
 });
 
+router.get('/editProfile', verify, async(req,res)=>{
+    //save update
+    console.log("--------------inside newsfeed.js /editProfile");
+    const currentUser = {
+        USER_ID : req.user.USER_ID,
+        STUDENT_ID : req.user.STUDENT_ID,
+        NAME : req.user.NAME,
+        EMAIL : req.user.EMAIL,
+        DEPARTMENT: req.user.DEPARTMENT,
+        DATE_OF_BIRTH: req.user.DATE_OF_BIRTH,
+        HALL: req.user.HALL,
+        HALL_ATTACHMENT: req.user.HALL_ATTACHMENT,
+        BATCH: req.user.BATCH,
+        STREET: req.user.STREET,
+        CITY: req.user.CITY,
+        POSTCODE: req.user.POSTCODE,
+        PROFILE_PIC : '/images/pfp.jpg', // will change it later
+    }
+    
+    let middle = [{type : 'editProfile'}];
+    res.render('index', {
+        type : "editProfile",
+        currentUser : currentUser,
+        title : 'Edit Profile',
+        left : ['left-profile', 'sidebar'],
+        right : ['newsfeed-search'],
+        middle : middle
+    });
+});
+
+
+router.post('/editProfile', verify, async(req,res)=>{
+    //save update
+    console.log("--------------inside newsfeed.js /editProfile");
+    console.log(req.user);
+    await DB_user.updateUser(req.body, req.user.USER_ID);
+    res.redirect('/user/user_id='+req.user.USER_ID);
+});
+
 
 
 module.exports = router;

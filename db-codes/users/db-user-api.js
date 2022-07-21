@@ -9,8 +9,6 @@ async function insertUser(user){
                         :profile_picture, :street, :city, :post_code, :result);
                 END;`;
 
-
-    
     const binds={
         student_id : user.student_id,
         name : user.name,
@@ -32,7 +30,6 @@ async function insertUser(user){
         }
     }
     const result =  (await database.execute(sql, binds)).outBinds;
-    console.log("result : ", result)
     return result.result;
 }
 
@@ -96,6 +93,32 @@ async function getUserProfilePosts(user_id){
 }
 
 
+async function updateUser(user, user_id){
+    const sql =`BEGIN
+                    UPDATE_USER(:user_id, :student_id, :name, :email,
+                        :date_of_birth,  :hall, :hall_attachment,
+                         :street, :city, :postcode,:result
+                        );
+                end;`;
+    const binds={
+        user_id : user_id,
+        student_id : parseInt(user.student_id),
+        name: user.name,
+        email: user.email,
+        date_of_birth : user.dof,
+        hall : user.hall,
+        hall_attachment : user.attachment,
+        street : user.street,
+        city : user.city,
+        postcode : parseInt(user.postcode),
+        result: {
+            dir: oracledb.BIND_OUT, 
+            type: oracledb.VARCHAR2
+        }
+    }
+    return (await database.execute(sql, binds)).outBinds;
+}
+
 module.exports = {
     getUserById,
     getUserByStudentId,
@@ -103,5 +126,5 @@ module.exports = {
     insertUser,
     getPostCount,
     getUserProfilePosts,
-   
+    updateUser
 }

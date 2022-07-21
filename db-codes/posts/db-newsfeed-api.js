@@ -16,7 +16,7 @@ async function getNewsFeedPostsForUserID(user_id){
     // posts
     // will have to add likes, dislikes and comments later
     result = (await database.execute(sql,binds)).rows;
-    console.log("db newsfeed api js :", result);
+    // console.log("db newsfeed api js :", result);
     return result;
 }
 

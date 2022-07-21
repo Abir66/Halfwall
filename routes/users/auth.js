@@ -102,13 +102,16 @@ router.post('/signup', async (req, res) => {
 
     result = await DB_user.insertUser(user);
 
-    if (result != "success") {
+    if (result === 'Student ID or email already exists' || result === 'Something went wrong') {
         res.send(result);
         return;
     }
 
+    // convert result to int
+    // result = parseInt(result);
+
     // do jwt token things
-    const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_ACCESS_TOKEN);
+    const token = jwt.sign({ user_id: result }, process.env.JWT_ACCESS_TOKEN);
     let options = {
         maxAge: 1000 * 60 * 60 * 24 * 365,
         httpOnly: true
@@ -116,8 +119,8 @@ router.post('/signup', async (req, res) => {
     res.cookie('auth-token', token, options);
 
     // redirect to user profile page
-    console.log("user created : ")
-    res.send("user created");
+    console.log("user created")
+    res.send("success");
 })
 
 

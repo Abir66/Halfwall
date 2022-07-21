@@ -1,0 +1,118 @@
+<style>
+input[type=text], select {
+  width: 270px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+input[type=date], select {
+  width: 270px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+input[type=email], select {
+  width: 270px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+input[type=number], select {
+  width: 270px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+.form-group{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: medium;
+    background-color: transparent;
+}
+.container-edit{
+    padding: 12px 12px 12px 12px;
+}
+.btn-block{
+    width: 100%;
+    margin-top: 15px;;
+}
+
+</style>
+
+<div class="post">
+    <div class="container-edit">
+        <h1>Edit Profile</h1>
+        <form id="edit-form" action="/user/editProfile" method="post" >  <!-- newsfee.js's /edit action="/newsfeed/editProfile" method="post" -->
+            <div class="form-group"">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" value="<%- currentUser.NAME %>">
+            </div>
+            <div class="form-group"">
+                <label for="student_id">Student Id</label>
+                <input type="number" name="student_id" id="student_id" value="<%- currentUser.STUDENT_ID %>">
+            </div>
+            <div class="form-group"">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="<%- currentUser.EMAIL %>">
+            </div>
+            <div class="form-group"">
+                <label for="dof">Date of Birth</label>
+                <%let date = [null]; if(currentUser.DATE_OF_BIRTH !== null) {dates=currentUser.DATE_OF_BIRTH.toISOString(); date=dates.split('T');}%>
+                <input type="date" name="dof" id="dof" value="<%= date[0]%>">
+            </div>
+            <div class="form-group"">
+                <label for="hall">Hall</label>
+                <select name="hall" id="hall">
+                    <option value="Suhrawardy" <% if(currentUser.HALL == 'Suhrawardy'){ %>selected<% } %>  >Suhrawardy</option>
+                    <option value="Sher e Bangla" <% if(currentUser.HALL == 'Sher e Bangla'){ %>selected<% } %> >Sher e Bangla</option>
+                    <option value="Ahsanullah" <% if(currentUser.HALL == 'Ahsanullah'){ %>selected<% } %> >Ahsanullah</option>
+                    <option value="Chattri" <% if(currentUser.HALL == 'Chattri'){ %>selected<% } %>>Chattri</option>
+                    <option value="Kazi Nazrul" <% if(currentUser.HALL == 'Kazi Nazrul'){ %>selected<% } %>>Kazi Nazrul</option>
+                    <option value="Titumir" <% if(currentUser.HALL == 'Titumir'){ %>selected<% } %>>Titumir</option>
+                    <option value="Rashid" <% if(currentUser.HALL == 'Rashid'){ %>selected<% } %>>Rashid</option>
+                </select>
+            </div>
+            <div class="form-group"">
+                <label for="attachment">Attachment</label>
+                <select name="attachment" id="attachment">
+                    <option value="R" <% if(currentUser. HALL_ATTACHMENT == 'R'){ %>selected<% } %> >Resident</option>
+                    <option value="A" <% if(currentUser. HALL_ATTACHMENT == 'A'){ %>selected<% } %>>Attached</option> 
+                </select>
+            </div>
+            <div class="form-group"">
+                <label for="street">Street</label>
+                <input type="text" name="street" id="street" value="<%- currentUser.STREET %> ">
+            </div>
+            <div class="form-group"">
+                <label for="city">City</label>
+                <input type="text" name="city" id="city"  value="<%- currentUser.CITY %>">
+            </div>
+            <div class="form-group"">
+                <label for="postcode">Post Code</label>
+                <input type="number" name="postcode" id="postcode" value="<%- currentUser.POSTCODE %>" >
+            </div>
+                <button class="btn btn-primary btn-block" type="submit" name="submit">Save</button>
+        </form>
+    </div>
+    <script>
+        const edit = document.getElementById(edit-form);
+        // edit.addEventListener('click',function(){
+        //     console.log("inside event listener");
+        // });
+    </script>
+</div>

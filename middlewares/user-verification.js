@@ -10,7 +10,6 @@ async function verify(req,res,next){
     const token = cookie.slice(11);
     try{
         const verified = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
-        console.log("verifying")
         req.user = await DB_user.getUserById(verified.user_id);
         console.log("User verified", verified.user_id)
         next();

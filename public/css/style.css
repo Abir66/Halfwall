@@ -213,6 +213,7 @@ main .container .left .profile {
 }
 
 
+
 /* ====================================== Sidebar =================================== */
 .left .sidebar {
     margin-top: 1rem;
@@ -280,8 +281,14 @@ main .container .left .profile {
 }
 
 .left .username{
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
+}
+
+main .container .left .profile-picture {
+    width: 25%;
+    aspect-ratio: 1/1;
+
 }
 
 /* ========================== Middle ============================= */
@@ -314,6 +321,7 @@ main .container .left .profile {
 }
 
 .middle .post .post-text {
+    font-size: 1rem;
     padding: 1rem;
 }
 
@@ -331,9 +339,15 @@ main .container .left .profile {
     padding: 0 1rem;
 }
 
-.middle .post .action-buttons i{
-    font-size: 1.4rem;
+.middle .post .action-buttons {
+    font-size: 1rem;
 }
+
+.middle .post .action-buttons i{
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
+
 
 
 /* ============================================= Right ================================================= */

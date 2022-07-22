@@ -22,7 +22,7 @@
             
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a id="copy-link" class="dropdown-item" href="#"><i class="fa-solid fa-link"></i> &nbsp Copy Link</a>
-                <% if (currentUser.USER_ID != postData.USER_ID) { %> 
+                <% if (currentUser.USER_ID === postData.USER_ID) { %> 
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#"><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</a>
                     <a class="dropdown-item" href="#"><i class="fa-solid fa-trash"></i>&nbsp Delete Post</a>
@@ -61,12 +61,15 @@
 
     <div class="action-buttons">
         <div class="interaction-buttons">
-            <span><i class="uil uil-thumbs-up"></i></span>
-            <span class="likes-count">10</span>
-            <i class="uil uil-thumbs-down"></i>
-            <span class="likes-count">10</span>
+            <span class = like-button id="like-button-<%=postData.POST_ID%>">
+            <% if (postData.USER_LIKED_THIS_POST === 1) { %>
+                <i class="fa-solid fa-heart" style="color: rgb(243, 55, 89);" onclick="unlike(<%=postData.POST_ID%>)" ></i>
+            <% } else{ %> 
+                <i class="fa-regular fa-heart" onclick="like(<%=postData.POST_ID%>)"></i>
+            <% } %>
+            </span>
+            <span class="likes-count" id="likes-count-<%= postData.POST_ID%>"><%= postData.LIKES_COUNT %> </span>
         </div>
-
         <div class="comments">
             <p onclick="testFunction('<%=postData.NAME%>')">15 comments</p>
         </div>

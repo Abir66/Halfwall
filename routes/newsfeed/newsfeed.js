@@ -20,10 +20,7 @@ router.get('/', verify, async (req, res) => {
 
         PROFILE_PIC : '/images/pfp.jpg', // will change it later
     }
-    
     const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID);
-
-
     let middle = [{type : "create-post"}];
     for (let i = 0; i < posts.length; i++) {
         // Images should be included in the post from the database after implementing FILES SCHEMA
@@ -41,14 +38,5 @@ router.get('/', verify, async (req, res) => {
     });
 });
 
-
-// router.get('/:postid',function(req,res){ do something like /showPost/:postid
-//     console.log(req.params.postid);
-//     // here do a query and just show the post
-// })
-
-router.get('/editProfile',function(req,res){
-    console.log("inside newsfeed.js /editProfile");
-})
 
 module.exports = router;

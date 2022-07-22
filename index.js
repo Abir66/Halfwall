@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, './public')))
 const auth = require('./routes/users/auth');
 const user = require('./routes/users/user');
 const followRoute = require('./routes/users/follow');
+const post = require('./routes/posts/post');
 
 // newsfeed routers
 const newsfeed = require('./routes/newsfeed/newsfeed');
@@ -33,6 +34,7 @@ app.use('/auth', auth);
 app.use('/newsfeed', newsfeed);
 app.use('/user', user);
 app.use('/follow', followRoute);
+app.use('/posts', post);
 
 
 

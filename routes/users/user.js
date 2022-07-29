@@ -8,6 +8,7 @@ const { response } = require('express');
 
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
+    
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -27,15 +28,25 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
     const follower_cout = await DB_follow.getFollowerCount(req.params.user_id);
     const following_count = await DB_follow.getFollowingCount(req.params.user_id);
     const post_count = await DB_user.getPostCount(req.params.user_id);
-    const posts = await DB_user.getUserProfilePosts(req.params.user_id);
-    const followed = await DB_follow.followedUser(req.user.USER_ID, req.params.user_id);
-    
 
     user.post_count = post_count.POST_COUNT;
     user.follower_count = follower_cout.FOLLOWER_COUNT;
     user.following_count = following_count.FOLLOWING_COUNT;
+
+    let followed, requested;
+    followed = await DB_follow.followedUser(req.user.USER_ID, req.params.user_id);
     if(followed) user.followed = followed;
-    console.log(user);
+
+    else{
+        requested = await DB_follow.requestedToFollowUser(req.user.USER_ID, req.params.user_id);
+        if( requested) user.requested = requested;
+    }
+
+   
+    // public private issues
+    const posts = await DB_user.getUserProfilePosts(req.params.user_id);
+    
+    //console.log(user);
     
     middle = [{type : 'profile', content : 'profile'}]
 

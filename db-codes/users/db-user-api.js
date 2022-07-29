@@ -88,7 +88,6 @@ async function getUserProfilePosts(user_id){
                 // posts
     // will have to add likes, dislikes and comments later
     result = (await database.execute(sql,binds)).rows;
-    console.log("db profile api js :", result);
     return result;
 }
 

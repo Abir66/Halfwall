@@ -123,9 +123,11 @@
                 <% if (currentUser.USER_ID != user.USER_ID) { %>
                     <!--------- Need to check if already following ------->
                     <% if (user.followed) { %>
-                        <button class="btn btn-blank" onclick="unfollowUser(<%=user.USER_ID%>)">Unfollow</button>
+                        <button class="btn btn-blank" onclick="removeFollow(<%=user.USER_ID%>)">Following</button>
+                    <% } else if (user.requested) { %>
+                        <button class="btn btn-blank" onclick="removeFollowRequest(<%=user.USER_ID%>)">Requested</button>
                     <% } else { %>
-                        <button class="btn btn-primary" onclick="followUser(<%=user.USER_ID%>)">Follow</button>
+                        <button class="btn btn-primary" onclick="requestFollow(<%=user.USER_ID%>)">Follow</button>
                     <% } %>
                     <button class="btn btn-primary">Message</button>
                 <% } else { %>
@@ -171,31 +173,45 @@
 
 
 <script>
-    async function followUser(USER_ID){
+    
+    async function requestFollow(USER_ID){
         const data = {
-        USER_ID : USER_ID
+            USER_ID : USER_ID
         }
-        const res = await axios.post("/follow/follow", data)
+        const res = await axios.post("/follow/requestFollow", data)
         console.log(res)
 
         if(res.data === "success"){
             window.location.reload();
         }else{
-            console.log("error in follow")
+            console.log("error in requestFollow")
+        }
+    }
+
+    async function removeFollow(USER_ID){
+        const data = {
+            USER_ID : USER_ID
+        }
+        const res = await axios.post("/follow/removeFollow", data)
+        console.log(res)
+        if(res.data === "success"){
+            window.location.reload();
+        }else{
+            console.log("error in remove follow")
         }
     }
 
 
-    async function unfollowUser(USER_ID){
+    async function removeFollowRequest(USER_ID){
         const data = {
             USER_ID : USER_ID
         }
-        const res = await axios.post("/follow/unfollow", data)
+        const res = await axios.post("/follow/removeFollowRequest", data)
         console.log(res)
         if(res.data === "success"){
             window.location.reload();
         }else{
-            console.log("error in unfollow")
+            console.log("error in remove follow req")
         }
     }
 

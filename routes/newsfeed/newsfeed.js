@@ -5,6 +5,8 @@ const { verify } = require('../../middlewares/user-verification');
 // const { verifyAccessToUpdatePost, verifyAccessToDeletePost } = require('../../middlewares/post-verification');
 
 router.get('/', verify, async (req, res) => {
+
+    console.log("in newsfeed router : ", req.query);
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -17,10 +19,11 @@ router.get('/', verify, async (req, res) => {
         STREET: req.user.STREET,
         CITY: req.user.CITY,
         POSTCODE: req.user.POSTCODE,
-
         PROFILE_PIC : '/images/pfp.jpg', // will change it later
     }
-    const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID);
+    
+    const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID, req.query.newsfeed_sort_by, req.query.newsfeed_search_term);
+    
     let middle = [{type : "create-post"}];
     for (let i = 0; i < posts.length; i++) {
         // Images should be included in the post from the database after implementing FILES SCHEMA
@@ -28,12 +31,28 @@ router.get('/', verify, async (req, res) => {
         posts[i].IMAGES = IMAGES;
         middle.push({type : 'post', content : posts[i]});
     }
+
+
+    const search_data = {}
+    if(req.query.newsfeed_search_term || req.query.newsfeed_sort_by) search_data.searched = true;
+    if(req.query.newsfeed_search_term) search_data.search_term = req.query.newsfeed_search_term;
+    if(req.query.newsfeed_sort_by) search_data.sort_by = req.query.newsfeed_sort_by;
+    const right = {
+        type : "newsfeed-search-box",
+        location : 'newsfeed-search',
+        data : search_data
+    }
+
+    
+    
+
+
     res.render('index', {
         type : "newsfeed",
         currentUser : currentUser,
         title : 'Newsfeed',
         left : ['left-profile', 'sidebar'],
-        right : ['newsfeed-search'],
+        right : [right],
         middle : middle
     });
 });

@@ -1,0 +1,50 @@
+<div class="right-box">
+    <form action = "/user/user_id=<%= user.USER_ID %> " method = "get" >
+        <div class="heading" style="display: flex; justify-content: space-between;"> 
+            <h3 style="font-size: 1.1rem;">Search & filter</h3>
+            <% if (data.searched) { %>
+                <a href="/user/user_id=<%= user.USER_ID %>/"><h5 class="text-muted" style="font-size: 1rem;">clear</h5></a>
+            <% } %>            
+        </div>
+
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="display: inblock;"></i>
+            <input type="search" name = "profile_post_search_term" placeholder="Search in this profile" <% if (data.search_term) { %> value = <%= data.search_term %> <% } %> >
+        </div>
+
+        <div class="subsection">
+            <h4><i class="uil uil-filter"></i>Filter</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="profile_post_filter" value="public" id="profile_post_filter_public" <% if (data.filter === "public") { %> checked <% } %>>
+                <label class="form-check-label" for="profile_post_filter_public">
+                  Public
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="profile_post_filter" value="private" id="profile_post_filter_private" <% if (data.filter === "private") { %> checked <% } %>>
+                <label class="form-check-label" for="profile_post_filter_private">
+                  Private
+                </label>
+              </div>
+        </div>
+
+        <div class="subsection">
+            <h4><i class="uil uil-filter"></i>Sort By</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="profile_post_sort_by" value="time" id="profile_post_search_sortByTime" <% if (data.sort_by === "time") { %> checked <% } %>>
+                <label class="form-check-label" for="profile_post_search_sortByTime">
+                  Time
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="profile_post_sort_by" value="popularity" id="profile_post_search_popularity" <% if (data.sort_by === "popularity") { %> checked <% } %>>
+                <label class="form-check-label" for="profile_post_search_popularity">
+                  Popularity
+                </label>
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100% ; margin-top: 1rem;">Search</button>
+
+    </form>
+</div>

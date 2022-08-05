@@ -14,7 +14,6 @@ async function addLike(post_id, user_id){
     return;
 }
 
-
 async function removeLike(post_id, user_id, ){
     const sql = `DELETE FROM LIKES 
                 WHERE USER_ID = :user_id AND post_id = :post_id`;

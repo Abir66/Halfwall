@@ -13,8 +13,8 @@ router.post('/requestFollow',verify, async (req,res)=>{
 
 router.post('/acceptFollow',verify, async (req,res)=>{
     const follower = req.body.USER_ID;
-    const following = req.user.USER_ID;
-    await DB_follow.acceptFollow(follower, following);
+    const followee = req.user.USER_ID;
+    await DB_follow.acceptFollow(follower, followee);
     res.send("success")
 });
 
@@ -25,13 +25,23 @@ router.post('/removeFollowRequest',verify, async (req,res)=>{
     res.send("success")
 });
 
-router.post('/removeFollow',verify, async (req,res)=>{
+router.post('/removeFollowToUser',verify, async (req,res)=>{
     const follower = req.user.USER_ID;
-    const following = req.body.USER_ID;
-    await DB_follow.removeFollow(follower, following);
+    const followee = req.body.USER_ID;
+    await DB_follow.removeFollow(follower, followee);
     res.send("success")
 });
 
+router.post('/removeFollowOFUser',verify, async (req,res)=>{
+    const followee = req.user.USER_ID;
+    const follower = req.body.USER_ID;
+    await DB_follow.removeFollow(follower, followee);
+    res.send("success")
+});
 
+router.get('/getFollowRequests',verify, async (req,res)=>{
+    const follow_requests = await DB_follow.getFollowRequests(req.user.USER_ID);
+    res.send(follow_requests)
+});
 
 module.exports = router;

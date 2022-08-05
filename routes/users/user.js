@@ -9,6 +9,8 @@ const { response } = require('express');
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
     
+    console.log("in user router : ", req.query);
+    
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -44,7 +46,7 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
 
    
     // public private issues
-    const posts = await DB_user.getUserProfilePosts(req.params.user_id);
+    const posts = await DB_user.getUserProfilePosts(req.user.USER_ID, req.params.user_id, followed, req.query.profile_post_sort_by, req.query.profile_post_search_term, req.query.profile_post_filter);
     
     //console.log(user);
     
@@ -60,6 +62,38 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
         posts[i].IMAGES = IMAGES;
         middle.push({type : 'post', content : posts[i]});
     }
+
+    const right = [];
+
+    // if user id is same make a follow requests count
+    if(req.user.USER_ID == req.params.user_id){
+        request_count = await DB_follow.getFollowRequestCount(req.user.USER_ID)
+        
+        if(request_count.FOLLOW_REQUEST_COUNT > 0){
+            currentUser.request_count = request_count.FOLLOW_REQUEST_COUNT;
+            const follow_requests = { type : "follow-requests", location : 'follow-requests' }
+            right.push(follow_requests);
+        }
+    }
+
+
+    const search_data = {}
+    if(req.query.profile_post_search_term || req.query.profile_post_sort_by) search_data.searched = true;
+    if(req.query.profile_post_search_term) search_data.search_term = req.query.profile_post_search_term;
+    if(req.query.profile_post_sort_by) search_data.sort_by = req.query.profile_post_sort_by;
+
+    if(!search_data.searched && !(!req.query.profile_post_filter || req.query.profile_post_filter.length == 2)) search_data.searched = true;
+    if(req.query.profile_post_filter && req.query.profile_post_filter.length != 2) search_data.filter = req.query.profile_post_filter;
+
+
+
+    const profile_search = {
+        type : "profile-search-box",
+        location : 'profile-search',
+        data : search_data
+    }
+
+    right.push(profile_search);
     
     res.render('index', {
         type : "userProfile",
@@ -67,7 +101,7 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
         user : user, 
         title : 'Halfwall | @'+user.STUDENT_ID,
         left : ['left-profile', 'sidebar'],
-        right : ['newsfeed-search'],
+        right : right,
         middle : middle
     });
 
@@ -101,7 +135,7 @@ router.get('/editProfile', verify, async(req,res)=>{
         currentUser : currentUser,
         title : 'Edit Profile',
         left : ['left-profile', 'sidebar'],
-        right : ['newsfeed-search'],
+        right : [],
         middle : middle
     });
 });

@@ -1,5 +1,7 @@
 const Database = require('../database');
 const database = new Database();
+const DB_follow = require('../../db-codes/users/db-follow-api');
+
 
 
 async function insertUser(user){
@@ -76,17 +78,45 @@ async function getPostCount(user_id){
     return result[0];
 }
 
-async function getUserProfilePosts(user_id){
+async function getUserProfilePosts(viewer_id, user_id, followed, sort_by = "TIMESTAMP DESC", search_term = "", search_filter){
 
-    const sql = `SELECT *
+
+    // filtering
+    let groups;
+    const group_ids = { public : 1, private : 2} 
+    if(!search_filter || search_filter.length == 2){
+        if(viewer_id == user_id || followed) groups = `${group_ids.public}, ${group_ids.private}`;
+        else groups = `${group_ids.public}`;
+    }
+
+    else if(search_filter == "public") groups = `${group_ids.public}`;
+
+    else{
+        if(viewer_id == user_id || followed) groups = `${group_ids.private}`;
+        else return [];
+    }
+
+    // sorting
+    let order_by = "TIMESTAMP DESC";
+    // HAVE TO IMPLEMENT A RANK FUNCTION LATER
+    if(sort_by === "popularity") order_by = `LIKES_COUNT DESC, TIMESTAMP DESC`;
+
+    // searching
+    let search_str = "";
+    if(search_term && search_term.length > 0) search_str = `AND (UPPER(TEXT) LIKE UPPER('%${search_term}%') OR UPPER(GET_USER_NAME(USER_ID)) LIKE UPPER('%${search_term}%'))`;
+    
+
+    const sql = `SELECT POSTS.*, GET_USER_NAME(USER_ID) "USERNAME", GET_USER_PROFILE_PIC(USER_ID) "PROFILE_PIC", LIKE_COUNT(POST_ID) "LIKES_COUNT",
+                USER_LIKED_THIS_POST(:viewer_id, POST_ID) "USER_LIKED"
+        
                 FROM POSTS
-                WHERE USER_ID = :user_id
-                ORDER BY TIMESTAMP DESC `;
+                WHERE POSTS.USER_ID = :user_id AND POSTS.GROUP_ID IN (${groups}) ${search_str}
+                ORDER BY ${order_by}`
     const binds ={
-        user_id : user_id
+        user_id : user_id,
+        viewer_id : viewer_id
     };
-                // posts
-    // will have to add likes, dislikes and comments later
+    
     result = (await database.execute(sql,binds)).rows;
     return result;
 }

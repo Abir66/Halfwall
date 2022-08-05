@@ -56,7 +56,6 @@
                     <% } else if (middle[index].type === 'post') { %>
                         <% 
                             if(!bodyObjects.post){
-                                console.log("posts exist");
                                 bodyObjects.post = '/js/posts/post.js'
                             }
                         %>
@@ -68,7 +67,7 @@
 
             <div class="right">
                 <% for( let index = 0; index < right.length; index++ ) { %>
-                    <%- include('right/' + right[index]); -%>
+                    <%- include('right/' + right[index].location, {data : right[index].data}); -%>
                 <% } %>
             </div>
 

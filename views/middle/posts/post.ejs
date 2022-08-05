@@ -8,7 +8,7 @@
                 
             </div>
             <div class="ingo">
-                <p class="username"><a href="/user/user_id=<%= postData.USER_ID %> "> <%= postData.NAME %> </a></p>
+                <p class="username"><a href="/user/user_id=<%= postData.USER_ID %> "> <%= postData.USERNAME %> </a></p>
 
                 <!--Convert timestamp to proper date time format-->
                 <small>
@@ -33,7 +33,7 @@
 
     <div class="post-text">
         <!--- Need to split the string by paragraphs and make individual paragraph tags for each ones -->
-        <p><%= postData.DESCRIPTION %></p>
+        <p><%= postData.TEXT %></p>
     </div> 
     <% if (postData.IMAGES) { %>
         <!--- Need convert this into a image sidebar. Should be implemented in another ejs -->
@@ -62,7 +62,7 @@
     <div class="action-buttons">
         <div class="interaction-buttons">
             <span class = like-button id="like-button-<%=postData.POST_ID%>">
-            <% if (postData.USER_LIKED_THIS_POST === 1) { %>
+            <% if (postData.USER_LIKED === 1) { %>
                 <i class="fa-solid fa-heart" style="color: rgb(243, 55, 89);" onclick="unlike(<%=postData.POST_ID%>)" ></i>
             <% } else{ %> 
                 <i class="fa-regular fa-heart" onclick="like(<%=postData.POST_ID%>)"></i>

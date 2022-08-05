@@ -109,6 +109,27 @@ async function requestedToFollowUser(follower_id, followee_id){
 }
 
 
+async function getFollowRequestCount(user_id){
+    const sql = `SELECT count(*) as follow_request_count FROM follow_requests
+                WHERE followee_id = :user_id`;
+    const binds ={
+        user_id : user_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result[0];
+}
+
+async function getFollowRequests(user_id){
+    const sql = `SELECT follow_requests.FOLLOWER_ID USER_ID, TIMESTAMP, NAME, PROFILE_PIC 
+                FROM follow_requests left join users on follow_requests.follower_id = users.USER_ID
+                WHERE followee_id = :user_id`;
+    const binds ={
+        user_id : user_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
+}
+
 
 module.exports = {
     requestFollow,
@@ -118,5 +139,7 @@ module.exports = {
     getFollowerCount,
     getFollowingCount,
     followedUser,
-    requestedToFollowUser
+    requestedToFollowUser,
+    getFollowRequestCount,
+    getFollowRequests
 }

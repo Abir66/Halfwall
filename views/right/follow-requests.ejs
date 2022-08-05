@@ -1,0 +1,39 @@
+<!-- Ei pura div er upor click korle modal asha lagbe -->
+
+<!-- remove anchor tag -->
+<a href="/follow/getFollowRequests">
+<div class="right-box follow-requests-box">
+    <h3 style="font-size: 1.2rem;">Follow Requests : <%= currentUser.request_count %>  </h3>
+    <p>See who have requested to follow you</p>
+</div>
+</a>
+
+
+<!--    
+The route of getting the follow requests is /follow/getFollowRequests should be a GET requests (remove the anchor tag from the above code) 
+The format of response is {
+    USER_ID,
+    TIME_STAMP,
+    NAME,
+    PROFILE_PIC [set to null for now. use a hardcoded image in frontend]
+}
+
+Use axios to get the follow requests from the server and display them in the modal 
+To both accept and remove
+the data of axios will only contain USER_ID : the user id of the user who has requested to follow you
+see profile.ejs
+
+The route of remove is /follow/removeFollowOFUser/
+the route of accept is /follow/acceptFollow/
+
+No need to reload window.  update followrequestcount and following count after remove and accept (get element by id)
+set some id to the tags if needed. (****WITH MEANINGFUL NON-COLIDING NAME***)
+(is success +- 1)
+
+
+IN the modal, when clicked on user's name or profile pic, it should redirect to the user's profile page.
+(newsfeed e post e click korle jeirokom hoy)
+
+After removing or accepting, the modal should be the remove and follow button should be hidden.
+
+-->

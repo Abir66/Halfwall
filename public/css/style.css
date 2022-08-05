@@ -164,7 +164,6 @@ nav .search-bar input[type="search"] {
     margin-left: 1rem;
     font-size: 0.9rem;
     color: var(--color-dark);
-    
 }
 
 nav .search-bar .input[type="search"]::placeholder {
@@ -360,16 +359,16 @@ main .container .right{
     bottom: 0;
 }
 
-.right .top-right-box{
+.right .right-box{
     background: var(--color-white);
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     padding-left: 2rem;
     padding-right: 2rem;
-    
+    margin-bottom: 1rem;  
 }
 
-.right .top-right-box .search-bar {
+.right .right-box .search-bar {
     background: var(--color-light);
     border-radius: var(--border-radius);
     padding: var(--search-padding);
@@ -378,20 +377,32 @@ main .container .right{
 }
 
 
-.right .top-right-box .search-bar input[type="search"] {
+.right .right-box .search-bar input[type="search"] {
     background: transparent;
     width: 80%;
     margin-left: 1rem;
     font-size: 0.9rem;
-    color: var(--color-dark);
-    
+    color: var(--color-dark); 
 }
 
-.right .top-right-box .search-bar .input[type="search"]::placeholder {
+.right .right-box .search-bar input[type="text"] {
+    background: transparent;
+    width: 80%;
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-dark); 
+}
+
+.right .right-box .search-bar .input[type="search"]::placeholder {
     color: var(--color-gray);
 }
 
-.right .top-right-box .subsection h4{
+.right .right-box .subsection {
+    margin-bottom: 1rem;
+}
+
+
+.right .right-box .subsection h4{
     font-size: 1rem;
     font-weight: 500;
     border-bottom:  0.1rem solid var(--color-gray);

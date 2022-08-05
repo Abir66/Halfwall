@@ -1,12 +1,34 @@
-<div class="top-right-box">
-    <form action="#">
-        <div class="heading"> <h3 style="font-size: 1.1rem;">Search & filter</h3></div>
+<div class="right-box">
+    <form action = "/newsfeed/" method = "get" >
+        <div class="heading" style="display: flex; justify-content: space-between;"> 
+            <h3 style="font-size: 1.1rem;">Search & filter</h3>
+            <% if (data.searched) { %>
+                <a href="/newsfeed/"><h5 class="text-muted" style="font-size: 1rem;">clear</h5></a>
+            <% } %>            
+        </div>
+
 
         <div class="search-bar">
             <i class="fa-solid fa-magnifying-glass" style="display: inblock;"></i>
-            <input type="search" placeholder="">
+            <input type="search" name = "newsfeed_search_term" placeholder="Search in newsfeed" <% if (data.search_term) { %> value = <%= data.search_term %> <% } %> >
         </div>
 
-        <div class="subsection"><h4><i class="uil uil-filter"></i>Filter</h4></div>
+        <div class="subsection">
+            <h4><i class="uil uil-filter"></i>Sort By</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="newsfeed_sort_by" value="time" id="newsfeed_search_sortByTime" <% if (data.sort_by === "time") { %> checked <% } %>>
+                <label class="form-check-label" for="newsfeed_search_sortByTime">
+                  Time
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="newsfeed_sort_by" value="popularity" id="newsfeed_search_popularity" <% if (data.sort_by === "popularity") { %> checked <% } %>>
+                <label class="form-check-label" for="newsfeed_search_popularity">
+                  Popularity
+                </label>
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100% ; margin-top: 1rem;">Search</button>
+
     </form>
 </div>

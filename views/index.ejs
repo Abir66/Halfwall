@@ -17,7 +17,7 @@
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
     <link rel="stylesheet" href="/css/style.css">
 
 </head>
@@ -44,8 +44,6 @@
             </div>
 
             <div class="middle">
-                <!-- delete this later -->
-                <%- include('groups/groupForm') -%>
                 <% for( let index = 0; index < middle.length; index++ ) { %>
 
                     <% if (middle[index].type === 'profile') { %>

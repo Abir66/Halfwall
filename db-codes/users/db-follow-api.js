@@ -12,34 +12,11 @@ async function requestFollow(follower, following){
         following : following
     }
 
-    try{
-        await database.execute(sql, binds);
-        return binds;
-    }catch(err){
-        console.log(err);
-    }
+
+    await database.execute(sql, binds);
+    return binds;
+
 }
-
-async function acceptFollow(follower, following){
-    console.log("----------inside accept follow---------------");
-    const sql =`INSERT INTO follows
-                VALUES (:follower, :following, CURRENT_TIMESTAMP);
-                DELETE FROM follow_requests
-                WHERE follower_id = :follower AND followee_id = :following;`;
-
-    const binds={
-        follower : follower,
-        following : following
-    }
-
-    try{
-        await database.execute(sql, binds);
-        return binds;
-    }catch(err){
-        console.log(err);
-    }
-}
-
 
 async function removeFollowRequest(follower, following){
     const sql =`DELETE FROM follow_requests
@@ -53,6 +30,25 @@ async function removeFollowRequest(follower, following){
     await database.execute(sql, binds);
     return binds;
 }
+
+async function processFollowRequest(follower, following, action = 'remove'){
+
+    const sql = `BEGIN
+                    PROCESS_FOLLOW_REQUEST(:follower, :following, :action, :result);
+                END;`;
+
+    const binds = {
+        follower : follower,
+        following : following,
+        action : action,
+        result: {
+            dir: oracledb.BIND_OUT,
+            type: oracledb.VARCHAR2
+        }
+    }
+    return (await database.execute(sql, binds)).outBinds;
+}
+
 
 async function removeFollow(follower, following){
     const sql =`DELETE FROM follows
@@ -76,11 +72,15 @@ async function getFollowerCount(user_id){
     const result = (await database.execute(sql, binds)).rows;
     return result[0];
 }
+
+
 async function getFollowerList(user_id){
 
-    const sql = `SELECT follow_requests.FOLLOWER_ID USER_ID, TIMESTAMP, NAME, PROFILE_PIC 
-                FROM follow_requests left join users on follow_requests.follower_id = users.USER_ID
-                WHERE followee_id = :user_id`;
+    const sql = `SELECT follows.FOLLOWER_ID USER_ID, NAME, TIMESTAMP, PROFILE_PIC 
+                FROM follows left join users on follows.follower_id = users.USER_ID
+                WHERE followee_id = :user_id
+                ORDER BY TIMESTAMP DESC`;
+
     const binds ={
         user_id : user_id
     };
@@ -98,6 +98,20 @@ async function getFollowingCount(user_id){
     const result = (await database.execute(sql, binds)).rows;
     return result[0];
 }
+
+async function getFollowingList(user_id){
+
+    const sql = `SELECT follows.FOLLOWEE_ID USER_ID, NAME, TIMESTAMP, PROFILE_PIC 
+                FROM follows left join users on follows.followee_id = users.USER_ID
+                WHERE follower_id = :user_id
+                ORDER BY TIMESTAMP DESC`;
+    const binds ={
+        user_id : user_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
+}
+
 
 async function followedUser(follower_id, followee_id){
     const sql = `SELECT * FROM follows
@@ -147,7 +161,7 @@ async function getFollowRequests(user_id){
 module.exports = {
     requestFollow,
     getFollowerList,
-    acceptFollow,
+    processFollowRequest,
     removeFollowRequest,
     removeFollow,
     getFollowerCount,
@@ -155,5 +169,6 @@ module.exports = {
     followedUser,
     requestedToFollowUser,
     getFollowRequestCount,
-    getFollowRequests
+    getFollowRequests,
+    getFollowingList
 }

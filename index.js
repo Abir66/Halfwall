@@ -27,6 +27,9 @@ const post = require('./routes/posts/post');
 // newsfeed routers
 const newsfeed = require('./routes/newsfeed/newsfeed');
 
+// group routers
+const group = require('./routes/groups/groups');
+
 
 
 // middlewares
@@ -35,6 +38,7 @@ app.use('/newsfeed', newsfeed);
 app.use('/user', user);
 app.use('/follow', followRoute);
 app.use('/posts', post);
+app.use('/groups', group);
 
 
 

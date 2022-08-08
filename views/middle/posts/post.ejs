@@ -1,84 +1,3 @@
-<style>
-    .modal-container-postLike{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 0;
-        left:0;
-        width:100%;
-        height: 100%;
-        opacity: 0;
-        pointer-events: none;
-        transition: all .3s ease-in-out;
-        
-        background-color: rgba(0,0,0,0.3);
-        z-index: 5;
-    }
-    .likes-count{
-        cursor: pointer;
-    }
-    .modal-postLike{
-        position: relative;
-        background-color: #fff;
-        width: 600px;
-        border-radius: 10px;
-        max-width: 80%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        padding: 30px 50px;
-        text-align: center;
-    }
-    .modal-postLike h1{
-        margin: 0;
-    }
-    .modal-postLike p{
-        opacity: 0.7;
-    }
-    .close-modal-postLike{
-        background-color: #47a386;
-        border-radius: 5px;
-        color: #fff;
-        padding: 10px 25px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        font-size: 14px;
-        cursor: pointer;
-    }
-    
-    .modal-postLike-active{
-        opacity: 1;
-        pointer-events: auto;
-    }
-    .postLike-list-thumbnail{
-        height: 50px;
-        width: 50px;
-        border-radius: 25px;
-    }
-    .postLike-Items{
-        display: flex;
-        align-items: center;
-        margin: 15px 0;
-    }
-    .postLikeList{
-        border: 1px solid #000;
-        border-radius: 5px;
-        height: 400px;
-        overflow: auto;
-        padding: 15px;
-    }
-    .postLike-list-userName{
-        margin-right: 40px;
-        font-size: 1.25em;
-    }
-    .stopFuntionality{
-        pointer-events: none;
-        position: fixed;
-        overflow-y: scroll;
-        width: 100%;
-    }
-    .postLike-Items{
-        overflow: auto;
-    }
-</style>
 <div class="post">
 
     <div class="head">
@@ -149,54 +68,10 @@
                 <i class="fa-regular fa-heart" onclick="like(<%=postData.POST_ID%>)"></i>
             <% } %>
             </span>
-            <span onclick="showLikesModal()" class="likes-count" id="likes-count-<%= postData.POST_ID%>"><%= postData.LIKES_COUNT %> </span>
+            <span class="likes-count" id="likes-count-<%= postData.POST_ID%>" onclick="getLikersList(<%=postData.POST_ID%>)"  ><%= postData.LIKES_COUNT %> </span>
         </div>
         <div class="comments">
             <p onclick="testFunction('<%=postData.NAME%>')">15 comments</p>
         </div>
     </div>
 </div>
-<!-- here is the modal part -->
-<div class="modal-container-postLike" id="modal-container-postLike">
-    <div class="modal-postLike">
-        <div class="postLikeList" id="postLikeList">
-            
-           
-        </div>
-        <button id="close-modal-postLike">
-            Close Me
-        </button>
-    </div>
-
-</div>
-
-<script>
-    const modal_container_postLike = document.getElementById('modal-container-postLike');
-    const close_modal_postLike = document.getElementById('close-modal-postLike');
-    const postLikeList = document.getElementById('postLikeList');
-   
-
-    const likes_count = document.getElementById('likes-count');
-    function showLikesModal(){
-        document.body.classList.add("stopFuntionality");
-        console.log("clicking post.ejs number of Likes");
-        postLikeList.innerHTML = "";
-        for(let i=0;i<3;i++){
-            let list_element = "";
-            let user_name = "Tanvir Saad";
-            let user_id = "1905090";
-            list_element += "<div class=\"postLike-Items\">";
-            list_element += "<img src=\"/images/pfp.jpg\" class=\"postLike-list-thumbnail\">";
-            list_element += "<a href=\""+"/user/user_id="+user_id+"\" class=\"postLike-list-userName\">"+user_name+"</a>";               
-            list_element += "</div>";
-            postLikeList.innerHTML += list_element;
-        }
-        modal_container_postLike.classList.add('modal-postLike-active');
-    }
-    close_modal_postLike.addEventListener('click',()=>{
-        modal_container_postLike.classList.remove('modal-postLike-active');
-        document.body.classList.remove("stopFuntionality");
-        
-    })
-</script>
-

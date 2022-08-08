@@ -1,7 +1,7 @@
 <div class="sidebar">
 
     <!---------------------------Home---------------------------------->
-    <a href="/newsfeed" class="menu-item active">
+    <a href="/newsfeed" class="menu-item <% if (type==='newsfeed') { %> active <% } %>">
         <span><i class="uil uil-home"></i><h3>Newsfeed</h3></span>
     </a>
     
@@ -26,7 +26,7 @@
     </a>
    
     <!---------------------------Groups---------------------------------->
-    <a href="#" class="menu-item">
+    <a href="/groups" class="menu-item <% if (type==='group') { %> active <% } %>">
         <span><i class="uil uil-users-alt"></i><h3>Groups</h3></span>
     </a>
     

@@ -1,84 +1,10 @@
 <style>
-.modal-container-follow{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left:0;
-    width:100%;
-    height: 100%;
-    opacity: 0;
-    pointer-events: none;
-    transition: all .3s ease-in-out;
-    
-    background-color: rgba(0,0,0,0.3);
-    z-index: 5;
-}
+
 #numberOfFollwers:hover{
     cursor: pointer;
 }
 #numberOfFollowing:hover{
     cursor: pointer;
-}
-.modal-follow{
-    position: relative;
-    background-color: #fff;
-    width: 600px;
-    border-radius: 10px;
-    max-width: 80%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    padding: 30px 50px;
-    text-align: center;
-}
-.modal-follow h1{
-    margin: 0;
-}
-.modal-follow p{
-    opacity: 0.7;
-}
-.close-modal-follow{
-    background-color: #47a386;
-    border-radius: 5px;
-    color: #fff;
-    padding: 10px 25px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    font-size: 14px;
-    cursor: pointer;
-}
-.modal-follow-active{
-    opacity: 1;
-    pointer-events: auto;
-}
-.follow-list-thumbnail{
-    height: 50px;
-    width: 50px;
-    border-radius: 25px;
-}
-.follow-Items{
-    display: flex;
-    align-items: center;
-    margin: 15px 0;
-}
-.followList{
-    border: 1px solid #000;
-    border-radius: 5px;
-    height: 400px;
-    overflow: auto;
-    padding: 15px;
-}
-.follow-list-userName{
-    margin-right: 40px;
-    font-size: 1.25em;
-}
-.stopFuntionalityFollow{
-    pointer-events: none;
-    position: fixed;
-    overflow-y: scroll;
-    width: 100%;
-}
-.follow-Items{
-    overflow: auto;
 }
 
 .view-user-profile {
@@ -91,37 +17,30 @@
     margin-bottom: 1rem;
     width: 100%; 
 }
-
 .view-user-profile .head{
     padding-left: 1rem;
     padding-right: 1rem;
     display: flex;
     justify-content: space-between;
 }
-
-
 .view-user-profile .user {
     width: 25%;
     aspect-ratio: 1/1;
 }
-
 .view-user-profile .profile-picture{
     width: 100%;
     border-radius: 100%;
     border: 5px solid hsl(252, 75%, 60%);
     padding: 4px;
 }
-
 .view-user-profile .profile-picture img{
     width: 100%;
     height: 100%;
     border-radius: 100%;
 }
-
 .view-user-profile .side{
     width: 60%;
     margin-right: 2rem;
-
 }
 .view-user-profile .popularity {
     width: 100%;
@@ -134,17 +53,13 @@
     padding-bottom: 0.5rem;
     padding-top: 0.5rem;
 }
-
-
 .view-user-profile .followers{
     text-align: center;
 }
-
 .view-user-profile .follow-number{
     font-size: 2rem;
     font-weight: 500;
 }
-
 .view-user-profile .buttons{
     display: flex;
     gap : 1rem;
@@ -155,24 +70,19 @@
 .view-user-profile .buttons .btn{
     width: 100%;
 }
-
 .view-user-profile .user-info{
     padding: 1rem;
 }
-
 .view-user-profile .name{
     font-size: 1.5rem;
     font-weight: 500;
 }
-
 .view-user-profile .other-text{
     font-size: 0.9rem;
 }
-
 .view-user-profile .user-info p{
     font-size: 0.9rem;
 }
-
 </style>
 
 <div class="view-user-profile">
@@ -189,12 +99,12 @@
                     <p class="follow-number"><%=user.post_count%></p>
                     <p class="follow-text">Posts</p>
                 </div>
-                <div class="followers" id="numberOfFollwers">
+                <div class="followers" id="numberOfFollwers" onclick="getFollowerList(<%=user.USER_ID%>, <%=currentUser.USER_ID%>)">
                     <p class="follow-number"><%=user.follower_count%></p>
                     <p class="follow-text">Follower</p>
                 </div>
 
-                <div class="followers" id="numberOfFollowing">
+                <div class="followers" id="numberOfFollowing" onclick="getFollowingList(<%=user.USER_ID%>)">
                     <p class="follow-number"><%=user.following_count%></p>
                     <p class="follow-text">Following</p>
                 </div>
@@ -205,7 +115,7 @@
                 <% if (currentUser.USER_ID != user.USER_ID) { %>
                     <!--------- Need to check if already following ------->
                     <% if (user.followed) { %>
-                        <button class="btn btn-blank" onclick="removeFollow(<%=user.USER_ID%>)">Following</button>
+                        <button class="btn btn-blank" onclick="unfollow(<%=user.USER_ID%>)">Following</button>
                     <% } else if (user.requested) { %>
                         <button class="btn btn-blank" onclick="removeFollowRequestToUser(<%=user.USER_ID%>)">Requested</button>
                     <% } else { %>
@@ -250,73 +160,16 @@
         <% if(user.DATE_OF_BIRTH){ %>
             <p class="text-muted"><i class="fa-solid fa-cake-candles"></i>&nbsp<%- (user.DATE_OF_BIRTH).getDate() %>  <%- month[(user.DATE_OF_BIRTH).getMonth()] %> </p>  
         <% } %>
-    </div>
-</div>
-<!-- here is the modal part -->
-<a href="/follow/getFollowerList">hellooooo</a>
-<div class="modal-container-follow" id="modal-container-follow">
-    <div class="modal-follow modal-follow">
-        <div class="followList" id="followList">
-            
-           
-        </div>
-        <button id="close-modal-follow">
-            Close Me
-        </button>
-    </div>
 
+        
+    </div>
 </div>
+
 
 
 <script>
-    
-    const modal_container_follow = document.getElementById('modal-container-follow');
-    const close_modal_follow = document.getElementById('close-modal-follow');
-    const followList = document.getElementById('followList');
-    
-    const numberOfPost = document.getElementById('numberOfPost');
-    const numberOfFollowing = document.getElementById('numberOfFollowing');
-    const numberOfFollwers = document.getElementById('numberOfFollwers');
 
-    numberOfFollwers.addEventListener('click',()=>{
-        document.body.classList.add("stopFuntionality");
-        console.log("clicking profile.ejs number of following");
-        followList.innerHTML = "";
-        for(let i=0;i<3;i++){
-            let list_element = "";
-            let user_name = "Tanvir Saad";
-            let user_id = "1905090";
-            list_element += "<div class=\"follow-Items\">";
-            list_element += "<img src=\"/images/pfp.jpg\" class=\"follow-list-thumbnail\">";
-            list_element += "<a href=\""+"/user/user_id="+user_id+"\" class=\"follow-list-userName\">"+user_name+"</a>";               
-            list_element += "</div>";
-            followList.innerHTML += list_element;
-        }
-        modal_container_follow.classList.add('modal-follow-active');
-
-    })
-    numberOfFollowing.addEventListener('click',()=>{
-        document.body.classList.add("stopFuntionality");
-        console.log("clicking profile.ejs number of following");
-        followList.innerHTML = "";
-        for(let i=0;i<3;i++){
-            let list_element = "";
-            let user_name = "Tanvir Saad";
-            let user_id = "1905090";
-            list_element += "<div class=\"follow-Items\">";
-            list_element += "<img src=\"/images/pfp.jpg\" class=\"follow-list-thumbnail\">";
-            list_element += "<a href=\""+"/user/user_id="+user_id+"\" class=\"follow-list-userName\">"+user_name+"</a>";               
-            list_element += "</div>";
-            followList.innerHTML += list_element;
-        }
-        modal_container_follow.classList.add('modal-follow-active');
-
-    })
-    close_modal_follow.addEventListener('click',()=>{
-        modal_container_follow.classList.remove('modal-follow-active');
-        document.body.classList.remove("stopFuntionality");
-        
-    })
+    var user_modal = new bootstrap.Modal(document.getElementById('user-modal'), {});
 
     async function requestFollow(USER_ID){
         const data = {
@@ -332,11 +185,11 @@
         }
     }
 
-    async function removeFollow(USER_ID){
+    async function unfollow(USER_ID){
         const data = {
             USER_ID : USER_ID
         }
-        const res = await axios.post("/follow/removeFollow", data)
+        const res = await axios.post("/follow/unfollow", data)
         console.log(res)
         if(res.data === "success"){
             window.location.reload();
@@ -344,6 +197,21 @@
             console.log("error in remove follow")
         }
     }
+
+
+    async function removeFollower(USER_ID){
+        const data = {
+            USER_ID : USER_ID
+        }
+        const res = await axios.post("/follow/removeFollower", data)
+        console.log(res)
+        if(res.data === "success"){
+            document.querySelector(`#modal-userlist-user-${USER_ID} .modal-userlist-action-buttons`).remove();
+        }else{
+            console.log("error in remove follower")
+        }
+    }
+
 
     async function removeFollowRequestToUser(USER_ID){
         const data = {
@@ -356,6 +224,69 @@
         }else{
             console.log("error in remove follow req")
         }
+    }
+
+    async function getFollowerList(user_id, currentUser_id){
+
+        const res = await axios.get("/follow/getFollowerList/", {params : {USER_ID : user_id}});
+        const followers = res.data;
+
+        const modalBody = document.getElementById('user-modal').querySelector('.modal-body');
+        const modalTitle = document.getElementById('user-modal').querySelector('.modal-title');
+        
+        modalTitle.innerHTML = `Followers : ${followers.length}`;
+        modalBody.innerHTML = "";
+
+        for (let i = 0; i < followers.length; i++) {
+
+            let follower_name = followers[i].NAME;
+            let follower_id = followers[i].USER_ID;
+
+        
+
+            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${follower_id}">
+                            <div class = "modal-userlist-userinfo">
+                                <a href="/user/user_id=${follower_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
+                                <a href="/user/user_id=${follower_id}"  class="modal-userlist-username">${follower_name}</a>
+                            </div>
+                            <% if (user.USER_ID == currentUser.USER_ID) { %>
+                            <div class = "modal-userlist-action-buttons">
+                                <button class="follower-list-remove btn btn-primary"  onclick = "removeFollower(${follower_id})">Remove</button>
+                            </div>
+                            <% } %>
+                        </div>`;
+            modalBody.innerHTML += str;
+        }
+
+        user_modal.show();
+    }
+
+
+    async function getFollowingList(user_id){
+        const res = await axios.get("/follow/getFollowingList/", {params : {USER_ID : user_id}});
+        const followings = res.data;
+
+        const modalBody = document.getElementById('user-modal').querySelector('.modal-body');
+        const modalTitle = document.getElementById('user-modal').querySelector('.modal-title');
+        
+        modalTitle.innerHTML = `Following : ${followings.length}`;
+        modalBody.innerHTML = "";
+
+        for (let i = 0; i < followings.length; i++) {
+
+            let followee_name = followings[i].NAME;
+            let followee_id = followings[i].USER_ID;
+
+            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${followee_id}">
+                            <div class = "modal-userlist-userinfo">
+                                <a href="/user/user_id=${followee_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
+                                <a href="/user/user_id=${followee_id}"  class="modal-userlist-username">${followee_name}</a>
+                            </div>
+                        </div>`;
+            modalBody.innerHTML += str;
+        }
+
+        user_modal.show();
     }
 
 </script>

@@ -123,7 +123,9 @@ router.post('/signup', async (req, res) => {
     res.send("success");
 })
 
-
+router.get('/groupForm', (req, res) => {
+    res.render('group/groupForm');
+})
 
 // router.get('/verify', verify, (req, res) => {
 //     res.send("all good")

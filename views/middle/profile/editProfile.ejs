@@ -66,7 +66,7 @@
                     <option value="RASHID" <% if(currentUser.HALL === 'RASHID'){ %>selected<% } %>>Rashid hall</option>
                 </select>
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="attachment">Attachment</label>
                 <select name="attachment" id="edit-profile-attachment">
                     <option value="" disable hidden <% if(currentUser.HALL_ATTACHMENT === null){ %>selected<% } %> ></option>
@@ -74,28 +74,28 @@
                     <option value="A" <% if(currentUser. HALL_ATTACHMENT == 'A'){ %>selected<% } %>>Attached</option> 
                 </select>
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="street">Street</label>
                 <input type="text" name="street" id="edit-profile-street" value="<%- currentUser.STREET %> ">
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="city">City</label>
                 <input type="text" name="city" id="edit-profile-city"  value="<%- currentUser.CITY %>">
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="postcode">Post Code</label>
                 <input type="number" name="postcode" id="edit-profile-postcode" value="<%- currentUser.POSTCODE %>" >
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="edit-profile-new-password">New password</label>
                 <input type="password" name="new-password" id="edit-profile-new-password" onchange="onPasswordChange()">
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="edit-profile-confirm-password">Confirm New password</label>
                 <input type="password" name="confirm-password" id="edit-profile-confirm-password" onchange="onPasswordChange()">
             </div>
             <hr>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="edit-profile-current-password">Current password</label>
                 <input type="password" name="current-password" id="edit-profile-current-password" required>
             </div>

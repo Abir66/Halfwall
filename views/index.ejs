@@ -66,6 +66,7 @@
             </div>
 
             <div class="right">
+                <%- include('right/follow-requests') %>
                 <% for( let index = 0; index < right.length; index++ ) { %>
                     <%- include('right/' + right[index].location, {data : right[index].data}); -%>
                 <% } %>

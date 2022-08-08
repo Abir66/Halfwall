@@ -21,9 +21,11 @@ async function requestFollow(follower, following){
 }
 
 async function acceptFollow(follower, following){
-    console.log (follower, following);
+    console.log("----------inside accept follow---------------");
     const sql =`INSERT INTO follows
-                VALUES (:follower, :following, CURRENT_TIMESTAMP)`;
+                VALUES (:follower, :following, CURRENT_TIMESTAMP);
+                DELETE FROM follow_requests
+                WHERE follower_id = :follower AND followee_id = :following;`;
 
     const binds={
         follower : follower,
@@ -73,6 +75,17 @@ async function getFollowerCount(user_id){
     };
     const result = (await database.execute(sql, binds)).rows;
     return result[0];
+}
+async function getFollowerList(user_id){
+
+    const sql = `SELECT follow_requests.FOLLOWER_ID USER_ID, TIMESTAMP, NAME, PROFILE_PIC 
+                FROM follow_requests left join users on follow_requests.follower_id = users.USER_ID
+                WHERE followee_id = :user_id`;
+    const binds ={
+        user_id : user_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
 }
 
 
@@ -133,6 +146,7 @@ async function getFollowRequests(user_id){
 
 module.exports = {
     requestFollow,
+    getFollowerList,
     acceptFollow,
     removeFollowRequest,
     removeFollow,

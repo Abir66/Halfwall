@@ -44,4 +44,10 @@ router.get('/getFollowRequests',verify, async (req,res)=>{
     res.send(follow_requests)
 });
 
+router.post('/acceptFollowRequest',verify,async (req,res)=>{
+    console.log("---- inside folllow.js /acceptfollow ------");
+    const accept_request = await DB_follow.acceptFollow(req.body.user_id,req.user.USER_ID);
+    console.log(accept_request);
+})
+
 module.exports = router;

@@ -23,6 +23,8 @@ const auth = require('./routes/users/auth');
 const user = require('./routes/users/user');
 const followRoute = require('./routes/users/follow');
 const post = require('./routes/posts/post');
+const searchProfile = require('./routes/searchProfiles/searchProfile');
+
 
 // newsfeed routers
 const newsfeed = require('./routes/newsfeed/newsfeed');
@@ -35,6 +37,7 @@ app.use('/newsfeed', newsfeed);
 app.use('/user', user);
 app.use('/follow', followRoute);
 app.use('/posts', post);
+app.use('/searchProfile',searchProfile);
 
 
 

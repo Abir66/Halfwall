@@ -151,52 +151,10 @@
             </span>
             <span onclick="showLikesModal()" class="likes-count" id="likes-count-<%= postData.POST_ID%>"><%= postData.LIKES_COUNT %> </span>
         </div>
-        <div class="comments">
-            <p onclick="testFunction('<%=postData.NAME%>')">15 comments</p>
+        <div class="comments" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            comments
         </div>
     </div>
 </div>
-<!-- here is the modal part -->
-<div class="modal-container-postLike" id="modal-container-postLike">
-    <div class="modal-postLike">
-        <div class="postLikeList" id="postLikeList">
-            
-           
-        </div>
-        <button id="close-modal-postLike">
-            Close Me
-        </button>
-    </div>
 
-</div>
-
-<script>
-    const modal_container_postLike = document.getElementById('modal-container-postLike');
-    const close_modal_postLike = document.getElementById('close-modal-postLike');
-    const postLikeList = document.getElementById('postLikeList');
-   
-
-    const likes_count = document.getElementById('likes-count');
-    function showLikesModal(){
-        document.body.classList.add("stopFuntionality");
-        console.log("clicking post.ejs number of Likes");
-        postLikeList.innerHTML = "";
-        for(let i=0;i<3;i++){
-            let list_element = "";
-            let user_name = "Tanvir Saad";
-            let user_id = "1905090";
-            list_element += "<div class=\"postLike-Items\">";
-            list_element += "<img src=\"/images/pfp.jpg\" class=\"postLike-list-thumbnail\">";
-            list_element += "<a href=\""+"/user/user_id="+user_id+"\" class=\"postLike-list-userName\">"+user_name+"</a>";               
-            list_element += "</div>";
-            postLikeList.innerHTML += list_element;
-        }
-        modal_container_postLike.classList.add('modal-postLike-active');
-    }
-    close_modal_postLike.addEventListener('click',()=>{
-        modal_container_postLike.classList.remove('modal-postLike-active');
-        document.body.classList.remove("stopFuntionality");
-        
-    })
-</script>
 

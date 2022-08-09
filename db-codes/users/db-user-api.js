@@ -149,11 +149,30 @@ async function updateUser(user, user_id){
     return (await database.execute(sql, binds)).outBinds;
 }
 
+async function searchProfile(user_input,user_id,hall_name,attachment,city){
+    const sql = `SELECT *
+                FROM USERS
+                WHERE  (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%' AND (USERS.NAME LIKE '%'||:user_Input||'%'))
+                OR (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%'
+                AND (USERS.STUDENT_ID = :user_id) ) OR  (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%'
+                AND (USERS.EMAIL LIKE '%'||:user_input||'%') )`
+    const binds ={
+        user_input : user_input,
+        user_id : user_id,
+        hall_name : hall_name,
+        attachment : attachment
+    };
+    // check the sql
+    result = (await database.execute(sql,binds)).rows;
+    return result;
+}
+
 module.exports = {
     getUserById,
     getUserByStudentId,
     getUserByEmail,
     insertUser,
+    searchProfile,
     getPostCount,
     getUserProfilePosts,
     updateUser

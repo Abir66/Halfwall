@@ -1,0 +1,197 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<style>
+    .search-profile-container{
+        width: 30%;
+    }
+    .search-profile-item{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: medium;
+        background-color: transparent;
+
+        margin: 1em;
+    }
+    #user-input-search-profile{
+        width: 100%;
+        border: 1px solid #000;
+        border-radius: 10px;
+        padding: 0.6em 0.4em;
+    }
+    .search-profile-box{
+        width: 70%;
+    }
+    .search-profile-item-checkbox{
+        margin: 1em;
+        display: flex;
+    }
+    .form-check{
+        margin-right: 1em;
+    }
+    .found-profile-card{
+        display: flex;
+        align-items: center;
+        width: 30%;
+        padding: 1em;
+    }
+    .found-profile-description{
+        width: 60%;
+    }
+    .found-profile-student-id{
+        font-size: small;
+        color: #333333;
+    }
+    .found-profile-userName{
+        margin-top: 15px ;
+        font-size: 1.5em;
+        color: #333333;
+    }
+
+    /* delete this */
+    .found-profile-profile-picture {
+        width: 70px;
+        border-radius: 35px;
+        margin-right: 1em;
+    }
+
+
+</style>
+
+<div class="card">
+    <div class="search-profile-container">
+        <form class="search-profile-form">
+            <div class="search-profile-item">
+                <h1>Search User</h1>
+                <label for="" class="search-profile-clear" id="search-profile-clear">clear</label>
+            </div>
+            <div class="search-profile-item">
+                <input class="" type="text" name="taking_user_input_search_profile" id="user-input-search-profile" placeholder="Name,Email or StudentId">
+            </div>
+            <div class="search-profile-item">
+                <label for="search-profile-hall-name">Hall</label>
+                <select name="search-profile-hall-name" class="search-profile-box" id="search-profile-hall-name">
+                    <option value="" selected ></option>
+                    <option value="SHUHRAWARDY" selected   >Suhrawardy hall</option>
+                    <option value="SHER-E-BANGLA" selected  >Sher-e-Bangla hall</option>
+                    <option value="Ahsanullah" selected  >Ahsanullah hall</option>
+                    <option value= "CHAATTRI" selected >Chattri hall</option>
+                    <option value="Nazrul" selected >Kazi Nazrul hall</option>
+                    <option value="TITUMIR" selected >Titumir hall</option>
+                    <option value="RASHID" selected >Rashid hall</option>
+                    <option value="" disabled hidden selected ></option>
+                </select>
+            </div>
+            <div class="search-profile-item-checkbox">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="R" id="search-profile-hall-attachment-resident">
+                    <label class="form-check-label" for="search-profile-hall-attachment">
+                      Resident
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="A" id="search-profile-hall-attachment-attached">
+                    <label class="form-check-label" for="search-profile-hall-attachment-attached">
+                      Attached
+                    </label>
+                </div>
+            </div>
+            <div class="search-profile-item">
+                <label for="search-profile-city">City</label>
+                <input type="text" class="search-profile-box" name="search-profile-city" id="search-profile-city" >
+            </div>
+            <div class="search-profile-item">
+                <button class="btn btn-primary w-100" id="search-profile-submit">Search</button>
+            </div>
+
+            </form>
+    </div>
+    <div class="found-profile-list" id="found-profile-list">
+        
+    </div>
+</div>
+
+<script>
+    const search_profile_submit = document.getElementById("search-profile-submit");
+    const search_profile_clear = document.getElementById("search-profile-clear");
+    const user_input_search_profile = document.getElementById("user-input-search-profile");
+    const user_input_search_hall_name = document.getElementById("search-profile-hall-name");
+    const search_profile_hall_attachment_resident = document.getElementById("search-profile-hall-attachment-resident");
+    const search_profile_hall_attachment_attached = document.getElementById("search-profile-hall-attachment-attached");
+    const search_profile_city = document.getElementById("search-profile-city");
+    const found_profile_list = document.getElementById("found-profile-list");
+
+    search_profile_hall_attachment_attached.addEventListener('click',()=>{
+        if(search_profile_hall_attachment_resident.checked)
+            search_profile_hall_attachment_resident.checked = false;
+    })
+    search_profile_hall_attachment_resident.addEventListener('click',()=>{
+        if(search_profile_hall_attachment_attached.checked)
+            search_profile_hall_attachment_attached.checked = false;
+    })
+    search_profile_submit.addEventListener('click',()=>{
+        event.preventDefault();
+        let user_input = user_input_search_profile.value;
+        let hall_name = user_input_search_hall_name.value;
+        let attached = search_profile_hall_attachment_attached.checked;
+        let resident = search_profile_hall_attachment_resident.checked;
+        let city = search_profile_city.value;
+        if(user_input === "" && hall_name === "" && !attached && !resident && city === ""){
+            ;
+        }else{
+                let attachment = "";
+                if(attached){
+                    attachment = 'A';
+                }else if(resident){
+                    attachment = 'R';
+                }
+                let data = {
+                    user_input: user_input,
+                    hall_name: hall_name,
+                    attachment: attachment,
+                    city: city                    
+                }
+                sendAndRetriveDatas(data);
+        }
+
+    })
+    async function sendAndRetriveDatas(data){
+        const res = await axios.post("/searchProfile/searchProfile", data)
+                .then((res)=>{
+                    console.log(res.data);
+                    found_profile_list.innerHTML = "";
+                    for(let i=0;i<res.data.length;i++){
+                        let namePlate = 
+                            `<div class="found-profile-card">
+                                <div >
+                                    <img class="found-profile-profile-picture" src="/images/pfp.jpg" alt="">
+                                </div> 
+                                <a class="found-profile-description" href="/user/user_id=${res.data[i].USER_ID}" style="text-decoration: none;">
+                                    <h1 class="found-profile-userName">Tanvir Saad</h1>
+                                    <p class="found-profile-student-id">1905090</p>
+                                </a>
+                                <div class="found-class-follow" onclick="doSomething(${res.data[i].USER_ID})">
+                                <button>Click Me</button>
+                                </div>
+                            </div>`;
+                        found_profile_list.innerHTML += namePlate;
+                    }                    
+                })
+    }
+    search_profile_clear.addEventListener('click',(event)=>{
+        event.preventDefault();
+        user_input_search_hall_name.value = "";
+        user_input_search_profile.value = "";
+        search_profile_hall_attachment_attached.checked = false;
+        search_profile_hall_attachment_resident.checked = false;
+        search_profile_city.value = "";
+
+    })
+    function goToProfilePage(user_id){
+
+    }
+</script>

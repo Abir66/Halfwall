@@ -29,6 +29,9 @@ const searchProfile = require('./routes/searchProfiles/searchProfile');
 // newsfeed routers
 const newsfeed = require('./routes/newsfeed/newsfeed');
 
+// group routers
+const group = require('./routes/groups/groups');
+
 
 
 // middlewares
@@ -38,6 +41,7 @@ app.use('/user', user);
 app.use('/follow', followRoute);
 app.use('/posts', post);
 app.use('/searchProfile',searchProfile);
+app.use('/groups', group);
 
 
 

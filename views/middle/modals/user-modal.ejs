@@ -1,0 +1,42 @@
+<style>
+    .modal {
+        margin-top: 50px;
+    }
+    
+    .modal-userlist-users {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-userlist-userinfo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-userlist-action-buttons .btn {
+        font-size: 0.7rem;
+    }
+
+    .modal-content{
+        padding : var(--card-padding);
+    }
+</style>
+
+
+<div class="modal fade modal-lg" tabindex="-1" id="user-modal">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Follow Requests</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+
+        </div>
+    </div>
+</div>

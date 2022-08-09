@@ -17,13 +17,15 @@
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
     <link rel="stylesheet" href="/css/style.css">
 
 </head>
 
 <body>
 
+    <%- include('middle/modals/user-modal')%> 
+    
     <% let bodyObjects = {} %>
 
 
@@ -42,19 +44,21 @@
             </div>
 
             <div class="middle">
-                <!-- delete this later -->
-                <%- include('groups/groupForm') -%>
                 <% for( let index = 0; index < middle.length; index++ ) { %>
 
                     <% if (middle[index].type === 'profile') { %>
-                        <%- include('middle/profile/profile', {currentUser}); -%>
+                        <%- include('middle/profile/profile'); -%>
+
+                        <% } else if (middle[index].type === 'group') { %>
+                            <%- include('middle/groups/group', {groupData : middle[index].content}); -%>
                     
                     <% } else if (middle[index].type === 'editProfile') { %>
-                        <%- include('middle/profile/editProfile', {currentUser}); -%>
+                        <%- include('middle/profile/editProfile'); -%>
                     
                     <% } else if (middle[index].type === 'create-post') { %>
-                        <%- include('middle/posts/create_post', {currentUser}); -%>
-                    <% } else if (middle[index].type === 'post') { %>
+                        <%- include('middle/posts/create_post'); -%>
+                    
+                        <% } else if (middle[index].type === 'post') { %>
                         <% 
                             if(!bodyObjects.post){
                                 bodyObjects.post = '/js/posts/post.js'
@@ -67,7 +71,6 @@
             </div>
 
             <div class="right">
-                <%- include('right/follow-requests') %>
                 <% for( let index = 0; index < right.length; index++ ) { %>
                     <%- include('right/' + right[index].location, {data : right[index].data}); -%>
                 <% } %>

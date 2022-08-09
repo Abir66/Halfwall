@@ -26,4 +26,9 @@ router.post('/unlike/post_id=:post_id', verify, async (req, res) => {
     res.send(data);
 })
 
+router.get('/getLikersList', async (req, res) => {
+    const liker_list = await db_post.getLikersList(req.query.POST_ID);
+    res.send(liker_list);
+})
+
 module.exports = router;

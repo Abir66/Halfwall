@@ -6,33 +6,38 @@ const { verify } = require('../../middlewares/user-verification');
 router.post('/requestFollow',verify, async (req,res)=>{
     const follower = req.user.USER_ID;
     const following = req.body.USER_ID;
-    console.log(follower, following);
     await DB_follow.requestFollow(follower, following);
     res.send("success")
 });
 
-router.post('/acceptFollow',verify, async (req,res)=>{
+
+router.post('/processFollowRequest',verify, async (req,res)=>{
     const follower = req.body.USER_ID;
     const followee = req.user.USER_ID;
-    await DB_follow.acceptFollow(follower, followee);
-    res.send("success")
+    const action = req.body.ACTION;
+    console.log("action = ",action);
+    const result = await DB_follow.processFollowRequest(follower, followee, action);
+    res.send(result);
 });
 
-router.post('/removeFollowRequest',verify, async (req,res)=>{
+
+router.post('/removeFollowRequestToUser',verify, async (req,res)=>{
     const follower = req.user.USER_ID;
     const following = req.body.USER_ID;
     await DB_follow.removeFollowRequest(follower, following);
     res.send("success")
 });
 
-router.post('/removeFollowToUser',verify, async (req,res)=>{
+
+
+router.post('/unfollow',verify, async (req,res)=>{
     const follower = req.user.USER_ID;
     const followee = req.body.USER_ID;
     await DB_follow.removeFollow(follower, followee);
     res.send("success")
 });
 
-router.post('/removeFollowOFUser',verify, async (req,res)=>{
+router.post('/removeFollower',verify, async (req,res)=>{
     const followee = req.user.USER_ID;
     const follower = req.body.USER_ID;
     await DB_follow.removeFollow(follower, followee);
@@ -44,10 +49,15 @@ router.get('/getFollowRequests',verify, async (req,res)=>{
     res.send(follow_requests)
 });
 
-router.post('/acceptFollowRequest',verify,async (req,res)=>{
-    console.log("---- inside folllow.js /acceptfollow ------");
-    const accept_request = await DB_follow.acceptFollow(req.body.user_id,req.user.USER_ID);
-    console.log(accept_request);
+
+router.get('/getFollowerList',verify, async (req,res)=>{
+    const follower_list = await DB_follow.getFollowerList(req.query.USER_ID);
+    res.send(follower_list);
+})
+
+router.get('/getFollowingList',verify, async (req,res)=>{
+    const following_list = await DB_follow.getFollowingList(req.query.USER_ID);
+    res.send(following_list);
 })
 
 

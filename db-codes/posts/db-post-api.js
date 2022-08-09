@@ -51,10 +51,25 @@ async function checkUserLiked(post_id,user_id){
 }
 
 
+async function getLikersList(post_id){
+    
+    const sql = `SELECT LIKES.USER_ID, USERS.NAME, USERS.PROFILE_PIC
+                FROM LIKES LEFT JOIN USERS ON LIKES.USER_ID = USERS.USER_ID
+                WHERE POST_ID = :post_id
+                ORDER BY TIMESTAMP DESC`;
+    const binds = {
+        post_id : post_id
+    }
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
+
+}
+
 module.exports = {
     addLike,
     removeLike,
     getLikesCount,
-    checkUserLiked
+    checkUserLiked,
+    getLikersList
 }
 

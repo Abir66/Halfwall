@@ -4,7 +4,6 @@ const message_field = document.getElementById('hidden_message');
 let error_message;
 
 form.addEventListener('click', (e) => {
-    console.log("hello world");
     e.preventDefault();
     signup();
 })

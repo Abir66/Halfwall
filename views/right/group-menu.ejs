@@ -1,0 +1,46 @@
+<style>
+    .right .group-menu .menu-item{
+        height: 3.2rem;
+        cursor: pointer;
+        transition: all 300ms ease;
+        position: relative;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .right .group-menu .menu-item:hover{
+        background: var(--color-light);
+    } 
+
+    .right .group-menu .active{
+        background: var(--color-primary);
+    }
+
+    .right .group-menu .active h3{
+        color: var(--color-white);
+    }
+
+    .right .group-menu .active:hover{
+        background: var(--color-primary);
+        opacity: 0.8;
+    }
+
+    .right .group-menu h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-left: 1rem;
+        
+    }
+
+</style>
+
+
+
+
+<div class="right-menu group-menu">
+    <div class="menu-item active"><a href="#"><h3>Group Posts</h3></a></div>
+    <div class="menu-item"><a href="#"><h3>Your Posts</h3></a></div>
+    <div class="menu-item"><a href="#"><h3>Members</h3></a></div>
+    <div class="menu-item"><a href="#"><h3>About</h3></a></div>
+</div>

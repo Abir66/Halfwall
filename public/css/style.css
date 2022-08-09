@@ -292,6 +292,16 @@ main .container .left .profile-picture {
 
 /* ========================== Middle ============================= */
 
+.middle .middle-card{
+    background: var(--color-white);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    margin: 0 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
 .middle .post {
     background: var(--color-white);
     border-radius: var(--card-border-radius);
@@ -366,6 +376,15 @@ main .container .right{
     padding-left: 2rem;
     padding-right: 2rem;
     margin-bottom: 1rem;  
+}
+
+.right .right-menu{
+    background: var(--color-white);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem; 
 }
 
 .right .right-box .search-bar {

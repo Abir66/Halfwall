@@ -5,8 +5,6 @@ const { verify } = require('../../middlewares/user-verification');
 // const { verifyAccessToUpdatePost, verifyAccessToDeletePost } = require('../../middlewares/post-verification');
 
 router.get('/', verify, async (req, res) => {
-
-    console.log("in newsfeed router : ", req.query);
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -24,7 +22,7 @@ router.get('/', verify, async (req, res) => {
     
     const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID, req.query.newsfeed_sort_by, req.query.newsfeed_search_term);
     
-    let middle = [{type : "create-post"}];
+    let middle = [{type : "create-post", location : "posts/create_post"}];
     for (let i = 0; i < posts.length; i++) {
         // Images should be included in the post from the database after implementing FILES SCHEMA
         const IMAGES = ['/images/pfp2.png','/images/pfp.jpg']
@@ -44,8 +42,6 @@ router.get('/', verify, async (req, res) => {
     }
 
     
-    
-
 
     res.render('index', {
         type : "newsfeed",

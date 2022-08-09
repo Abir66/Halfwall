@@ -54,7 +54,6 @@ async function getUserById(user_id){
         user_id : user_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    console.log("in middlewire, verified user - ", result[0])
     return result[0];
 }
 
@@ -149,20 +148,28 @@ async function updateUser(user, user_id){
     return (await database.execute(sql, binds)).outBinds;
 }
 
-async function searchProfile(user_input,user_id,hall_name,attachment,city){
-    const sql = `SELECT *
-                FROM USERS
-                WHERE  (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%' AND (USERS.NAME LIKE '%'||:user_Input||'%'))
-                OR (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%'
-                AND (USERS.STUDENT_ID = :user_id) ) OR  (USERS.HALL LIKE '%'||:hall_name||'%' AND USERS.HALL_ATTACHMENT LIKE '%'||:attachment||'%'
-                AND (USERS.EMAIL LIKE '%'||:user_input||'%') )`
+async function searchProfile(search_data){
+
+    const sql = `SELECT USER_ID, STUDENT_ID, NAME, PROFILE_PIC, DEPARTMENT
+                FROM users
+                WHERE ((UPPER(NAME) LIKE UPPER('%'||:search_input||'%')
+                OR UPPER(EMAIL) LIKE UPPER('%'||:search_input||'%'))
+                OR STUDENT_ID = :student_id)
+                AND NVL(HALL, ' ') like UPPER('%'||:hall ||'%')
+                AND NVL(HALL_ATTACHMENT, ' ') like UPPER('%'||:hall_attachment ||'%')
+                AND NVL(DEPARTMENT, ' ') like UPPER('%'||:department ||'%')
+                AND NVL(CITY, ' ') like UPPER('%'||:city ||'%')
+                `;
     const binds ={
-        user_input : user_input,
-        user_id : user_id,
-        hall_name : hall_name,
-        attachment : attachment
+        search_input : search_data.search_input,
+        student_id : search_data.student_id,
+        hall : search_data.hall,
+        hall_attachment : search_data.hall_attachment,
+        // batch : search_data.batch,
+        department : search_data.department,
+        city : search_data.city
     };
-    // check the sql
+    
     result = (await database.execute(sql,binds)).rows;
     return result;
 }

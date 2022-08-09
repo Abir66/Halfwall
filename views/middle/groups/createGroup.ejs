@@ -1,38 +1,36 @@
 <style>
-    .CreateGroupForm input, select{
+    .groupCreateForm{
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    .group_form_items{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: transparent;
+        margin-top: 1em;
+        
+    }
+
+    .CreateGroupForm input, select, textarea{
         width: 70%;
-        padding: 12px 20px;
-        margin: 8px 0;
+        padding: 0.5rem 0.5rem;
         display: inline-block;
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
         background-color: white;
     }
-    .groupCreateForm{
-        padding: 1rem;
-    }
-    .group_form_items{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: medium;
-        background-color: transparent;
 
-        margin: 1em;
-        font-size: 1.2em;
-    }
     .group_create_form_container{
-        padding: 12px 12px 12px 12px;
+        padding: 1rem 1rem;
     }
-    .group_create_form_container h1{
-        padding-left: 20px;
+    
+    .groupCreateForm .group_create_form_container h2{
+        font-size: 1.5em;
+        font-weight: 500;
     }
-    .label_for_description{
-        padding-left: 20px;
-        font-size: 1.2em;
-        
-    }
+
     #group_form_description{
         width: 100%;
         border: 1px solid #ccc;
@@ -45,27 +43,29 @@
 
 <div class="groupCreateForm card">
     <div class="group_create_form_container">
-        <h1>Create Group</h1>
-        <form action="" class="CreateGroupForm">
+        <h2>Create Group</h2>
+        <form action="/groups/create-group" class="CreateGroupForm" method="post">
             <div class="group_form_items">
-                <Label for="group_form_name">Group Name</Label>
-                <input type="text" class="input_text_box_GroupName" name="GroupForm_Name" id="group_form_name">
+                <label for="group_form_name">Group Name</label>
+                <input type="text" class="input_text_box_GroupName" name="group_name" id="group_form_name" required>
             </div>        
             <div class="group_form_items">
-                <Label for="group_form_privacy">Privacy</Label>
-                <select name="GroupForm_Privacy" id="group_form_privacy">
+                <label for="group_form_privacy">Privacy</label>
+                <select name="group_privacy" id="group_form_privacy" required>
                     <option value="" disable hidden selected ></option>
                     <option value="Private">Private</option>
                     <option value="Public" >Public</option> 
                 </select>   
             </div>
-            <label class="label_for_description">Description</label>
             <div class="group_form_items">
-                <textarea name="GroupForm_Description" id="group_form_description" cols="30" rows="10"></textarea>           
+                <label for="group_form_description" class="label_for_description">Description</label>
+            </div>
+            <div class="group_form_items">
+                <textarea name="group_description" id="group_form_description" cols="30" rows="10"></textarea>           
             </div>
             <div class="group_form_items">
                 <label for="group_form_file">Cover Photo</label>
-                <input type="file" name="FroupForm_File" id="group_form_file">
+                <input type="file" name="cover_photo" id="group_form_file">
             </div>
             <div class="group_form_items">
                 <button id="group_form_submit" class="btn btn-primary btn-block-group-create">create Group</button>            

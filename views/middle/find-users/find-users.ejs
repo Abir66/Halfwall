@@ -1,0 +1,232 @@
+<style>
+    .find-users-container {
+        padding: 1rem;
+    }
+
+    .find-users-form .search-bar {
+        background: var(--color-light);
+        border-radius: var(--border-radius);
+        padding: var(--search-padding);
+    }
+
+
+    .find-users-form .search-bar input[type="search"] {
+        width: 100%;
+        background: transparent;
+        font-size: 0.9rem;
+        color: var(--color-dark);
+    }
+
+    .find-users-form .search-bar .input[type="search"]::placeholder {
+        color: var(--color-gray);
+    }
+
+    .find-users-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: medium;
+        background-color: transparent;
+        margin: 1em;
+        font-size: 0.9rem;
+    }
+
+    .find-users-box {
+        width: 70%;
+        border: 1px solid grey;
+        padding: 0.2rem;
+        padding-left: 0.8rem;
+
+    }
+
+    .find-users-item-checkbox {
+        width: 70%;
+        display: flex;
+        gap: 10px;
+        padding-right: auto;
+    }
+
+    .found-profile-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--color-white);
+        padding: var(--card-padding);
+        border-radius: var(--card-border-radius);
+        margin-bottom: 1rem;
+    }
+    
+    
+    .found-profile-description{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .found-user-count{
+        margin-bottom: 0;
+        margin-left: 0.8rem;  
+    }
+    .found-user-count h2{
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+
+</style>
+
+<div class="card">
+    <div class="find-users-container">
+        <form action="/user/find-users" method="get" class="find-users-form" id="find-users-form">
+            <div class="find-users-item">
+                <h3 style="font-size: 1.5rem; font-weight: 500;">Search User</h3>
+                <h5 class="text-muted" style="font-size: 1rem;" onclick="clear_form()">clear</h5>
+                
+            </div>
+
+            <div class="search-bar">
+                <input type="search" name="search_input" id="search_user_search_input"
+                    placeholder="Name, Email or Student ID">
+            </div>
+
+
+            <div class="find-users-item">
+                <label for="find-users-hall-name">Hall</label>
+                <select name="hall" class="find-users-box" id="find-users-hall">
+                    <option value="">None</option>
+                    <option value="SHUHRAWARDY" selected>Suhrawardy hall</option>
+                    <option value="SHER-E-BANGLA" selected>Sher-e-Bangla hall</option>
+                    <option value="Ahsanullah" selected>Ahsanullah hall</option>
+                    <option value="CHAATTRI" selected>Chattri hall</option>
+                    <option value="Nazrul" selected>Kazi Nazrul hall</option>
+                    <option value="TITUMIR" selected>Titumir hall</option>
+                    <option value="RASHID" selected>Rashid hall</option>
+                    <option value="" disabled hidden selected></option>
+                </select>
+            </div>
+
+            <div class="find-users-item">
+                <p>Attchment</p>
+                <div class="find-users-item-checkbox">
+                    <div class="form-check">
+                        <input class="form-check-input search-user-hall-attachment" type="checkbox"
+                            name="hall_attachment" value="R" id="find-users-hall-attachment-resident">
+                        <label class="form-check-label" for="find-users-hall-attachment">
+                            Resident
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input search-user-hall-attachment" type="checkbox"
+                            name="hall_attachment" value="A" id="find-users-hall-attachment-attached">
+                        <label class="form-check-label" for="find-users-hall-attachment-attached">
+                            Attached
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="find-users-item">
+                <label for="find-users-city">City</label>
+                <input type="search" class="find-users-box" name="city" id="find-users-city">
+            </div>
+            <div class="find-users-item">
+                <button class="btn btn-primary w-100" id="find-users-submit">Search</button>
+            </div>
+
+        </form>
+        <p class="hidden_message" id="empty-form-error-message" style="color:red" hidden>No input</p>
+    </div>
+
+   
+     
+    <% if (data.searched) { %>
+    <div class="found-users" id = "found-users">
+
+        <div class="found-profile-card found-user-count">
+            <% if (!data.user_list || data.user_list.length == 0) { %>
+                <div class="user-search-result">
+                    <h3>No user found</h3>
+                </div>
+            <% } else { %>
+    
+                <div class="user-search-result">
+                    <h2><%= data.user_list.length %> users found</h2>
+                </div>
+            <% } %>
+        </div>
+        
+        <% if (data.user_list && data.user_list.length > 0) { %>
+        <div class="found-profile-list" id="found-profile-list">
+            <% for( let index = 0; index < data.user_list.length; index++ ) { %>
+                <div class="found-profile-card">
+                    <a class="found-profile-description" href="/user/user_id=<%= data.user_list[index].USER_ID %>">
+                        <div class = "profile-picture"><img  src="/images/pfp.jpg" alt="pfp"></div> 
+                    
+                        <div class="found-profile-info">
+                            <h3 class="found-profile-userName" style="font-size : 1rem; font-weight : 500;"><%=data.user_list[index].NAME%></h3>
+                            <p class="found-profile-student-id text-muted" style="font-size : 0.8rem;"">1905090</p>
+                        </div>
+                    </a>
+                </div>
+            <% } %> 
+
+        </div>
+        <% } %>
+    </div>
+
+    <% } %>
+    
+    
+</div>
+
+<script>
+
+    const find_user_form = document.getElementById("find-users-form");
+    const found_profile_list = document.getElementById("found-profile-list");
+
+    // event listerner of submit
+    find_user_form.addEventListener("submit", function (e) {
+        if (check_empty_form()) {
+            e.preventDefault();
+            document.getElementById("empty-form-error-message").hidden = false;
+            return false
+        }
+        else return true;
+    });
+
+    // check if the form is empty or not
+    function check_empty_form() {
+        const search_input = document.getElementById("search_user_search_input").value.trim();
+        const hall = document.getElementById("find-users-hall").value;
+        const city = document.getElementById("find-users-city").value.trim();
+        const attached = document.getElementById("find-users-hall-attachment-resident").checked;
+        const resident = document.getElementById("find-users-hall-attachment-attached").checked;
+
+        var hall_attachment = attached || resident;
+        // var inputElements = document.getElementsByClassName('.search-user-hall-attachment');
+        // for (var i = 0; inputElements[i]; ++i) {
+        //     if (inputElements[i].checked) {
+        //         hall_attachment = inputElements[i].value;
+        //         break;
+        //     }
+        // }
+
+        console.log(hall_attachment, attached, resident);
+        console.log(hall, city, search_input);
+
+        if ((!search_input || search_input === '') && (!hall || hall === '') && (!city || city === '') && !hall_attachment) return true;
+        
+        else return false;
+    }
+
+    // clear the form
+    function clear_form() {
+        document.getElementById("search_user_search_input").value = "";
+        document.getElementById("find-users-hall").value = "";
+        document.getElementById("find-users-city").value = "";
+        document.getElementById("find-users-hall-attachment-resident").checked = false;
+        document.getElementById("find-users-hall-attachment-attached").checked = false;
+        document.getElementById("empty-form-error-message").hidden = true;
+        document.getElementById("found-users").hidden = true;
+    }
+
+</script>

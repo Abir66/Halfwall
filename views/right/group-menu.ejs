@@ -36,11 +36,16 @@
 </style>
 
 
-
-
 <div class="right-menu group-menu">
-    <div class="menu-item active"><a href="#"><h3>Group Posts</h3></a></div>
+    <div class="menu-item"><a href="#"><h3>Group Posts</h3></a></div>
     <div class="menu-item"><a href="#"><h3>Your Posts</h3></a></div>
-    <div class="menu-item"><a href="#"><h3>Members</h3></a></div>
-    <div class="menu-item"><a href="#"><h3>About</h3></a></div>
+    <div class="menu-item"><a href="/groups/group_id=<%= group.GROUP_ID %>/members "><h3>Members</h3></a></div>
+    <% if (data.isAdmin) { %>
+        <div class="menu-item"><a href="#"><h3>Pending members</h3></a></div>
+    <% } %>
+    <div class="menu-item <% if (data.selected == 'about') { %> active <% } %>"><a href="#"><h3>About</h3></a></div>
+    <div class="menu-item"><a href="#"><h3>Leave Group</h3></a></div>
+    <% if (data.isAdmin) { %>
+    <div class="menu-item"><a href="#"><h3>Delete Group</h3></a></div>
+    <% } %>
 </div>

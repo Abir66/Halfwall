@@ -31,61 +31,48 @@ async function deleteGroup(group_id){
 }
 
 
-async function getJoinedGroups(user_id){
-    const sql = `SELECT G.*, (SELECT COUNT(*) FROM GROUP G2 WHERE G2.GROUP_ID = G.GROUP_ID) AS GROUP_MEMBER_COUNT 
-                FROM GROUPS G WHERE G.GROUP_ID IN (SELECT GROUP_ID FROM GROUP_MEMBERS WHERE USER_ID = :user_id)
-                ORDER BY GROUP_MEMBER_COUNT DESC`;
-    
+// get group by group id
+async function getGroup(group_id){
+    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID ) AS GROUP_MEMBER_COUNT
+                FROM GROUPS G WHERE GROUP_ID = :group_id`;
     const binds = {
-        user_id : user_id
+        group_id : group_id
     }
-    const result = (await database.execute(sql, binds)).rows;
+    const result = (await database.execute(sql, binds)).rows[0];
     return result;
 }
 
 
-async function getPendingGroups(user_id){
-    const sql = `SELECT G.*, (SELECT COUNT(*) FROM GROUP G2 WHERE G2.GROUP_ID = G.GROUP_ID) AS GROUP_MEMBER_COUNT
-                FROM GROUPS G WHERE G.GROUP_ID IN (SELECT GROUP_ID FROM GROUP_PENDING WHERE USER_ID = :user_id)`;
+async function isAdmin(group_id, user_id){
+    const sql = `SELECT COUNT(*) AS ROW_COUNT FROM GROUP_ADMINS WHERE GROUP_ID = :group_id AND USER_ID = :user_id`;
     const binds = {
+        group_id : group_id,
         user_id : user_id
     }
-    const result = (await database.execute(sql, binds)).rows;
-    return result;
+    const result = (await database.execute(sql, binds)).rows[0];
+    return result.ROW_COUNT > 0;
 }
 
-
-async function joinGroupRequest(group_id, user_id){
-    const sql = `BEGIN
-                    JOIN_GROUP(:group_id, :user_id, :result);
-                END;`;
-    const binds={
+async function isMember(group_id, user_id){
+    const sql = `SELECT COUNT(*) AS ROW_COUNT FROM GROUP_MEMBERS WHERE GROUP_ID = :group_id AND USER_ID = :user_id`;
+    const binds = {
         group_id : group_id,
-        user_id : user_id,
-        result: {
-            dir: oracledb.BIND_OUT, 
-            type: oracledb.VARCHAR2
-        }
+        user_id : user_id
     }
-    return (await database.execute(sql, binds)).outBinds;
+    const result = (await database.execute(sql, binds)).rows[0];
+    return result.ROW_COUNT > 0;
 }
 
-
-async function processPendingGroupmEMBER(group_id, user_id, action){
-    const sql = `BEGIN
-                    PROCESS_PENDING_GROUP_MEMBER(:group_id, :user_id, :action, :result);
-                END;`;
-    const binds={
-        group_id : group_id,
-        user_id : user_id,
-        action : action,
-        result: {
-            dir: oracledb.BIND_OUT,
-            type: oracledb.VARCHAR2
-        }
+// get group privacy
+async function getGroupPrivacy(group_id){
+    const sql = `SELECT GROUP_PRIVACY FROM GROUPS WHERE GROUP_ID = :group_id`;
+    const binds = {
+        group_id : group_id
     }
-    return (await database.execute(sql, binds)).outBinds;
+    const result = (await database.execute(sql, binds)).rows[0];
+    return result.GROUP_PRIVACY;
 }
+
 
 
 
@@ -93,10 +80,9 @@ async function processPendingGroupmEMBER(group_id, user_id, action){
 module.exports = {
     createGroup,
     deleteGroup,
-    getJoinedGroups,
-    getPendingGroups,
-    joinGroupRequest,
-    processPendingGroupmEMBER
-
+    getGroup,
+    isAdmin,
+    isMember,
+    getGroupPrivacy
 }
 

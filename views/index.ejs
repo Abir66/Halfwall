@@ -46,26 +46,22 @@
             <div class="middle">
                 <% for( let index = 0; index < middle.length; index++ ) { %>
 
-                    <% if (middle[index].type === 'profile') { %>
-                        <%- include('middle/profile/profile'); -%>
+                   
+                    <% if (middle[index].type === 'group') { %>
+                        <%- include('middle/groups/group', {groupData : middle[index].content}); -%>
 
-                        <% } else if (middle[index].type === 'group') { %>
-                            <%- include('middle/groups/group', {groupData : middle[index].content}); -%>
-                    
-                    <% } else if (middle[index].type === 'editProfile') { %>
-                        <%- include('middle/profile/editProfile'); -%>
-                    
-                    <% } else if (middle[index].type === 'create-post') { %>
-                        <%- include('middle/posts/create_post'); -%>
-                    
-                        <% } else if (middle[index].type === 'post') { %>
+                    <% } else if (middle[index].type === 'post') { %>
                         <% 
                             if(!bodyObjects.post){
                                 bodyObjects.post = '/js/posts/post.js'
                             }
                         %>
                         <%- include('middle/posts/post', {postData : middle[index].content}); -%>
-                    <% } %>
+                    
+                    <% } else { %>
+                        <%- include('middle/' + middle[index].location, {data : middle[index].data}); -%>
+                    <% } %> 
+
                 <% } %> 
                 
             </div>

@@ -70,7 +70,7 @@ async function editProfile(user_id) {
     if (res.data === "success") {
         window.location.replace('/user/user_id=' + user_id);
     } else {
-        console.log(res.data);
+
         alert.innerHTML = `<div class="alert alert-warning alert-dismissible" id="edit-profile-alert" margin-top: 1rem;">
             ${res.data}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

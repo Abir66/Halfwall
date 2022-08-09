@@ -9,8 +9,6 @@ const { response } = require('express');
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
     
-    console.log("in user router : ", req.query);
-    
     const currentUser = {
         USER_ID : req.user.USER_ID,
         STUDENT_ID : req.user.STUDENT_ID,
@@ -50,7 +48,11 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
     
     //console.log(user);
     
-    middle = [{type : 'profile', content : 'profile'}]
+    middle = [{type : 'profile', location : 'profile/profile'}]
+
+    // if user is current user
+    if(req.user.USER_ID == req.params.user_id)
+        middle.push({type : 'create-profile', location : 'posts/create_post'});
 
 
     // inefficient. have to change it later
@@ -129,7 +131,7 @@ router.get('/editProfile', verify, async(req,res)=>{
         PROFILE_PIC : '/images/pfp.jpg', // will change it later
     }
     
-    let middle = [{type : 'editProfile'}];
+    let middle = [{type : 'editProfile', location : 'profile/editProfile'}];
     res.render('index', {
         type : "editProfile",
         currentUser : currentUser,
@@ -157,6 +159,55 @@ router.post('/editProfile', verify, async(req,res)=>{
 });
 
 
+router.get('/find-users',verify,async(req,res)=>{
+   
+    let searched = false;
+    let users = undefined;
+    if(Object.keys(req.query).length > 0){
+        searched = true;
+        console.log(req.query);
+
+        const matches = req.query.search_input.replace(/\s+/g, " ").trim().match(/(\d+)/);
+        let student_id = undefined;
+        if(matches!= null && matches[0].length === 7 && !isNaN(matches[0]) ) student_id = parseInt(matches[0]);
+
+        if(!req.query.search_input) req.query.search_input = '';
+        if(!req.query.hall) req.query.hall = '';
+        if(!req.query.batch) req.query.batch = '';
+        if(!req.query.department) req.query.department = '';
+        if(!req.query.city) req.query.city = '';
+        if(!req.query.hall_attachment) req.query.hall_attachment = '';
+
+        const search_data = {
+            search_input : req.query.search_input.replace(/\s+/g, " ").trim(),
+            student_id : student_id,
+            hall : req.query.hall.replace(/\s+/g, " ").trim(),
+            hall_attachment : req.query.hall_attachment.replace(/\s+/g, " ").trim(),
+            department : req.query.department.replace(/\s+/g, " ").trim(),
+            batch : req.query.batch.replace(/\s+/g, " ").trim(),
+            city : req.query.city.replace(/\s+/g, " ").trim(),
+        }
+        users = await DB_user.searchProfile(search_data);
+    };
+    
+
+    const data = {
+        searched : searched,
+        user_list : users
+    }
+    
+    middle = [{type : 'find-users', location : 'find-users/find-users', data : data}];
+    
+    res.render('index', {
+        type : "find-users",
+        currentUser : req.user,
+        title : 'Find Users',
+        left : ['left-profile', 'sidebar'],
+        right : [],
+        middle : middle
+    });
+    
+})
 
 
 

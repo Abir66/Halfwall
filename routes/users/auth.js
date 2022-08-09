@@ -46,12 +46,8 @@ router.post('/signin', async (req, res) => {
 })
 
 router.get('/signout', verify, (req, res) => {
-    //destroy token
     res.cookie('auth-token', '', { maxAge: 1 });
-    console.log("logged out");
-    // redirect to login page
-    //res.redirect('/auth/signin');
-    res.send("signed out");
+    res.redirect('/auth/signin');
 });
 
 router.get('/signin', (req, res) => {
@@ -107,9 +103,6 @@ router.post('/signup', async (req, res) => {
         return;
     }
 
-    // convert result to int
-    // result = parseInt(result);
-
     // do jwt token things
     const token = jwt.sign({ user_id: result }, process.env.JWT_ACCESS_TOKEN);
     let options = {
@@ -123,13 +116,6 @@ router.post('/signup', async (req, res) => {
     res.send("success");
 })
 
-router.get('/groupForm', (req, res) => {
-    res.render('group/groupForm');
-})
-
-// router.get('/verify', verify, (req, res) => {
-//     res.send("all good")
-// });
 
 
 module.exports = router;

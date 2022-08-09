@@ -11,7 +11,6 @@ async function verify(req,res,next){
     try{
         const verified = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
         req.user = await DB_user.getUserById(verified.user_id);
-        console.log("User verified", verified.user_id)
         next();
     }catch(err){
         res.status(400).send('Invalid Token');

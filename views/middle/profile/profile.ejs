@@ -176,7 +176,6 @@
             USER_ID : USER_ID
         }
         const res = await axios.post("/follow/requestFollow", data)
-        console.log(res)
 
         if(res.data === "success"){
             window.location.reload();
@@ -190,7 +189,7 @@
             USER_ID : USER_ID
         }
         const res = await axios.post("/follow/unfollow", data)
-        console.log(res)
+
         if(res.data === "success"){
             window.location.reload();
         }else{
@@ -204,7 +203,6 @@
             USER_ID : USER_ID
         }
         const res = await axios.post("/follow/removeFollower", data)
-        console.log(res)
         if(res.data === "success"){
             document.querySelector(`#modal-userlist-user-${USER_ID} .modal-userlist-action-buttons`).remove();
         }else{
@@ -218,7 +216,6 @@
             USER_ID : USER_ID
         }
         const res = await axios.post("/follow/removeFollowRequestToUser", data)
-        console.log(res)
         if(res.data === "success"){
             window.location.reload();
         }else{

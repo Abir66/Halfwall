@@ -3,7 +3,6 @@ const database = new Database();
 
 
 async function requestFollow(follower, following){
-    console.log (follower, following);
     const sql =`INSERT INTO follow_requests
                 VALUES (:follower, :following, CURRENT_TIMESTAMP)`;
 

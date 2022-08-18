@@ -28,6 +28,32 @@
         font-weight: 500;
     }
 
+    .group-submenu{
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 1rem;
+    }
+
+    .group-submenu .submenu-item{
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-black);
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .group-submenu .active{
+        color: var(--color-primary);
+        border-bottom: 1px solid var(--color-primary);
+    }
+
+    .group-submenu .submenu-item:hover{
+        opacity: 0.8;
+    }
+
 </style>
 
 
@@ -39,11 +65,56 @@
     </div>
     
     <div class="group-info">
-        <h3 class = "group-name"><%= data.group_name %> </h3>
+        <h3 class = "group-name"><%= group.GROUP_NAME %> </h3>
         <div class="group-details">
-            <p class="text-muted"><%= data.group_privacy %> Group | <%= data.group_member_count %> members</p>
+            <p class="text-muted"><%= group.GROUP_PRIVACY %> Group | <%= group.GROUP_MEMBER_COUNT %> members</p>
         </div>
     </div>
 
+    <div class="group-submenu">
+        <a href="/groups/group_id=<%= group.GROUP_ID%>/posts"><div class="submenu-item  <% if (data.active === 'Posts') { %> active <% } %>">Posts</div></a>
+        <a href="/groups/group_id=<%= group.GROUP_ID%>/about"><div class="submenu-item  <% if (data.active === 'About') { %> active <% } %>">About</div></a>
+        <a href="/groups/group_id=<%= group.GROUP_ID%>/members"><div class="submenu-item  <% if (data.active === 'Members') { %> active <% } %>">Members</div></a>
+
+        <% if (isAdmin) { %><div class="submenu-item" data-bs-toggle="modal" data-bs-target="#delete_group_modal">Delete Group</div><% } %>
+        <% if (isAdmin) { %><div class="submenu-item" >Edit Group</div><% } %>
+    </div>
+
+    
+  <!-- Modal -->
+  <div class="modal fade" id="delete_group_modal" tabindex="-1" aria-labelledby="delete_group_modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 1.2rem; font-weight: 500;">Are you sure you want to delete this group "<%= group.GROUP_NAME %>"?</p>
+          <p style="font-size: 0.8rem; color: red;">This action cannot be undone</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="deleteGroup(<%=group.GROUP_ID%>)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
+
+
+<script>
+    async function deleteGroup(group_id){
+        console.log(group_id);
+
+        // send axios request to delete group
+        const response = await axios.post(`/groups/group_id=${group_id}/delete-group`);
+
+        if (response.data === 'success') window.location.replace("/groups");
+        
+        // get the modal
+        let modal = document.getElementById('delete_group_modal');
+        modal = bootstrap.Modal.getInstance(modal)
+        modal.hide();
+    }
+</script>

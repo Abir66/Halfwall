@@ -15,7 +15,6 @@ router.post('/processFollowRequest',verify, async (req,res)=>{
     const follower = req.body.USER_ID;
     const followee = req.user.USER_ID;
     const action = req.body.ACTION;
-    console.log("action = ",action);
     const result = await DB_follow.processFollowRequest(follower, followee, action);
     res.send(result);
 });

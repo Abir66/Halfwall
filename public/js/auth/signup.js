@@ -29,7 +29,6 @@ async function signup(){
     const name = document.getElementById('name').value.replace(/ +(?= )/g,'');
     const password1= document.getElementById('pass1').value.replace(/ +(?= )/g,'');
     const password2= document.getElementById('pass2').value.replace(/ +(?= )/g,'');
-    console.log(email+" "+studentId+" "+name+" "+password1);
     
     if(!check_inputs(email, studentId, name, password1, password2)){
         message_field.innerHTML = error_message;

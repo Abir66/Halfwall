@@ -27,7 +27,6 @@ router.post('/signin', async (req, res) => {
 
     else if (result.PASSWORD !== password) {
         res.send("Password incorrect");
-        console.log("huh");
         return;
     }
 

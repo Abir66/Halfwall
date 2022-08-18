@@ -42,7 +42,7 @@ async function getUserByStudentId(student_id){
         student_id : student_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    console.log("result : ", result)
+    // console.log("result : ", result)
     return result[0];
 }
 

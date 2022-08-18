@@ -33,7 +33,7 @@ async function deleteGroup(group_id){
 
 // get group by group id
 async function getGroup(group_id){
-    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID ) AS GROUP_MEMBER_COUNT
+    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT
                 FROM GROUPS G WHERE GROUP_ID = :group_id`;
     const binds = {
         group_id : group_id
@@ -42,26 +42,6 @@ async function getGroup(group_id){
     return result;
 }
 
-
-async function isAdmin(group_id, user_id){
-    const sql = `SELECT COUNT(*) AS ROW_COUNT FROM GROUP_ADMINS WHERE GROUP_ID = :group_id AND USER_ID = :user_id`;
-    const binds = {
-        group_id : group_id,
-        user_id : user_id
-    }
-    const result = (await database.execute(sql, binds)).rows[0];
-    return result.ROW_COUNT > 0;
-}
-
-async function isMember(group_id, user_id){
-    const sql = `SELECT COUNT(*) AS ROW_COUNT FROM GROUP_MEMBERS WHERE GROUP_ID = :group_id AND USER_ID = :user_id`;
-    const binds = {
-        group_id : group_id,
-        user_id : user_id
-    }
-    const result = (await database.execute(sql, binds)).rows[0];
-    return result.ROW_COUNT > 0;
-}
 
 // get group privacy
 async function getGroupPrivacy(group_id){
@@ -73,7 +53,59 @@ async function getGroupPrivacy(group_id){
     return result.GROUP_PRIVACY;
 }
 
+async function getGroupsForUser(user_id, search_data){
 
+    let group_privacy_str = '', group_membership_str = '', group_name_str = '';
+    
+    // GROUP_PRIVACY
+    if(search_data.group_privacy.length > 0) group_privacy_str = `AND G.group_privacy IN ('${search_data.group_privacy.join("','")}')`;
+    
+    // GROUP_MEMBERSHIP
+    if(!(search_data.group_membership.length == 0 || search_data.group_membership.includes('all_groups'))) {
+        let subquery = '';
+        for(let i = 0; i <  search_data.group_membership.length; i++){
+            if(search_data.group_membership[i] == 'member') subquery += `SELECT GROUP_ID FROM GROUP_MEMBERS WHERE USER_ID = :user_id AND (STATUS = 'MEMBER' OR STATUS = 'ADMIN')`;
+            else if(search_data.group_membership[i] == 'pending') subquery += `SELECT GROUP_ID FROM GROUP_MEMBERS WHERE USER_ID = :user_id AND STATUS = 'PENDING' `
+            else if(search_data.group_membership[i] == 'admin') subquery += `SELECT GROUP_ID FROM GROUP_MEMBERS WHERE USER_ID = :user_id AND STATUS = 'ADMIN' ` 
+
+            if(i < search_data.group_membership.length - 1) subquery += 'UNION ';
+        }
+
+        group_membership_str = `AND G.GROUP_ID IN (${subquery})`;
+    }
+
+    if(search_data.search_term && search_data.search_term.length > 0) group_name_str = `AND UPPER(G.GROUP_NAME) LIKE UPPER('%${search_data.search_term}%')`;
+
+    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT, GROUP_MEMBERSHIP_STATUS(G.GROUP_ID, :user_id) AS GROUP_MEMBERSHIP_STATUS
+                FROM GROUPS G
+                WHERE G.GROUP_ID > 100
+                ${group_name_str}
+                ${group_privacy_str}
+                ${group_membership_str}
+
+                `;
+    const binds = {
+        user_id : user_id
+    };
+
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
+
+
+}
+
+async function getGroupAbout(group_id){
+
+    const sql = `SELECT GROUP_DESCRIPTION, TIME_OF_CREATION, (SELECT COUNT(*) AS POST_COUNT FROM POSTS P WHERE P.GROUP_ID = :group_id) AS POST_COUNT
+                FROM GROUPS WHERE GROUP_ID = :group_id`;
+    const binds = {
+        group_id : group_id
+    }
+    const result = (await database.execute(sql, binds)).rows[0];
+    return result;
+   
+
+}
 
 
 // export
@@ -81,8 +113,8 @@ module.exports = {
     createGroup,
     deleteGroup,
     getGroup,
-    isAdmin,
-    isMember,
-    getGroupPrivacy
+    getGroupPrivacy,
+    getGroupsForUser,
+    getGroupAbout
 }
 

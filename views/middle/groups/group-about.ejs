@@ -1,0 +1,37 @@
+<style>
+
+    .group-about{
+        padding: 1rem;
+        border: none;
+        margin-bottom: 1rem;
+    }
+
+    .group-about h2{
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .group-about p{
+        white-space: pre-line;
+    }
+
+</style>
+
+
+<div class="card group-about">
+    <h2>About</h2>
+    <p><%=data.description%></p>
+</div>
+
+
+<div class="card group-about">
+    <h2>Created on</h2>
+    <p><%=data.creation_date%></p>
+</div>
+
+<div class="card group-about">
+    <h2>Posts</h2>
+    <p><%=data.post_count%> posts</p>
+</div>
+
+

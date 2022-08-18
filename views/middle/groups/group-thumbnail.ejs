@@ -1,0 +1,51 @@
+<style>
+    .group-thumbnail {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: var(--card-padding);
+        gap: 1rem;
+    }
+
+    .group-thumbnail .group-picture {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 15%;
+    }
+
+    .group-thumbnail .group-picture img {
+        border-radius: 10px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+    }
+
+    .group-thumbnail .group-info .group-name{
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+</style>
+
+<div class="group-list card">
+
+    <% for( const group of data.groups ) { %>
+        <a href="/groups/group_id=<%= group.GROUP_ID %>">
+            <div class="group-thumbnail">
+                <div class="group-picture"><img src="images/pfp2.png" alt="pfp"></div>
+                <div class="group-info">
+                    <h3 class = "group-name"><%=  group.GROUP_NAME %></h3>
+                    <div class="group-details">
+                        <p class="text-muted"><%=  group.GROUP_PRIVACY %> Group | <%=  group.GROUP_MEMBER_COUNT %> members</p>
+                        <% if ( group.GROUP_MEMBERSHIP_STATUS == 'admin') { %><p class="text-muted">You are an admin of this group</p>
+                        <% } else if ( group.GROUP_MEMBERSHIP_STATUS == 'member') { %><p class="text-muted">Joined</p>
+                        <% } else if ( group.GROUP_MEMBERSHIP_STATUS == 'pending') { %><p class="text-muted">Join Request Pending</p><% } %>
+                    </div>
+                </div>
+            </div>
+        </a>
+    <% } %>
+
+
+</div>

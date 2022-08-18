@@ -21,32 +21,112 @@
         
     }
 
+    .group-members h3{
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .group-members .group-member-action-buttons .btn{
+        font-size : 0.7rem;
+    }
+
+    .group-members .member-option-buttons{
+        width: 50%;
+        display: flex;
+        justify-content: flex-end;
+    }
 
 </style>
 
 <div class="group-members">
 
-    <% for( let i = 0; i < data.group_members.length; i++ ) { %>
+    <h3>Admins : <%=data.group_admins.length%></h3>
+    <% for( let admin of data.group_admins ) { %>
 
-        <div class="group-member">
-
-        <a href="/user/user_id=<%= data.group_members[i].USER_ID %>">
+        <div class="group-member" id = 'group_member_<%= admin.USER_ID %>'>
+        <a href="/user/user_id=<%= admin.USER_ID %>">
             <div class="group-member-info">
                 <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
-                <div class="group-member-name"><%= data.group_members[i].NAME %></div>
+                <div class="group-member-name"><%= admin.NAME %></div>
             </div>
         </a>
-        
-        <% if (data.isAdmin && currentUser.USER_ID != data.group_members[i].USER_ID) { %>
+        <% if (isAdmin && currentUser.USER_ID != admin.USER_ID) { %>
             <div class="group-member-action-buttons">
-                <button class="btn btn-primary">Make admin</button>
-                <button class="btn btn-blank">Remove</button>
+                <button class="btn btn-blank" onclick="processMember(<%=admin.USER_ID%>, 'remove-admin')">Remove Admin</button>
             </div>
         <% } %>
-        
-
         </div>
-
-
     <% } %>
+
+    
+    <% if (isMember || group.GROUP_PRIVACY == 'PUBLIC') { %>
+        <h3>Group members : <%=data.group_members.length%></h3>
+        <% for( let member of data.group_members ) { %>
+    
+            <div class="group-member" id = 'group_member_<%= member.USER_ID %>'>
+            <a href="/user/user_id=<%= member.USER_ID %>">
+                <div class="group-member-info">
+                    <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
+                    <div class="group-member-name"><%= member.NAME %></div>
+                </div>
+            </a>
+            <% if (isAdmin && currentUser.USER_ID != member.USER_ID) { %>
+                <div class="group-member-action-buttons member-option-buttons">
+                    <div>
+                        <button class="btn btn-primary" onclick="processMember(<%=member.USER_ID%>, 'make-admin')">Make admin</button>
+                        <button class="btn btn-blank" onclick="processMember(<%=member.USER_ID%>, 'remove-member')">Remove</button>
+                    </div>
+                </div>
+            <% } %>
+            </div>
+        <% } %>
+    <% } %>
+    
+    
+    
+    <% if (isAdmin) { %>
+        <h3>Pending members : <%=data.pending_members.length%></h3>
+        <% for( let member of data.pending_members) { %>
+
+            <div class="group-member" id = 'group_member_<%= member.USER_ID %>'>
+            <a href="/user/user_id=<%= member.USER_ID %>">
+                <div class="group-member-info">
+                    <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
+                    <div class="group-member-name"><%= member.NAME %></div>
+                </div>
+            </a>
+            <% if (isAdmin && currentUser.USER_ID != member.USER_ID) { %>
+                <div class="group-member-action-buttons">
+                    <button class="btn btn-primary" onclick="processMember(<%=member.USER_ID%>, 'accept-pending')">Accept</button>
+                    <button class="btn btn-blank" onclick="processMember(<%=member.USER_ID%>, 'remove-pending')">Remove</button>
+                </div>
+            <% } %>
+            </div>
+        <% } %>
+    <% } %>
+
 </div>
+
+<script>
+
+    async function processMember(user_id, action){
+        const response = await axios.post("/groups/group_id=<%=group.GROUP_ID%>/process-group-member", {
+            member_id : user_id,
+            action : action
+        });
+
+        
+        if(response.data.result === 'success'){
+            // remove buttons
+            console.log('group_member_' + user_id)
+            const member = document.getElementById('group_member_' + user_id);
+            const buttons = member.getElementsByClassName('group-member-action-buttons')[0];
+            buttons.innerHTML = '';
+        }
+        
+    }
+
+
+
+</script>

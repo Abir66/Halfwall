@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const ejs = require("ejs");
+const multer = require('multer');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
@@ -34,6 +35,7 @@ const group = require('./routes/groups/groups');
 
 
 
+
 // middlewares
 app.use('/auth', auth);
 app.use('/newsfeed', newsfeed);
@@ -42,6 +44,14 @@ app.use('/follow', followRoute);
 app.use('/posts', post);
 app.use('/groups', group);
 
+
+
+// default error handler
+app.use((err, req, res, next) => {
+    console.log(err);
+    if(err) res.status(500).send(err.message);
+    else res.send('success')
+})
 
 
 const port = process.env.PORT || 5000;

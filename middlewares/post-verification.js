@@ -1,33 +1,39 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const db_user = require('../db-codes/users/db-user-api');
-const db_post= require('../db-codes/posts/db-post-api');
+const DB_user = require('../db-codes/users/db-user-api');
+const DB_group = require('../db-codes/groups/db-group-api');
+const DB_group_member = require('../db-codes/groups/db-group-member-api');
+const DB_post = require('../db-codes/posts/db-post-api');
+const DB_follow = require('../db-codes/users/db-follow-api');
 
 async function verifyAccessToViewPost(req,res,next){
-    const cookie  = req.header('cookie');
-    if(!cookie) return res.redirect('/api/auth/login?status=Access Denied');
-    const token = cookie.slice(11);
+    
+    const post_metaData = await DB_post.getGroupAndUserOfPost(req.params.post_id);
+    res.locals.postViewAccess = false;
 
-    // have to do something here...
-    // try{
-    //     const verified = jwt.verify(token, process.env.JWT_TOKEN_HELPER);
-    //     req.user =await DB_user.getUserById(verified.user_id);
-    //     const post = await DB_post.getPost(req.params.post_id);
-    //     if(post.POST_TYPE === 'group_post'){
-    //         const group_post = await DB_group_post.getGroupPost(req.user.USER_ID, req.params.post_id);
-    //         const group_member = await DB_group_member.getGroupMember(req.user.USER_ID,group_post.GROUP_ID);
-    //         if(group_member === undefined) return res.redirect('/api/auth/login?status=Access Denied');
-    //     }
-    //     next();
+    if(!post_metaData) return res.status(404).send('Post not found');
 
-    // }catch(err){
-    //     res.status(400).send('Invalid Token');
-    // }
+    else if(post_metaData.USER_ID == req.user.USER_ID) res.locals.postViewAccess = true;
+    
+    else if(post_metaData.GROUP_PRIVACY == 'PUBLIC') res.locals.postViewAccess = true;
+    
+    // check if group member
+    else if(post_metaData.GROUP_PRIVACY == 'PRIVATE'){
+        const isMember = await DB_group_member.isMember(post_metaData.GROUP_ID, req.user.USER_ID);
+        if(isMember) res.locals.postViewAccess = true; 
+    }
 
+    // check if follower
+    else if(post_metaData.GROUP_PRIVACY == 'PERSONAL PRIVATE'){
+        const isFollower = await DB_follow.followedUser(req.user.USER_ID, post_metaData.USER_ID);
+        if(isFollower) res.locals.postViewAccess = true;  
+    }
     next()
 }
 
 
 
 
-module.exports = {verify};
+module.exports = {
+    verifyAccessToViewPost
+};

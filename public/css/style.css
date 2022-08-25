@@ -302,62 +302,6 @@ main .container .left .profile-picture {
     line-height: 1.5;
 }
 
-.middle .post {
-    background: var(--color-white);
-    border-radius: var(--card-border-radius);
-    padding: var(--card-padding);
-    margin: 0 0;
-    margin-bottom: 1.5rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
-}
-
-.middle .post .head {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    display: flex;
-    justify-content: space-between;
-}
-
-.middle .post .user {
-    display: flex;
-    gap: 1rem;
-}
-
-.middle .post .username {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-.middle .post .post-text {
-    font-size: 1rem;
-    padding: 1rem;
-}
-
-
-.middle .post .photo {
-    overflow: hidden;
-    margin: 0 1rem;
-    margin-bottom: 1rem;
-}
-
-.middle .post .action-buttons{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
-}
-
-.middle .post .action-buttons {
-    font-size: 1rem;
-}
-
-.middle .post .action-buttons i{
-    font-size: 1.2rem;
-    margin-right: 0.2rem;
-}
-
-
 
 /* ============================================= Right ================================================= */
 

@@ -48,15 +48,15 @@
 
                    
                     <% if (middle[index].type === 'group') { %>
-                        <%- include('middle/groups/group', {groupData : middle[index].content}); -%>
+                        <%- include('middle/groups/group', {groupData : middle[index].data}); -%>
 
                     <% } else if (middle[index].type === 'post') { %>
-                        <% 
-                            if(!bodyObjects.post){
-                                bodyObjects.post = '/js/posts/post.js'
-                            }
-                        %>
-                        <%- include('middle/posts/post', {postData : middle[index].content}); -%>
+                        <% if(!bodyObjects.post) { bodyObjects.post = { css : "/css/post.css", js : '/js/posts/post.js' }}%>
+                        <%- include('middle/posts/post', {postData : middle[index].data}); -%>
+
+                    <% } else if (middle[index].type === 'posts') { %>
+                        <% if(!bodyObjects.post) { bodyObjects.post = { css : "/css/post.css", js : '/js/posts/post.js' }}%>
+                        <% for( let post of middle[index].data) { %> <%- include('middle/posts/post', {postData : post}); -%><% } %>
                     
                     <% } else { %>
                         <%- include('middle/' + middle[index].location, {data : middle[index].data}); -%>
@@ -77,9 +77,9 @@
     </main>
 
     
-    <% for( let scriptPath of Object.values(bodyObjects) ) { %>
-        <script src=" <%= scriptPath %>  "></script>
-        
+    <% for( let bodyObject of Object.values(bodyObjects) ) { %>
+        <% if (bodyObject.css) { %> <link rel="stylesheet" href="<%= bodyObject.css %>"><% } %>
+        <% if (bodyObject.js) { %> <script src="<%= bodyObject.js %>"></script> <% } %>
     <% } %>
 
 </body>

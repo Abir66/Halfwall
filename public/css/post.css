@@ -1,0 +1,115 @@
+.middle .post {
+    background: var(--color-white);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    margin: 0 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.middle .post .head {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.middle .post .user {
+    display: flex;
+    gap: 1rem;
+}
+
+.middle .post .username {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.middle .post .post-text {
+    font-size: 1rem;
+    padding: 1rem;
+}
+
+
+.middle .post .photo {
+    overflow: hidden;
+    margin: 0 1rem;
+    margin-bottom: 1rem;
+}
+
+.middle .post .action-buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.middle .post .action-buttons {
+    font-size: 1rem;
+}
+
+.middle .post .action-buttons i{
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
+
+.middle .post .comments{
+    padding: 0 1rem;
+
+}
+
+.middle .post .comment{
+    display: flex;
+    gap : 0.5rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+
+.middle .post .comment .profile-picture {
+    width: 2.5rem;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.middle .post .comment .comment-body .comment-time{
+    font-size: 0.7rem;
+}
+
+.middle .post .comment .comment-username{
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.middle .post .comments .hide-comments{
+    margin-bottom: 1rem; 
+    cursor: pointer;
+}
+
+.middle .post .comment  .comment-body {
+    width: 100%;
+}
+
+.middle .post .comments-count{
+    cursor: pointer;
+}
+
+
+.middle .post .comment .comment-body .comment-text{
+    border-radius: var(--card-border-radius);
+    background-color: var(--color-light);
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+
+.middle .post .comment .comment-image{
+    width: 50%;
+    margin-top: 0.5rem;
+}
+
+.middle .post .comment .comment-image img{
+    border-radius: var(--card-border-radius);
+}

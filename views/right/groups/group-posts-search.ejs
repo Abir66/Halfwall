@@ -1,0 +1,53 @@
+<div class="right-box">
+    <form action = "/groups/group_id=<%= group.GROUP_ID %>/posts" method = "get" >
+        <div class="heading" style="display: flex; justify-content: space-between;"> 
+            <h3 style="font-size: 1.1rem;">Search & filter</h3>
+            <% if (data.searched) { %>
+                <a href="/groups/group_id=<%= group.GROUP_ID %>/posts"><h5 class="text-muted" style="font-size: 1rem;">clear</h5></a>
+            <% } %>            
+        </div>
+
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="display: inblock;"></i>
+            <input type="search" name = "group_post_search_term" placeholder="Search in this group" <% if (data.search_term) { %> value = <%= data.search_term %> <% } %> >
+        </div>
+
+        <% if (isMember || group.GROUP_PRIVACY != 'PRIVATE') { %>
+          <div class="subsection">
+            <h4><i class="fa-solid fa-filter"></i>Filter</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="group_post_filter" value="admin_posts" id="group_post_filter_public" <% if (data.group_post_filter && data.group_post_filter.includes("admin_posts")) { %> checked <% } %>>
+                <label class="form-check-label" for="group_post_filter_public">
+                  Admins' posts
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="group_post_filter" value="followings" id="group_post_filter_private" <% if (data.group_post_filter && data.group_post_filter.includes("followings")) { %> checked <% } %>>
+                <label class="form-check-label" for="group_post_filter_private">
+                  Your followings
+                </label>
+            </div>
+        </div>
+        <% } %>
+        
+
+        <div class="subsection">
+            <h4><i class="uil uil-filter"></i>Sort By</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="group_post_sort_by" value="time" id="group_post_search_sortByTime" <% if (data.sort_by === "time") { %> checked <% } %>>
+                <label class="form-check-label" for="group_post_search_sortByTime">
+                  Time
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="group_post_sort_by" value="popularity" id="group_post_search_popularity" <% if (data.sort_by === "popularity") { %> checked <% } %>>
+                <label class="form-check-label" for="group_post_search_popularity">
+                  Popularity
+                </label>
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100% ; margin-top: 1rem;">Search</button>
+
+    </form>
+</div>

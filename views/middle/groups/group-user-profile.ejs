@@ -1,0 +1,147 @@
+<style>
+    .view-user-profile {
+        background: var(--color-white);
+        border-radius: var(--card-border-radius);
+        padding: var(--card-padding);
+        margin: 0 0;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        width: 100%; 
+    }
+    .view-user-profile .head{
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        display: flex;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+    
+    .view-user-profile .user-image {
+        width: 25%;
+        
+    }
+    
+    .view-user-profile .profile-picture{
+        width: 100%;
+        border-radius: 100%;
+        border: 5px solid hsl(252, 75%, 60%);
+        padding: 4px;
+    }
+    .view-user-profile .profile-picture img{
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+    }
+    
+    .view-user-profile .head .side{
+        max-width: 70%;
+        display: flex;
+      justify-content: center;
+      align-items: center; 
+        
+    }
+    
+    
+    
+    .view-user-profile .user-info p{
+        font-size: 0.9rem;
+        word-wrap: break-word;
+    }
+    
+    .view-user-profile .user-info .name{
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .view-user-profile .group-join-date{
+        padding: 1rem;
+        width: 100%;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    
+    .view-user-profile .group-member-action-buttons{
+        width: 100%;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    
+    .view-user-profile .group-member-action-buttons .btn{
+        font-size: 0.8rem;
+        width: 100%;
+    }
+    
+    
+    </style>
+    
+    <div class="view-user-profile">
+        <div class="head">
+            <div class="user-image">
+                <div class="profile-picture">
+                    <img src="/images/pfp.jpg" alt="pfp" >
+                </div>
+            </div>
+            <div class="side">
+                <div class="user-info">
+                    <a href="/user/user_id=<%=user.USER_ID%>"><p class="name"><%= user.NAME %> </p></a>
+                    <% if (isAdmin || user.STATUS != 'PENDING') { %><p><%= user.STATUS %> </p><% } %>
+                </div>
+            </div>
+        </div>
+        
+        <% if (user.STATUS === 'ADMIN' || user.STATUS === 'MEMBER') { %>
+            <div class = "group-join-date">
+                <p>Member of <strong><%= group.GROUP_NAME %></strong> since <%= user.TIMESTAMP %> </p>
+            </div>
+        <% } %>
+        
+        <% if (isAdmin && currentUser.USER_ID != user.USER_ID) { %>
+            
+            <% if (user.STATUS == 'ADMIN') { %>
+                <div class="group-member-action-buttons">
+                    <button class="btn btn-blank" onclick="processMember(<%=user.USER_ID%>, 'remove-admin')">Remove Admin</button>
+                </div>
+            <% } else if (user.STATUS == 'MEMBER') { %>
+                <div class="group-member-action-buttons">
+                    <button class="btn btn-primary" onclick="processMember(<%=user.USER_ID%>, 'make-admin')">Make admin</button>
+                    <button class="btn btn-blank" onclick="processMember(<%=user.USER_ID%>, 'remove-member')">Remove</button>
+                </div>
+            
+            <% } else if (user.STATUS == 'PENDING') { %>
+                <div class="group-member-action-buttons">
+                    <button class="btn btn-primary" onclick="processMember(<%=user.USER_ID%>, 'accept-pending')">Accept</button>
+                    <button class="btn btn-blank" onclick="processMember(<%=user.USER_ID%>, 'remove-pending')">Remove</button>
+                </div>
+            <% } %>
+    
+        <% } %>
+    
+    </div>
+    
+    
+    
+    <script>
+    
+        async function processMember(user_id, action){
+            const response = await axios.post("/groups/group_id=<%=group.GROUP_ID%>/process-group-member", {
+                member_id : user_id,
+                action : action
+            });
+    
+            console.log(response.data);
+            if(response.data.result === 'success'){
+                // RELOAD PAGE
+                location.reload();
+            }
+            
+        }
+        
+    </script>
+    
+    
+    
+    

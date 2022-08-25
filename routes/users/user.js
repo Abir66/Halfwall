@@ -5,25 +5,12 @@ const DB_follow = require('../../db-codes/users/db-follow-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
 const { response } = require('express');
+const utils = require('../../routerControllers/utils.js');
 
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
     
-    const currentUser = {
-        USER_ID : req.user.USER_ID,
-        STUDENT_ID : req.user.STUDENT_ID,
-        NAME : req.user.NAME,
-        DEPARTMENT: req.user.DEPARTMENT,
-        DATE_OF_BIRTH: req.user.DATE_OF_BIRTH,
-        HALL: req.user.HALL,
-        HALL_ATTACHMENT: req.user.HALL_ATTACHMENT,
-        BATCH: req.user.BATCH,
-        STREET: req.user.STREET,
-        CITY: req.user.CITY,
-        POSTCODE: req.user.POSTCODE,
-        PROFILE_PIC : '/images/pfp.jpg', // will change it later
-    }
-
+    const currentUser = req.user;
     const user = await DB_user.getUserById(req.params.user_id);
     const follower_cout = await DB_follow.getFollowerCount(req.params.user_id);
     const following_count = await DB_follow.getFollowingCount(req.params.user_id);
@@ -43,27 +30,26 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
     }
 
    
-    // public private issues
-    const posts = await DB_user.getUserProfilePosts(req.user.USER_ID, req.params.user_id, followed, req.query.profile_post_sort_by, req.query.profile_post_search_term, req.query.profile_post_filter);
-    
-    //console.log(user);
-    
-    middle = [{type : 'profile', location : 'profile/profile'}]
 
-    // if user is current user
-    if(req.user.USER_ID == req.params.user_id)
-        middle.push({type : 'create-profile', location : 'posts/create_post'});
+    const middle = [{type : 'profile', location : 'profile/profile'}]
+    if(req.user.USER_ID == req.params.user_id) middle.push({type : 'create-post', location : 'posts/create_post'});
 
 
-    // inefficient. have to change it later
-    for (let i = 0; i < posts.length; i++) {
-        // Images should be included in the post from the database after implementing FILES SCHEMA
-        posts[i].NAME = user.NAME;
-        posts[i].PROFILE_PIC = user.PROFILE_PIC;
-        const IMAGES = ['/images/pfp2.png']
-        posts[i].IMAGES = IMAGES;
-        middle.push({type : 'post', content : posts[i]});
+
+    const search_data = {}
+    if((req.query.profile_post_search_term && req.query.profile_post_search_term.trim().length > 0 ) || req.query.profile_post_sort_by || req.query.profile_post_filter) 
+    {
+        search_data.searched = true;
+        search_data.search_term = req.query.profile_post_search_term.trim();
+        search_data.sort_by = req.query.profile_post_sort_by;
+        search_data.search_filter = utils.to_array(req.query.profile_post_filter);
+        if(search_data.search_filter.length > 1) {search_data.searched = false; search_data.search_filter = []}
+
     }
+    
+    const posts = await DB_user.getUserProfilePosts(req.user.USER_ID, req.params.user_id, followed, search_data);
+    middle.push({type : 'posts', data : posts});
+    
 
     const right = [];
 
@@ -79,28 +65,13 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
     }
 
 
-    const search_data = {}
-    if(req.query.profile_post_search_term || req.query.profile_post_sort_by) search_data.searched = true;
-    if(req.query.profile_post_search_term) search_data.search_term = req.query.profile_post_search_term;
-    if(req.query.profile_post_sort_by) search_data.sort_by = req.query.profile_post_sort_by;
-
-    if(!search_data.searched && !(!req.query.profile_post_filter || req.query.profile_post_filter.length == 2)) search_data.searched = true;
-    if(req.query.profile_post_filter && req.query.profile_post_filter.length != 2) search_data.filter = req.query.profile_post_filter;
-
-
-
-    const profile_search = {
-        type : "profile-search-box",
-        location : 'profile-search',
-        data : search_data
-    }
-
-    right.push(profile_search);
+    right.push({location : 'profile-search', data : search_data});
     
     res.render('index', {
         type : "userProfile",
-        currentUser : currentUser,
+        currentUser : req.user,
         user : user, 
+        group : undefined,
         title : 'Halfwall | @'+user.STUDENT_ID,
         left : ['left-profile', 'sidebar'],
         right : right,

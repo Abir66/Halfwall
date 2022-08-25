@@ -3,16 +3,21 @@
 
 .middle .create-post {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     background: var(--color-white);
     padding: 0.6rem var(--card-padding);
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
+    font-size: 0.85rem;
 }
 
-.middle .create-post input[type='text'] {
+.middle .create-post .create-post-mini{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.middle .create-post .create-post-mini input[type='text'] {
     justify-self: start;
     width: 100%;
     padding-left: 1rem;
@@ -22,10 +27,307 @@
     font-size: 1rem;
 }
 
+.middle .create-post-big {
+   padding: 1rem;
+}
+
+.middle .create-post-big .post-info {
+   margin-bottom: 1rem;
+}
+
+
+.middle .create-post-big .post-info .user{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+
+
+.middle .create-post-big .post-info .username {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.middle .create-post-big .post-info .head{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.middle .create-post-big .post-text  {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--color-light);
+    margin-bottom: 1rem;
+}
+
+
+.middle .create-post .post-group select{
+
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    margin-left: 0;
+}
+
+
+.middle .create-post-big .post-footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.middle .create-post .post-footer .btn{
+    font-size: 0.7rem;
+}
+
+.middle .create-post .post-footer .btn-blank{
+    border-color: var(--color-gray);
+}
+
+
+.middle .create-post-big #create-post-files-preview-list{
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.middle .create-post-big .file-preview{
+    width: 20%;
+   
+}
+
+.middle .create-post-big .file-preview .file{
+    width: 100%;
+    
+}
+
+.middle .create-post-big .file-preview{
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.middle .create-post-big .file-preview .previw-close-button{
+    background-color: red;
+    padding: 0 1rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
 
 
 </style>
+
 <form action="" class="create-post">
-    <input type="text" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>">
-    <input type="submit" value="post" class="btn btn-primary" placeholder="post">
+
+    <div class="create-post-mini" onclick="replacewithBig()">
+        <input type="text" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>">
+        <input type="submit" value="post" class="btn btn-primary" placeholder="post">
+    </div>
+    
+    <div class="create-post-big" style="display: none ;">
+        
+        <!-- post info -->
+        <div class="post-info">
+            <div class="head">
+                <div class="user">
+                <div class="profile-picture">
+                    <img src="/images/pfp.jpg" alt="pfp">
+                </div>
+                
+                <div class="info">
+                    <p class="username"><%= currentUser.NAME%></p>
+                    
+                    <div class="post-group">
+                        <% if (group) { %>
+                            <p class="group-name text-muted">in <%=group.GROUP_NAME%></p>
+                        <% } else { %>
+                            <div class="form-group">
+                                <select name="privacy" id="post-privacy">
+                                    <option value="PRIVATE" selected>Followers only</option>
+                                    <option value="PUBLIC">Public</option>
+                                </select>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                </div>
+                </div>
+
+                <i class="fa-solid fa-xmark" onclick="replacewithmini()" style="font-size: 1.5rem; color: var(--color-gray);"></i>
+            </div>
+        </div>
+        
+        <textarea class = "post-text" name="post-text" rows="10" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>"></textarea>
+        
+        <div class="create-postfiles-preview-container">
+            <input type="file" id="create-post-file-input" accept="image/png, image/jpeg, video/mp4" onchange="preview()" multiple hidden>
+            <div id="create-post-files-preview-list"></div>
+        </div>
+
+        <div class="post-footer">
+            <label for="create-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
+            <input class="btn btn-primary" type = "submit" value="post" class="btn btn-primary" placeholder="post">
+        </div>
+
+    </div>
+    
+    
 </form>
+
+
+<script>
+
+    async function replacewithBig(){
+
+        let create_post = document.querySelector('.create-post');
+        // hide create-post-mini
+        const create_post_mini = create_post.querySelector('.create-post-mini');
+        create_post_mini.style.display = 'none';
+
+        // show create-post-big
+        const create_post_big = create_post.querySelector('.create-post-big');
+        create_post_big.style.display = 'block';
+
+    }
+
+    async function replacewithmini(){
+        let create_post = document.querySelector('.create-post');
+        // hide create-post-big
+        const create_post_big = create_post.querySelector('.create-post-big');
+        create_post_big.style.display = 'none';
+        // show create-post-mini
+        const create_post_mini = create_post.querySelector('.create-post-mini');
+        create_post_mini.style.display = 'flex';
+    }
+
+
+    // prevent default form action
+    document.querySelector('.create-post').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        post(<% if (group) {%><%=group.GROUP_ID%><%}%>);
+        console.log("here....");
+        
+    } );
+
+
+    let fileInput = document.getElementById("create-post-file-input");
+    let fileContainer = document.getElementById("create-post-files-preview-list");
+
+    const files = [];
+    
+    async function post(group_id){   
+        
+        // get form element
+        const form = document.querySelector('.create-post');
+
+        // create a new formdata and add info to it
+        const formData = new FormData();
+        formData.append('user_id', <%= currentUser.USER_ID%>);
+        formData.append('post_text', form.querySelector('.post-text').value);
+        
+
+        // get all input of type text data from form and add it to formdata
+        const inputs = form.querySelectorAll('input.post-data, select');
+        inputs.forEach(input => { formData.append(input.name, input.value);} );
+    
+        if(!group_id) group_id = form.querySelector('#post-privacy').value === 'PUBLIC' ? 1 : 2;
+        formData.append('group_id', group_id);
+
+        // get all files from files array and add it to formdata
+        files.forEach(file => { formData.append('files', file);} );
+        
+        
+        // send formdata to server via axios 
+        const res = await axios({
+            method: 'post',
+            url: '/posts/create-post',
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        console.log(res);
+    }
+
+    
+
+    async function preview() {
+
+        // add the files to the list of files
+        for (let i = 0; i < fileInput.files.length; i++) files.push(fileInput.files[i]);
+
+        for (i of fileInput.files) {
+
+            // create a div for the file
+            let fileDiv = document.createElement("div");
+            fileDiv.className = "file-preview";
+
+            // if file is an image
+            if (i.type.match("image.*")) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("file");
+                    fileDiv.appendChild(img);
+                    // add a close button that deletes the image
+                    let close = document.createElement("button");
+                    close.classList.add("btn", "previw-close-button");
+                    close.innerHTML = "&times;";
+                    fileDiv.appendChild(close);
+
+                    // clicking on this button should delete the image
+                    close.addEventListener("click", function () {
+                        fileContainer.removeChild(fileDiv);
+                        // remove the file from the array of files
+                        files.splice(files.indexOf(i), 1);
+                    });
+                    fileContainer.appendChild(fileDiv);
+                }
+                reader.readAsDataURL(i);
+            }
+
+
+            // else if it is a video
+            else if (i.type.match("video.*")) {
+
+                // add preview of the video
+                let video = document.createElement("video");
+                video.setAttribute("controls", "");
+                video.setAttribute("src", URL.createObjectURL(i));
+                video.classList.add("file");
+                fileDiv.appendChild(video);
+
+                // add a close button that deletes the image
+                let close = document.createElement("button");
+                close.classList.add("btn", "previw-close-button");
+                close.innerHTML = "&times;";
+                fileDiv.appendChild(close);
+
+                // clicking on this button should delete the image
+                close.addEventListener("click", function () {
+                    fileContainer.removeChild(fileDiv);
+                    
+                    // remove the file from the array of files
+                    files.splice(files.indexOf(i), 1);
+                });
+
+                fileContainer.appendChild(fileDiv);
+            }
+
+            
+        }
+        fileInput.value = null;
+    }
+
+
+</script>

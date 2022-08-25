@@ -54,6 +54,14 @@
         opacity: 0.8;
     }
 
+    .group-submenu .group-join-button{
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-left: auto;
+        
+    }
+
 </style>
 
 
@@ -77,16 +85,30 @@
         <a href="/groups/group_id=<%= group.GROUP_ID%>/members"><div class="submenu-item  <% if (data.active === 'Members') { %> active <% } %>">Members</div></a>
 
         <% if (isAdmin) { %><div class="submenu-item" data-bs-toggle="modal" data-bs-target="#delete_group_modal">Delete Group</div><% } %>
-        <% if (isAdmin) { %><div class="submenu-item" >Edit Group</div><% } %>
+        <% if (isAdmin) { %><a href="/groups/group_id=<%= group.GROUP_ID%>/edit-group"><div class="submenu-item" >Edit Group</div></a><% } %>
+
+        
+        <% if (isMember) { %>
+            <div class="group-join-button btn btn-blank" data-bs-toggle="modal" data-bs-target="#leave-group-modal">Leave</div> 
+        <% } else if (isPending) { %>
+            <div class="group-join-button btn btn-blank" data-bs-toggle="modal" data-bs-target="#cancel-pending-group-modal">Pending</div> 
+        <% } else { %> 
+            <div class="group-join-button btn btn-primary" onclick="joinGroup(<%= group.GROUP_ID%>)">Join</div> 
+        <% } %>
+         
+         
     </div>
 
     
-  <!-- Modal -->
+
+    
+  <!-- Modal delete group-->
+  <% if (isAdmin) { %>
   <div class="modal fade" id="delete_group_modal" tabindex="-1" aria-labelledby="delete_group_modalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Delete Group</h5>
+          <h5 class="modal-title" id="delete-group-modal-label">Delete Group</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -99,14 +121,75 @@
       </div>
     </div>
   </div>
+  <% } %>
+
+
+<!-- Modal leave group-->
+<div class="modal fade" id="leave-group-modal" tabindex="-1" aria-labelledby="leave-group-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leave-group-modal-label">Leave Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 1.2rem; font-weight: 500;">Are you sure you want to Leave this group "<%= group.GROUP_NAME %>"?</p>
+          <p style="font-size: 0.8rem; color: red;">This action cannot be undone</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="leaveGroup(<%= group.GROUP_ID%>)">Leave</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<!-- Modal cancel pending join request-->
+<div class="modal fade" id="cancel-pending-group-modal" tabindex="-1" aria-labelledby="cancel-pending-group-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancel-pending-group-modal-label">Leave Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 1.2rem; font-weight: 500;">Are you sure you want to cancel your join request to this group "<%= group.GROUP_NAME %>"?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="leaveGroup(<%= group.GROUP_ID%>)">Cancel join request</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<!-- Only admin -->
+<div class="modal fade" id="only-admin-group-modal" tabindex="-1" aria-labelledby="only-admin-group-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="only-admin-group-modal-label">Leave Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 1.2rem; font-weight: 500;">You cannot leave this group "<%= group.GROUP_NAME %>" because you are the only admin of it. Make someone else admin first or delete the group.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
 
 </div>
 
 
+
 <script>
     async function deleteGroup(group_id){
-        console.log(group_id);
-
         // send axios request to delete group
         const response = await axios.post(`/groups/group_id=${group_id}/delete-group`);
 
@@ -117,4 +200,35 @@
         modal = bootstrap.Modal.getInstance(modal)
         modal.hide();
     }
+
+
+    async function joinGroup(group_id){
+        const response = await axios.post(`/groups/group_id=${group_id}/join-group`);
+
+        if (response.data === 'success') window.location.reload();
+        
+        // get the modal
+        let modal = document.getElementById('delete_group_modal');
+        modal = bootstrap.Modal.getInstance(modal)
+        modal.hide();
+    }
+
+
+    async function leaveGroup(group_id){
+        const response = await axios.post(`/groups/group_id=${group_id}/leave-group`);
+        console.log(response.data);
+        if (response.data === 'success') window.location.reload();
+        else if(response.data === 'only admin'){
+            // get the modal
+            const only_admin_modal = new bootstrap.Modal(document.getElementById('only-admin-group-modal'), {});
+            only_admin_modal.show();
+        }
+        // get the modal
+        let modal = document.getElementById('leave-group-modal');
+        modal = bootstrap.Modal.getInstance(modal)
+        modal.hide();
+        
+    }
+
+
 </script>

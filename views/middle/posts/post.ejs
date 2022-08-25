@@ -1,19 +1,18 @@
-<div class="post">
+<div class="post" id="post-<%= postData.POST_ID %>">
 
     <div class="head">
         <div class="user">
             <div class="profile-picture">
                 <!------Need to use user's profile pic later-->
-                <a href="/user/user_id=<%= postData.USER_ID %> "> <img src="/images/pfp.jpg" alt="pfp"> </a>
+                <a href="/groups/group_id=<%= postData.GROUP_ID%>/user/user_id=<%= postData.USER_ID%>"> <img src="/images/pfp.jpg" alt="pfp"> </a>
                 
             </div>
             <div class="ingo">
-                <p class="username"><a href="/user/user_id=<%= postData.USER_ID %> "> <%= postData.USERNAME %> </a></p>
+                <p class="username"><a href="/groups/group_id=<%= postData.GROUP_ID%>/user/user_id=<%= postData.USER_ID%>"> <%= postData.USERNAME %> </a>
+                <% if (postData.GROUP_ID > 2) { %> > <a href="/groups/group_id=<%= postData.GROUP_ID %>"><%= postData.GROUP_NAME %></a><% } %>
+                </p>
 
-                <!--Convert timestamp to proper date time format-->
-                <small>
-                    <%= postData.TIMESTAMP %>
-                </small>
+                <small><%= postData.TIMESTAMP %></small>
             </div>
         </div>
         <span class="edit dropdown show">
@@ -70,8 +69,18 @@
             </span>
             <span class="likes-count" id="likes-count-<%= postData.POST_ID%>" onclick="getLikersList(<%=postData.POST_ID%>)"  ><%= postData.LIKES_COUNT %> </span>
         </div>
-        <div class="comments" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            comments
+        <div class="comments-count" onclick="showComments(<%= postData.GROUP_ID%>, <%= postData.POST_ID%>)">
+            <%= postData.COMMENT_COUNT%> comments
         </div>
     </div>
+    
+    <div class="comments" style="display: none;">
+        <hr>
+        <p class="hide-comments" onclick="hideComments(<%= postData.POST_ID%>)">Hide comments</p>
+        
+        <div class="comments-list">
+
+        </div>
+    </div>
+
 </div>

@@ -77,18 +77,19 @@ async function getPostCount(user_id){
     return result[0];
 }
 
-async function getUserProfilePosts(viewer_id, user_id, followed, sort_by = "TIMESTAMP DESC", search_term = "", search_filter){
+async function getUserProfilePosts(viewer_id, user_id, followed, search_data, sort_by, search_term, search_filter){
 
 
     // filtering
     let groups;
     const group_ids = { public : 1, private : 2} 
-    if(!search_filter || search_filter.length == 2){
+    if(!search_data.search_filter || search_data.search_filter.length == 2){
         if(viewer_id == user_id || followed) groups = `${group_ids.public}, ${group_ids.private}`;
         else groups = `${group_ids.public}`;
     }
 
-    else if(search_filter == "public") groups = `${group_ids.public}`;
+    else if(search_data.search_filter && search_data.search_filter.length == 1 && search_data.search_filter[0] == "public") 
+        groups = `${group_ids.public}`;
 
     else{
         if(viewer_id == user_id || followed) groups = `${group_ids.private}`;
@@ -96,27 +97,39 @@ async function getUserProfilePosts(viewer_id, user_id, followed, sort_by = "TIME
     }
 
     // sorting
-    let order_by = "TIMESTAMP DESC";
+    let order_by = "TIMESTAMP DESC", search_term_str = "";
     // HAVE TO IMPLEMENT A RANK FUNCTION LATER
-    if(sort_by === "popularity") order_by = `LIKES_COUNT DESC, TIMESTAMP DESC`;
+    if(search_data.sort_by === "popularity") order_by = `LIKES_COUNT DESC, TIMESTAMP DESC`;
 
     // searching
-    let search_str = "";
-    if(search_term && search_term.length > 0) search_str = `AND (UPPER(TEXT) LIKE UPPER('%${search_term}%') OR UPPER(GET_USER_NAME(USER_ID)) LIKE UPPER('%${search_term}%'))`;
+    if(search_data.search_term && search_data.search_term.length > 0) 
+    search_term_str = `AND (UPPER(P.TEXT) LIKE UPPER('%${search_data.search_term}%') 
+                            OR UPPER(U.NAME) LIKE UPPER('%${search_data.search_term}%')
+                            OR UPPER(U.STUDENT_ID) = '${search_data.search_term}' )`;
     
 
-    const sql = `SELECT POSTS.*, GET_USER_NAME(USER_ID) "USERNAME", GET_USER_PROFILE_PIC(USER_ID) "PROFILE_PIC", LIKE_COUNT(POST_ID) "LIKES_COUNT",
-                USER_LIKED_THIS_POST(:viewer_id, POST_ID) "USER_LIKED"
-        
-                FROM POSTS
-                WHERE POSTS.USER_ID = :user_id AND POSTS.GROUP_ID IN (${groups}) ${search_str}
-                ORDER BY ${order_by}`
+    const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
+                INITCAP(U.NAME) "USERNAME", U.PROFILE_PIC "USER_PROFILE_PIC",
+                LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:viewer_id, P.POST_ID) "USER_LIKED", COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT"
+	                
+                FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
+                WHERE P.USER_ID = :user_id
+                AND P.GROUP_ID IN (${groups}) ${search_term_str}
+                ORDER BY ${order_by}`;
+    
     const binds ={
         user_id : user_id,
         viewer_id : viewer_id
     };
     
     result = (await database.execute(sql,binds)).rows;
+
+    // will change later
+    for(let post of result){
+        const IMAGES = ['/images/pfp2.png']
+        post.IMAGES = IMAGES;
+    }
+
     return result;
 }
 
@@ -174,6 +187,33 @@ async function searchProfile(search_data){
     return result;
 }
 
+
+async function getUserMiniData(user_id){
+    const sql = `SELECT USER_ID, STUDENT_ID, INITCAP(NAME) "NAME", PROFILE_PIC
+                FROM users  
+                WHERE USER_ID = :user_id`;
+    const binds ={
+        user_id : user_id
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result[0];
+}
+
+async function test(){
+
+    const sql = `SELECT U.NAME, 
+                
+                CURSOR(SELECT * FROM FOLLOWS 
+                WHERE FOLLOWER_ID = U.USER_ID) as "FOLLOWINGS"
+                
+                FROM USERS U`
+    
+    const binds ={};
+    const result = (await database.execute(sql, binds)).rows;
+
+    console.dir(result, {depth : null});
+}
+
 module.exports = {
     getUserById,
     getUserByStudentId,
@@ -182,5 +222,7 @@ module.exports = {
     searchProfile,
     getPostCount,
     getUserProfilePosts,
-    updateUser
+    updateUser,
+    getUserMiniData,
+    test
 }

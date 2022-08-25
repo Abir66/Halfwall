@@ -36,24 +36,24 @@
     <div class="container-edit">
         <h1>Edit Profile</h1>
         <form class = "edit-form" id="edit-form"> <!-- action="/user/editProfile" method="post" >  newsfee.js's /edit action="/newsfeed/editProfile" method="post" -->
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="edit-profile-name" value="<%- currentUser.NAME %>" required>
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="student_id">Student Id</label>
                 <input type="number" name="student_id" id="edit-profile-student_id" value="<%- currentUser.STUDENT_ID %>" required>
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="edit-profile-email" value="<%- currentUser.EMAIL %>" required>
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="dof">Date of Birth</label>
                 <%let date = [null]; if(currentUser.DATE_OF_BIRTH !== null) {dates=currentUser.DATE_OF_BIRTH.toISOString(); date=dates.split('T');}%>
                 <input type="date" name="dof" id="edit-profile-dof" value="<%= date[0]%>">
             </div>
-            <div class="form-group"">
+            <div class="form-group">
                 <label for="hall">Hall</label>
                 <select name="hall" id="edit-profile-hall">
                     <option value="" disable hidden <% if(currentUser.HALL === null){ %>selected<% } %> ></option>

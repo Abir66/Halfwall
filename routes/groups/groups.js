@@ -2,38 +2,36 @@ require('dotenv').config();
 const router = require('express').Router();
 const { verify } = require('../../middlewares/user-verification.js');
 const { group_header } = require('../../middlewares/group-header.js');
+const { verifyAdmin } = require('../../middlewares/group-verification.js');
+const DB_user = require('../../db-codes/users/db-user-api');
 const DB_group = require('../../db-codes/groups/db-group-api.js');
 const DB_group_member = require('../../db-codes/groups/db-group-member-api.js');
 const utils = require('../../routerControllers/utils.js');
 
 
+
 router.get('/create-group', verify, async(req, res) => {
-
-    const currentUser = {
-        USER_ID : req.user.USER_ID,
-        STUDENT_ID : req.user.STUDENT_ID,
-        NAME : req.user.NAME,
-        DEPARTMENT: req.user.DEPARTMENT,
-        DATE_OF_BIRTH: req.user.DATE_OF_BIRTH,
-        HALL: req.user.HALL,
-        HALL_ATTACHMENT: req.user.HALL_ATTACHMENT,
-        BATCH: req.user.BATCH,
-        STREET: req.user.STREET,
-        CITY: req.user.CITY,
-        POSTCODE: req.user.POSTCODE,
-        PROFILE_PIC : '/images/pfp.jpg', // will change it later
-    }
-
 
     res.render('index', {
         type : "group",
-        currentUser : currentUser,
+        currentUser : req.user,
         title : 'Halfwall | Create Group',
         left : ['left-profile', 'sidebar'],
         right : [],
-        middle : [{type : 'createGroup', location : 'groups/createGroup'}]
+        middle : [{type : 'createGroup', location : 'groups/create-group'}]
     });
+})
 
+router.get('/group_id=:group_id/edit-group', verify, verifyAdmin, async(req, res) => {
+
+    res.render('index', {
+        type : "group",
+        currentUser : req.user,
+        title : 'Halfwall | Create Group',
+        left : ['left-profile', 'sidebar'],
+        right : [],
+        middle : [{type : 'createGroup', location : 'groups/edit-group'}]
+    });
 })
 
 router.post('/create-group', verify, async(req, res) => {
@@ -44,8 +42,23 @@ router.post('/create-group', verify, async(req, res) => {
     }
 
     const result = await DB_group.createGroup(group, req.user.USER_ID);
-    res.send('group created');
+    if(result.result == 'success') res.redirect('/groups/group_id=' + result.group_id);
+    else res.send(result.result);
 });
+
+router.post('/group_id=:group_id/edit-group', verify, verifyAdmin, async(req, res) => {
+    const group = {
+        group_id : req.params.group_id,
+        name : req.body.group_name,
+        description : req.body.group_description,
+        privacy : req.body.group_privacy,
+        cover_photo : req.body.group_cover_photo
+    }
+
+    await DB_group.updateGroup(group);
+    res.redirect('/groups/group_id=' + req.params.group_id + '/about');
+});
+
 
 
 router.get('/group_id=:group_id/members', verify, group_header,  async(req, res) => {
@@ -62,7 +75,7 @@ router.get('/group_id=:group_id/members', verify, group_header,  async(req, res)
 
     if(req.query.group_members_search_term || req.query.group_members_filter || req.query.group_members_sort_by ) {
         search_data.searched = true;
-        search_data.search_term = req.query.group_members_search_term;
+        search_data.search_term = req.query.group_members_search_term.trim();
         search_data.member_filter = utils.to_array(req.query.group_members_filter);
         search_data.sort_by = req.query.group_members_sort_by;
     }
@@ -136,6 +149,121 @@ router.get('/group_id=:group_id/about', verify, group_header, async(req, res) =>
 })
 
 
+router.get('/group_id=:group_id/user/user_id=:user_id', verify, group_header, async(req,res) => {
+
+    
+    const group_id = req.params.group_id;
+
+    if(group_id == 1 || group_id == 2) {
+        res.redirect('/user/user_id=' + req.params.user_id);
+        return;
+    }
+
+
+    const privacy = await DB_group.getGroupPrivacy(group_id);
+    const isAdmin = res.locals.isAdmin;
+    const isMember = res.locals.isMember;
+    const user_id = req.params.user_id;
+
+    if(!isMember && privacy == 'PRIVATE' && user_id != req.user.USER_ID) {
+        console.log("Can't see posts");
+        res.send('okay');
+        return;
+    }
+
+    let user = await DB_group_member.getMemberinGroup(group_id, user_id);
+    if(!user) {
+        user = await DB_user.getUserMiniData(user_id);
+        user.STATUS = 'Not a current member of this group';
+    }
+
+    if(!user) {
+        res.status(404).send('Nothing found');
+        return;
+    }
+
+    res.locals.middle.push({type : "group_user_profile", location : "groups/group-user-profile"});
+
+    const search_data = {post_user_id : req.params.user_id}
+    if(req.query.group_post_search_term  || req.query.group_post_sort_by ) {
+        search_data.searched = true;
+        search_data.search_term = req.query.group_post_search_term.trim();
+        search_data.sort_by = req.query.group_post_sort_by;
+    }
+
+
+    const posts = await DB_group.getGroupPosts(group_id, req.user.USER_ID, search_data);
+
+    // if user not in group
+    if(!user && posts.length == 0) {
+        res.status(404).send('Nothing found');
+        return;
+    }
+
+
+
+    res.locals.middle.push({type : "posts", data : posts})
+
+    res.render('index', {
+        type : "group",
+        currentUser : req.user,
+        user : user,
+        title :  res.locals.group.GROUP_NAME,
+        left : ['left-profile', 'sidebar'],
+        right : [{location : 'groups/group-user-posts-search', data : search_data}],
+    });
+
+})
+
+router.get('/group_id=:group_id/posts', verify, group_header, async(req, res) => {
+
+    res.locals.middle[0].data.active = 'Posts';
+    
+    const group_id = req.params.group_id;
+    const privacy = res.locals.group.GROUP_PRIVACY;
+    const isAdmin = res.locals.isAdmin;
+    const isMember = res.locals.isMember;
+
+    
+    if(isMember) res.locals.middle.push({type : "create-post", location : "posts/create_post"})
+    
+    const search_data = {}
+    if(req.query.group_post_search_term  || req.query.group_post_filter || req.query.group_post_sort_by ) {
+        search_data.searched = true;
+        search_data.search_term = req.query.group_post_search_term.trim();
+        search_data.group_post_filter = utils.to_array(req.query.group_post_filter);
+        search_data.sort_by = req.query.group_post_sort_by;
+    }
+
+    
+    // get posts
+    console.log(privacy);
+    let posts;
+    if(privacy == 'PRIVATE' && !isMember) {
+        search_data.post_user_id = req.user.USER_ID;
+        posts = await DB_group.getGroupPosts(group_id, req.user.USER_ID, search_data);
+        res.locals.middle.push({location : "groups/private-group-own-post"})
+        res.locals.middle.push({type : "posts", data : posts})
+    }
+
+    else{
+        posts = await DB_group.getGroupPosts(group_id, req.user.USER_ID, search_data);
+        res.locals.middle.push({type : "posts", data : posts})
+    }
+    
+
+    res.render('index', {
+        type : "group",
+        currentUser : req.user,
+        title :  res.locals.group.GROUP_NAME,
+        left : ['left-profile', 'sidebar'],
+        right : [{location : 'groups/group-posts-search', data : search_data}],
+    });
+
+
+})
+
+
 router.post('/group_id=:group_id/delete-group', verify, async(req, res) => {
     // check if admin
     const isAdmin = await DB_group_member.isAdmin(req.params.group_id, req.user.USER_ID);
@@ -151,7 +279,6 @@ router.get('/group_id=:group_id', verify, async(req, res) => {
     if(!isMember) res.redirect('/groups/group_id=' + req.params.group_id + '/about');
     else res.redirect('/groups/group_id=' + req.params.group_id + '/posts');
 })
-
 
 
 router.get('/', verify, async(req, res) => {
@@ -170,7 +297,7 @@ router.get('/', verify, async(req, res) => {
 
     if(req.query.group_search_term || req.query.group_privacy || req.query.group_membership || req.query.group_sort_by ) {
         search_data.searched = true;
-        search_data.search_term = req.query.group_search_term;
+        search_data.search_term = req.query.group_search_term.trim();
         search_data.group_privacy = utils.to_array(req.query.group_privacy);
         search_data.group_membership = utils.to_array(req.query.group_membership);
         search_data.sort_by = req.query.group_sort_by;
@@ -217,5 +344,17 @@ router.post('/group_id=:group_id/process-group-member', verify, async(req, res) 
 
 })
 
+router.post('/group_id=:group_id/join-group', verify, async(req, res) => {
+    const group_id = req.params.group_id;
+    const result = await DB_group_member.joinGroup(group_id, req.user.USER_ID);
+    return res.send(result);
+})
+
+
+router.post('/group_id=:group_id/leave-group', verify, async(req, res) => {
+    const group_id = req.params.group_id;
+    const result = await DB_group_member.leaveGroup(group_id, req.user.USER_ID);
+    return res.send(result);
+})
 
 module.exports = router;

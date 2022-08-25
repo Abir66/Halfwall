@@ -4,7 +4,7 @@ const database = new Database();
 
 async function createGroup(group, admin_id){
     const sql = `BEGIN
-                    CREATE_GROUP(:group_name, :admin_id, :description, :cover_photo, :privacy, :result);
+                    CREATE_GROUP(:group_name, :admin_id, :description, :cover_photo, :privacy, :result, :group_id);
                 END;`;
     const binds={
         group_name : group.name,
@@ -15,10 +15,32 @@ async function createGroup(group, admin_id){
         result: {
             dir: oracledb.BIND_OUT, 
             type: oracledb.VARCHAR2
+        },
+        group_id: {
+            dir: oracledb.BIND_OUT,
+            type: oracledb.NUMBER
         }
     }
     const result =  (await database.execute(sql, binds)).outBinds;
-    return result.result;
+    return result;
+}
+
+async function updateGroup(group){
+    const sql = `UPDATE GROUPS SET 
+                GROUP_NAME = :group_name, 
+                GROUP_PRIVACY = :group_privacy, 
+                GROUP_DESCRIPTION = :group_description, 
+                COVER_PHOTO = :cover_photo 
+                WHERE GROUP_ID = :group_id`;
+    const binds = {
+        group_name : group.name,
+        group_privacy : group.privacy,
+        group_description : group.description,
+        cover_photo : group.cover_photo,
+        group_id : group.group_id
+    }
+
+    await database.execute(sql, binds);
 }
 
 
@@ -29,7 +51,6 @@ async function deleteGroup(group_id){
     }
     await database.execute(sql, binds);
 }
-
 
 // get group by group id
 async function getGroup(group_id){
@@ -96,7 +117,9 @@ async function getGroupsForUser(user_id, search_data){
 
 async function getGroupAbout(group_id){
 
-    const sql = `SELECT GROUP_DESCRIPTION, TIME_OF_CREATION, (SELECT COUNT(*) AS POST_COUNT FROM POSTS P WHERE P.GROUP_ID = :group_id) AS POST_COUNT
+    const sql = `SELECT GROUP_ID, GROUP_NAME, GROUP_PRIVACY,
+                GROUP_DESCRIPTION, TO_CHAR(TIME_OF_CREATION, 'HH:MM DD-MON-YYYY') "TIME_OF_CREATION",
+                (SELECT COUNT(*) AS POST_COUNT FROM POSTS P WHERE P.GROUP_ID = :group_id) AS POST_COUNT
                 FROM GROUPS WHERE GROUP_ID = :group_id`;
     const binds = {
         group_id : group_id
@@ -107,6 +130,58 @@ async function getGroupAbout(group_id){
 
 }
 
+async function getGroupPosts(group_id, user_id, search_data = {}){
+
+    let orderby = '', search_term_str = '', admin_posts = '', followings = '', post_user = ''
+    
+    // sorting
+    orderby = ` ORDER BY P.TIMESTAMP DESC`;
+    if(search_data.sort_by == 'popularity') orderby = ` ORDER BY LIKES_COUNT DESC`;
+
+    if(search_data.search_term && search_data.search_term.length > 0) 
+        search_term_str = `AND (UPPER(P.TEXT) LIKE UPPER('%${search_data.search_term}%') 
+                            OR UPPER(U.NAME) LIKE UPPER('%${search_data.search_term}%')
+                            OR UPPER(U.STUDENT_ID) = '${search_data.search_term}' )`;
+    
+    if(search_data.group_post_filter && search_data.group_post_filter.includes('admin_posts'))
+        admin_posts = ` AND P.USER_ID IN (SELECT USER_ID FROM GROUP_MEMBERS WHERE GROUP_ID = :group_id AND STATUS = 'ADMIN')`;
+
+    if(search_data.group_post_filter && search_data.group_post_filter.includes('followings'))
+        followings = ` AND P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id)`;
+
+    if(search_data.post_user_id){
+        post_user = ` AND P.USER_ID = ${search_data.post_user_id}`;
+        admin_posts = '';
+        followings = '';
+    }
+    
+    const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
+                INITCAP(U.NAME) "USERNAME", U.PROFILE_PIC "USER_PROFILE_PIC",
+                LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
+                G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY
+                FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID LEFT JOIN GROUPS G ON P.GROUP_ID = G.GROUP_ID
+                WHERE P.GROUP_ID = :group_id
+                ${post_user}
+                ${admin_posts}
+                ${followings}
+                ${search_term_str}
+                ${orderby}
+                `;
+
+    const binds ={
+        group_id : group_id,
+        user_id : user_id
+    };
+
+    result = (await database.execute(sql,binds)).rows;
+
+    for(let post of result){
+        const IMAGES = ['/images/pfp2.png','/images/pfp.jpg']
+        post.IMAGES = IMAGES;
+    }
+    return result;
+}
+
 
 // export
 module.exports = {
@@ -115,6 +190,8 @@ module.exports = {
     getGroup,
     getGroupPrivacy,
     getGroupsForUser,
-    getGroupAbout
+    getGroupAbout,
+    getGroupPosts,
+    updateGroup
 }
 

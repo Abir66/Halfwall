@@ -1,0 +1,76 @@
+<style>
+    .groupCreateForm{
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    .group_form_items{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: transparent;
+        margin-top: 1em;
+        
+    }
+
+    .CreateGroupForm input, select, textarea{
+        width: 70%;
+        padding: 0.5rem 0.5rem;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: white;
+    }
+
+    .group_create_form_container{
+        padding: 1rem 1rem;
+    }
+    
+    .groupCreateForm .group_create_form_container h2{
+        font-size: 1.5em;
+        font-weight: 500;
+    }
+
+    #group_form_description{
+        width: 100%;
+        border: 1px solid #ccc;
+    }
+    .btn-block-group-create{
+        width: 100%;
+        margin-top: 15px;;
+    }
+</style>
+
+<div class="groupCreateForm card">
+    <div class="group_create_form_container">
+        <h2>Edit Group Info</h2>
+        <form action="/groups/group_id=<%=group.GROUP_ID%>/edit-group" class="CreateGroupForm" method="post">
+            <div class="group_form_items">
+                <label for="group_form_name">Group Name</label>
+                <input type="text" class="input_text_box_GroupName" name="group_name" id="group_form_name" value= "<%= group.GROUP_NAME %>"  required>
+            </div>        
+            <div class="group_form_items">
+                <label for="group_form_privacy">Privacy</label>
+                <select name="group_privacy" id="group_form_privacy" required>
+                    
+                    <option value="PRIVATE" <% if (group.GROUP_PRIVACY === 'PRIVATE') { %> selected <% } %>>Private</option>
+                    <option value="PUBLIC" >Public</option> 
+                </select>   
+            </div>
+            <div class="group_form_items">
+                <label for="group_form_description" class="label_for_description">Description</label>
+            </div>
+            <div class="group_form_items">
+                <textarea name="group_description" id="group_form_description" cols="30" rows="10"><%= group.GROUP_DESCRIPTION %> </textarea>           
+            </div>
+            <div class="group_form_items">
+                <label for="group_form_file">Cover Photo</label>
+                <input type="file" name="cover_photo" id="group_form_file">
+            </div>
+            <div class="group_form_items">
+                <button id="group_form_submit" class="btn btn-primary btn-block-group-create">Update Group Info</button>            
+            </div>
+    
+        </form>
+    </div>
+</div>

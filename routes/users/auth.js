@@ -49,12 +49,12 @@ router.get('/signout', verify, (req, res) => {
     res.redirect('/auth/signin');
 });
 
-router.get('/signin', (req, res) => {
+router.get('/signin', async(req, res) => {
     res.render('auth/signin');
 })
 
 
-router.get('/signup', (req, res) => {
+router.get('/signup', async(req, res) => {
     res.render('auth/signup');
 })
 

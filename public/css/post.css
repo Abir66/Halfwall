@@ -37,6 +37,14 @@
     margin-bottom: 1rem;
 }
 
+
+
+.middle .post .video{
+    width: 100%;
+    margin: 0 1rem;
+    
+}
+
 .middle .post .action-buttons{
     display: flex;
     justify-content: space-between;
@@ -112,4 +120,65 @@
 
 .middle .post .comment .comment-image img{
     border-radius: var(--card-border-radius);
+}
+
+
+/* -----------------------add comment------------------ */
+
+.middle .post .add-comment{
+    width: 100%;
+    padding: 0 1rem;
+}
+.middle .post .add-comment .comment-form{
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.middle .post .add-comment i{
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    
+}
+
+
+.middle .post .add-comment textarea{
+    background-color: var(--color-light);
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    min-height: 2rem;
+    padding: 0.5rem;
+    border-radius: var(--card-border-radius);
+}
+
+.middle .comment-image-preview{
+    width: 30%;
+    padding-left: 2rem;
+}
+
+.middle .comment-image-preview img{
+    border-radius: var(--card-border-radius);
+    margin-bottom: 1rem;
+}
+
+.middle .comment-image-preview{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.middle .comment-image-preview i{
+    font-size: 1.5rem;
+    color: var(--color-danger);
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }

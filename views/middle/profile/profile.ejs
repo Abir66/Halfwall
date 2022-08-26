@@ -90,7 +90,7 @@
         <div class="user">
             <div class="profile-picture">
                 <!------Need to use user's profile pic later-->
-                <img src="/images/pfp.jpg" alt="pfp" >
+                <img src="<%= user.PROFILE_PIC %>" alt="<%= user.NAME %>" >
             </div>
         </div>
         <div class="side">
@@ -243,7 +243,7 @@
 
             const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${follower_id}">
                             <div class = "modal-userlist-userinfo">
-                                <a href="/user/user_id=${follower_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
+                                <a href="/user/user_id=${follower_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="${followers[i].PROFILE_PIC}"></div></a>
                                 <a href="/user/user_id=${follower_id}"  class="modal-userlist-username">${follower_name}</a>
                             </div>
                             <% if (user.USER_ID == currentUser.USER_ID) { %>
@@ -276,7 +276,7 @@
 
             const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${followee_id}">
                             <div class = "modal-userlist-userinfo">
-                                <a href="/user/user_id=${followee_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
+                                <a href="/user/user_id=${followee_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="${followings[i].PROFILE_PIC}"></div></a>
                                 <a href="/user/user_id=${followee_id}"  class="modal-userlist-username">${followee_name}</a>
                             </div>
                         </div>`;

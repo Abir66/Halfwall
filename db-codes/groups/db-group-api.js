@@ -1,6 +1,9 @@
 const Database = require('../database');
 const database = new Database();
 
+// require defaults
+const default_values = require('../default_values');
+
 
 async function createGroup(group, admin_id){
     const sql = `BEGIN
@@ -54,7 +57,7 @@ async function deleteGroup(group_id){
 
 // get group by group id
 async function getGroup(group_id){
-    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT
+    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, NVL(G.COVER_PHOTO, '${default_values.default_group_cover}') "COVER_PHOTO", (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT
                 FROM GROUPS G WHERE GROUP_ID = :group_id`;
     const binds = {
         group_id : group_id
@@ -97,7 +100,7 @@ async function getGroupsForUser(user_id, search_data){
 
     if(search_data.search_term && search_data.search_term.length > 0) group_name_str = `AND UPPER(G.GROUP_NAME) LIKE UPPER('%${search_data.search_term}%')`;
 
-    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY, G.COVER_PHOTO, (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT, GROUP_MEMBERSHIP_STATUS(G.GROUP_ID, :user_id) AS GROUP_MEMBERSHIP_STATUS
+    const sql = `SELECT G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,  NVL(G.COVER_PHOTO, '${default_values.default_group_cover}') "COVER_PHOTO", (SELECT COUNT(*) FROM GROUP_MEMBERS G2 WHERE G2.GROUP_ID = G.GROUP_ID AND G2.STATUS <> 'PENDING' ) AS GROUP_MEMBER_COUNT, GROUP_MEMBERSHIP_STATUS(G.GROUP_ID, :user_id) AS GROUP_MEMBERSHIP_STATUS
                 FROM GROUPS G
                 WHERE G.GROUP_ID > 100
                 ${group_name_str}
@@ -156,9 +159,11 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
     }
     
     const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
-                INITCAP(U.NAME) "USERNAME", U.PROFILE_PIC "USER_PROFILE_PIC",
+                INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
-                G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY
+                COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
+                G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
+                CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID LEFT JOIN GROUPS G ON P.GROUP_ID = G.GROUP_ID
                 WHERE P.GROUP_ID = :group_id
                 ${post_user}
@@ -174,11 +179,6 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
     };
 
     result = (await database.execute(sql,binds)).rows;
-
-    for(let post of result){
-        const IMAGES = ['/images/pfp2.png','/images/pfp.jpg']
-        post.IMAGES = IMAGES;
-    }
     return result;
 }
 

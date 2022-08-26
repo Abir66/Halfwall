@@ -139,7 +139,7 @@
             <div class="head">
                 <div class="user">
                 <div class="profile-picture">
-                    <img src="/images/pfp.jpg" alt="pfp">
+                    <img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>">
                 </div>
                 
                 <div class="info">
@@ -230,7 +230,6 @@
 
         // create a new formdata and add info to it
         const formData = new FormData();
-        formData.append('user_id', <%= currentUser.USER_ID%>);
         formData.append('post_text', form.querySelector('.post-text').value);
         
 

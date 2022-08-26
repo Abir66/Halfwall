@@ -12,26 +12,23 @@ router.post('/signin', async (req, res) => {
     if (studentIDorEmail.length === 7 && !studentIDorEmail.includes('.') && !isNaN(studentIDorEmail)) studentID = parseInt(studentIDorEmail);
     else email = studentIDorEmail;
 
-    console.log(studentID, email, password);
-
-
     if (studentID) result = await DB_user.getUserByStudentId(studentID);
     else if (email) result = await DB_user.getUserByEmail(email);
 
 
     if (result === undefined || result.length === 0) {
-        //errors.push("Email or UserID not found");
         res.send("Email or UserID not found");
         return;
     }
 
-    else if (result.PASSWORD !== password) {
+    const password_matched = await DB_user.checkPassword(result.USER_ID, password);
+    
+    if (!password_matched) {
         res.send("Password incorrect");
         return;
     }
 
     else {
-        // do jwt token things
         const token = jwt.sign({ user_id: result.USER_ID }, process.env.JWT_ACCESS_TOKEN);
         let options = {
             maxAge: 1000 * 60 * 60 * 24 * 365,
@@ -39,7 +36,7 @@ router.post('/signin', async (req, res) => {
         }
         res.cookie('auth-token', token, options);
         res.send("success");
-        //res.redirect('/newsfeed');
+        console.log(`user - ${result.USER_ID} - ${result.STUDENT_ID} signing in...`);
     }
 
 })

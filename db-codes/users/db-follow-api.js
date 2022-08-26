@@ -1,6 +1,6 @@
 const Database = require('../database');
 const database = new Database();
-
+const default_values = require('../default_values');
 
 async function requestFollow(follower, following){
     const sql =`INSERT INTO follow_requests
@@ -75,7 +75,7 @@ async function getFollowerCount(user_id){
 
 async function getFollowerList(user_id){
 
-    const sql = `SELECT follows.FOLLOWER_ID USER_ID, NAME, TIMESTAMP, PROFILE_PIC 
+    const sql = `SELECT follows.FOLLOWER_ID USER_ID, NAME, TIMESTAMP, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM follows left join users on follows.follower_id = users.USER_ID
                 WHERE followee_id = :user_id
                 ORDER BY TIMESTAMP DESC`;
@@ -100,7 +100,7 @@ async function getFollowingCount(user_id){
 
 async function getFollowingList(user_id){
 
-    const sql = `SELECT follows.FOLLOWEE_ID USER_ID, NAME, TIMESTAMP, PROFILE_PIC 
+    const sql = `SELECT follows.FOLLOWEE_ID USER_ID, NAME, TIMESTAMP, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM follows left join users on follows.followee_id = users.USER_ID
                 WHERE follower_id = :user_id
                 ORDER BY TIMESTAMP DESC`;
@@ -120,7 +120,7 @@ async function followedUser(follower_id, followee_id){
         followee_id : followee_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    return result[0];
+    return result.length > 0;
 }
 
 async function requestedToFollowUser(follower_id, followee_id){
@@ -146,7 +146,7 @@ async function getFollowRequestCount(user_id){
 }
 
 async function getFollowRequests(user_id){
-    const sql = `SELECT follow_requests.FOLLOWER_ID USER_ID, TIMESTAMP, NAME, PROFILE_PIC 
+    const sql = `SELECT follow_requests.FOLLOWER_ID USER_ID, TIMESTAMP, NAME, NVL(users.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM follow_requests left join users on follow_requests.follower_id = users.USER_ID
                 WHERE followee_id = :user_id`;
     const binds ={

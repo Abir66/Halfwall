@@ -156,14 +156,14 @@
         
         <% if (data.user_list && data.user_list.length > 0) { %>
         <div class="found-profile-list" id="found-profile-list">
-            <% for( let index = 0; index < data.user_list.length; index++ ) { %>
+            <% for( let user of data.user_list ) { %>
                 <div class="found-profile-card">
-                    <a class="found-profile-description" href="/user/user_id=<%= data.user_list[index].USER_ID %>">
-                        <div class = "profile-picture"><img  src="/images/pfp.jpg" alt="pfp"></div> 
+                    <a class="found-profile-description" href="/user/user_id=<%=user.USER_ID %>">
+                        <div class = "profile-picture"><img  src="<%= user. PROFILE_PIC %> " alt="<%=user.NAME%>"></div> 
                     
                         <div class="found-profile-info">
-                            <h3 class="found-profile-userName" style="font-size : 1rem; font-weight : 500;"><%=data.user_list[index].NAME%></h3>
-                            <p class="found-profile-student-id text-muted" style="font-size : 0.8rem;""><%=data.user_list[index].STUDENT_ID%></p>
+                            <h3 class="found-profile-userName" style="font-size : 1rem; font-weight : 500;"><%=user.NAME%></h3>
+                            <p class="found-profile-student-id text-muted" style="font-size : 0.8rem;"><%=user.STUDENT_ID%></p>
                         </div>
                     </a>
                 </div>

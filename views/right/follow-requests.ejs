@@ -20,19 +20,15 @@
         followRequestsBox.innerHTML = `Follow Requests : ${followers.length}`;
         modalBody.innerHTML = ""
 
-        for (let i = 0; i < followers.length; i++) {
-
-            let user_name = followers[i].NAME;
-            let user_id = followers[i].USER_ID;
-
-            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${user_id}">
+        for (let follower of followers) {
+            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${follower.USER_ID}">
                             <div class = "modal-userlist-userinfo">
-                                <a href="/user/user_id=${user_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
-                                <a href="/user/user_id=${user_id}"  class="modal-userlist-username">${user_name}</a>
+                                <a href="/user/user_id=${follower.USER_ID}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="${follower.PROFILE_PIC}"></div></a>
+                                <a href="/user/user_id=${follower.USER_ID}"  class="modal-userlist-username">${follower.NAME}</a>
                             </div>
                             <div class = "modal-userlist-action-buttons">
-                                <button class="followRequest-list-accept btn btn-primary"  onclick = "processFollowRequest(${user_id}, 'accept')">Accept</button>
-                                <button class="followRequest-list-remove btn btn-primary"  onclick = "processFollowRequest(${user_id}, 'remove')">Remove</button>
+                                <button class="followRequest-list-accept btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'accept')">Accept</button>
+                                <button class="followRequest-list-remove btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'remove')">Remove</button>
                             </div>
                         </div>`;
             modalBody.innerHTML += str;

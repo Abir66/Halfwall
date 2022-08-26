@@ -1,6 +1,6 @@
 const Database = require('../database');
 const database = new Database();
-
+const default_values = require('../default_values');
 
 
 async function getGroupMembers(group_id, status = 'ADMIN', search_data = {}){
@@ -17,7 +17,7 @@ async function getGroupMembers(group_id, status = 'ADMIN', search_data = {}){
     // followings only
     if(search_data.member_filter && search_data.member_filter.includes('followings')) followings = `AND GM.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = ${search_data.user_id})`;
 
-    const sql = `SELECT U.USER_ID, U.STUDENT_ID, U.NAME, U.PROFILE_PIC, GM.TIMESTAMP
+    const sql = `SELECT U.USER_ID, U.STUDENT_ID, U.NAME, NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC", GM.TIMESTAMP
                 FROM GROUP_MEMBERS GM JOIN USERS U on GM.USER_ID = U.USER_ID
                 WHERE GM.GROUP_ID = :group_id
                 AND GM.STATUS = UPPER(:status)
@@ -57,7 +57,6 @@ async function leaveGroup(group_id, user_id){
         result : {type : oracledb.VARCHAR2, dir : oracledb.BIND_OUT}
     }
     const result = (await database.execute(sql, binds)).outBinds;
-    console.log(result);
     return result.result;
 }
 
@@ -125,7 +124,7 @@ async function getGroupMembership(group_id, user_id){
 
 async function getMemberinGroup(group_id, user_id){
 
-    const sql = `SELECT U.USER_ID, INITCAP(U.NAME) "NAME", U.STUDENT_ID, U.PROFILE_PIC, GM.STATUS, TO_CHAR(GM.TIMESTAMP, 'DD-MON-YYYY') "TIMESTAMP"
+    const sql = `SELECT U.USER_ID, INITCAP(U.NAME) "NAME", U.STUDENT_ID, NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC", GM.STATUS, TO_CHAR(GM.TIMESTAMP, 'DD-MON-YYYY') "TIMESTAMP"
                 FROM USERS U JOIN GROUP_MEMBERS GM ON U.USER_ID = GM.USER_ID
                 WHERE U.USER_ID = :user_id AND GM.GROUP_ID = :group_id `;
     const binds = {

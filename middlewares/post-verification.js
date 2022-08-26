@@ -8,6 +8,7 @@ const DB_follow = require('../db-codes/users/db-follow-api');
 
 async function verifyAccessToViewPost(req,res,next){
     
+    
     const post_metaData = await DB_post.getGroupAndUserOfPost(req.params.post_id);
     res.locals.postViewAccess = false;
 

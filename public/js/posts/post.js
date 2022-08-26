@@ -31,15 +31,11 @@ async function getLikersList(post_id){
         modalTitle.innerHTML = `Likes : ${users.length}`;
         modalBody.innerHTML = "";
 
-        for (let i = 0; i < users.length; i++) {
-
-            let user_name = users[i].NAME;
-            let user_id = users[i].USER_ID;
-
-            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${user_id}">
+        for (let user of users) {
+            const str = `<div class = "modal-userlist-users" id = "modal-userlist-user-${user.USER_ID}">
                             <div class = "modal-userlist-userinfo">
-                                <a href="/user/user_id=${user_id}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="/images/pfp.jpg"></div></a>
-                                <a href="/user/user_id=${user_id}"  class="modal-userlist-username">${user_name}</a>
+                                <a href="/user/user_id=${user.USER_ID}"  class="modal-userlist-userpic"><div class = "profile-picture"><img src="${user.PROFILE_PIC}"></div></a>
+                                <a href="/user/user_id=${user.USER_ID}"  class="modal-userlist-username">${user.NAME}</a>
                             </div>
                         </div>`;
             modalBody.innerHTML += str;
@@ -53,7 +49,7 @@ async function addComment(comment_list, comment, group_id){
     const comment_str = ` 
             <div class="comment">
                 <div class="profile-picture">
-                    <a href="/groups/group_id=${group_id}/user/user_id=${comment.USER_ID}"> <img src="/images/pfp.jpg" alt="pfp"> </a>
+                    <a href="/groups/group_id=${group_id}/user/user_id=${comment.USER_ID}"> <img src="${comment.PROFILE_PIC}" alt="pfp"> </a>
                 </div>
 
                 <div class="comment-body">
@@ -61,8 +57,9 @@ async function addComment(comment_list, comment, group_id){
                         <p class="comment-username"><a href="/groups/group_id=${group_id}/user/user_id=${comment.USER_ID}"> ${comment.USERNAME} </a>
                         <small class = "comment-time text-muted">${comment.TIMESTAMP}</small></p>
                     </div>
-                
-                    <div class="comment-text"><p>${comment.TEXT}</p></div>
+
+                    ${(!comment.TEXT || comment.TEXT == null) ? '' : '<div class="comment-text"><p>' + comment.TEXT + '</p></div>'}
+                    
                 
                     ${comment.IMAGE ? `<div class="comment-image"><img src="${comment.IMAGE}" alt="comment-image"></div>` : ""}
                 </div>
@@ -108,4 +105,135 @@ async function hideComments(post_id){
     // set display of comments to none
     const comments = post.querySelector('.comments');
     comments.style.display = "none";
+
+    // clear the comments list
+    const comments_list = post.querySelector('.comments-list');
+    comments_list.innerHTML = "";
+}
+
+async function textarea_auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight)+"px";
+}
+
+
+// prevent default behaviour of all form submit
+
+
+async function comment_image_preview(post_id){
+
+    // get the post element
+    const post = document.getElementById(`post-${post_id}`);
+
+    // get the file input
+    const file_input = post.querySelector('.comment-image-input');
+
+    // get the input file
+    const file = file_input.files[0];
+
+    // get the image preview
+    const image_preview = post.querySelector('.comment-image-preview');
+
+    // clear the image preview
+    image_preview.innerHTML = "";
+
+    // if file is an image
+    if (file.type.match("image.*")) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            let img = document.createElement("img");
+            img.src = e.target.result;
+            image_preview.appendChild(img);
+
+            // add a close button
+            let close_button = document.createElement("i");
+            close_button.className = "fa-solid fa-rectangle-xmark comment-image-close";
+            close_button.onclick = function(){
+                image_preview.innerHTML = "";
+                file_input.value = "";
+            }
+
+            image_preview.appendChild(close_button);
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+
+document.querySelector('.create-post').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+} );
+
+
+async function send_comment(post_id, group_id){
+    
+    // get the post element
+    const post = document.getElementById(`post-${post_id}`);
+
+    // get the comment form data
+    const form_data = new FormData(post.querySelector('.comment-form'));
+    
+    // get comment-text value
+    const comment_text = form_data.get('comment_text_input');
+
+
+    // check if both image and input is empty
+    if(form_data.get('comment_image').name == "" && (!comment_text || comment_text.trim()===''))return;
+
+
+    //close image preview
+    const image_preview = post.querySelector('.comment-image-preview');
+    image_preview.innerHTML = "";
+
+    // clear comment_text_input
+    const comment_text_input = post.querySelector('.comment-text-input');
+    comment_text_input.value = "";
+
+    let res;
+
+    try{
+        res = await axios({
+            method: 'post',
+            url: `/posts/post_id=${post_id}/comment`,
+            data: form_data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+    }catch(err){
+    
+    }
+
+    // clear files
+    const file_input = post.querySelector('.comment-image-input');
+    file_input.value = "";
+
+
+    if(res.data.result != 'success'){
+        alert('Couldn\'t send comment');
+        return;
+    }
+
+
+    // increment comments count
+    const comments_count = post.querySelector('.comments-count');
+    console.log("before", comments_count.innerHTML);
+    const comments_count_value = parseInt(comments_count.innerHTML.trim().split(' ')[0]);
+    comments_count.innerHTML = `${comments_count_value + 1} comments`;
+    console.log("after", comments_count.innerHTML);
+
+
+
+    // set display of comments to block
+    const comments = post.querySelector('.comments');
+    comments.style.display = "block";
+    
+    // get the comments list
+    const comments_list = post.querySelector('.comments-list');
+    
+
+    // add comment to the list
+    await addComment(comments_list, res.data.comment, group_id);
+
 }

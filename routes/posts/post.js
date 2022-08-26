@@ -2,7 +2,7 @@ const router = require('express').Router();
 const db_post = require('../../db-codes/posts/db-post-api');
 const { verify } = require('../../middlewares/user-verification');
 const { verifyAccessToViewPost } = require('../../middlewares/post-verification');
-const { posts_upload } = require('../../middlewares/file-upload');
+const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
 
 // need to add a middleware to check if the user has access to the post
 router.post('/like/post_id=:post_id', verify, async (req, res) => {
@@ -61,11 +61,9 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
     
     const files = [];
     for(let file of req.files) {
-        // get file extension
-        const file_extension = file.filename.split('.').pop();
         
+        const file_extension = file.filename.split('.').pop();
         let file_path = file.path.replace(/\\/g, '/');
-        // rmeove the root folder
         file_path = file_path.substring(file_path.indexOf('/'));
 
         if(file_extension === 'png' || file_extension === 'jpg' || file_extension === 'jpeg') {
@@ -83,12 +81,43 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
         }
     }
 
-    console.log(files);
-    console.log(data);
+    data.post_text = data.post_text.replace(/\s+/g, " ").trim();
     
-
-    //const post_id = await db_post.createPost(data, files, req.user.USER_ID);
+    
+    
+    await db_post.createPost(req.user.USER_ID, data, files);
     res.send('okay');
 } )
+
+
+router.post('/post_id=:post_id/comment', verify, verifyAccessToViewPost, comments_upload.single('comment_image') ,async (req, res) => {
+
+    let file_path = undefined;
+    if(req.file) {
+        file_path = req.file.path.replace(/\\/g, '/');
+        file_path = file_path.substring(file_path.indexOf('/'));
+    }
+
+    const comment = {
+        post_id : req.params.post_id,
+        user_id : req.user.USER_ID,
+        comment_text : req.body.comment_text_input,
+        comment_image : file_path
+    }
+
+    const result = await db_post.createComment(comment);
+    
+
+    if(result.result != 'success'){
+        res.send(result.result);
+        return;
+    }
+
+
+    const new_comment = await db_post.getCommentByID(result.comment_id);
+    result.comment = new_comment;
+    res.send(result);
+
+})
 
 module.exports = router;

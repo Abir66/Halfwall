@@ -86,26 +86,10 @@ router.get('/profile', verify, async (req, res) => {
 });
 
 router.get('/editProfile', verify, async(req,res)=>{
-    const currentUser = {
-        USER_ID : req.user.USER_ID,
-        STUDENT_ID : req.user.STUDENT_ID,
-        NAME : req.user.NAME,
-        EMAIL : req.user.EMAIL,
-        DEPARTMENT: req.user.DEPARTMENT,
-        DATE_OF_BIRTH: req.user.DATE_OF_BIRTH,
-        HALL: req.user.HALL,
-        HALL_ATTACHMENT: req.user.HALL_ATTACHMENT,
-        BATCH: req.user.BATCH,
-        STREET: req.user.STREET,
-        CITY: req.user.CITY,
-        POSTCODE: req.user.POSTCODE,
-        PROFILE_PIC : '/images/pfp.jpg', // will change it later
-    }
-    
     let middle = [{type : 'editProfile', location : 'profile/editProfile'}];
     res.render('index', {
         type : "editProfile",
-        currentUser : currentUser,
+        currentUser : req.user,
         title : 'Edit Profile',
         left : ['left-profile', 'sidebar'],
         right : [],
@@ -115,7 +99,9 @@ router.get('/editProfile', verify, async(req,res)=>{
 
 
 router.post('/editProfile', verify, async(req,res)=>{
-    if(req.user.PASSWORD != req.body.password){
+
+    const password_matched = await DB_user.checkPassword(req.user.USER_ID, req.body.password);
+    if(!password_matched){
         res.send('Incorrect Password');
         return;
     }

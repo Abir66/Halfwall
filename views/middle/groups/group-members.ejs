@@ -47,7 +47,7 @@
         <div class="group-member" id = 'group_member_<%= admin.USER_ID %>'>
         <a href="/groups/group_id=<%= group.GROUP_ID %>/user/user_id=<%= admin.USER_ID %>">
             <div class="group-member-info">
-                <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
+                <div class="profile-picture"><img src="<%=admin.PROFILE_PIC%>" alt="<%= admin.NAME %> "></div>
                 <div class="group-member-name"><%= admin.NAME %></div>
             </div>
         </a>
@@ -67,7 +67,7 @@
             <div class="group-member" id = 'group_member_<%= member.USER_ID %>'>
             <a href="/groups/group_id=<%= group.GROUP_ID %>/user/user_id=<%= member.USER_ID %>">
                 <div class="group-member-info">
-                    <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
+                    <div class="profile-picture"><img src="<%=member.PROFILE_PIC%>" alt="<%=member.NAME%>"></div>
                     <div class="group-member-name"><%= member.NAME %></div>
                 </div>
             </a>
@@ -92,7 +92,7 @@
             <div class="group-member" id = 'group_member_<%= member.USER_ID %>'>
             <a href="/groups/group_id=<%= group.GROUP_ID %>/user/user_id=<%= member.USER_ID %>">
                 <div class="group-member-info">
-                    <div class="profile-picture"><img src="/images/pfp.jpg" alt="pfp"></div>
+                    <div class="profile-picture"><img src="<%=member.PROFILE_PIC%>" alt="<%=member.NAME%>"></div>
                     <div class="group-member-name"><%= member.NAME %></div>
                 </div>
             </a>

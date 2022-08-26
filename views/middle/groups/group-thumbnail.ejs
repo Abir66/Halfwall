@@ -33,7 +33,7 @@
     <% for( const group of data.groups ) { %>
         <a href="/groups/group_id=<%= group.GROUP_ID %>">
             <div class="group-thumbnail">
-                <div class="group-picture"><img src="images/pfp2.png" alt="pfp"></div>
+                <div class="group-picture"><img src="<%=group.COVER_PHOTO%>" alt="pfp"></div>
                 <div class="group-info">
                     <h3 class = "group-name"><%=  group.GROUP_NAME %></h3>
                     <div class="group-details">

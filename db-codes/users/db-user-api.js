@@ -1,7 +1,7 @@
 const Database = require('../database');
 const database = new Database();
 const DB_follow = require('../../db-codes/users/db-follow-api');
-
+const default_values = require('../default_values');
 
 
 async function insertUser(user){
@@ -36,7 +36,11 @@ async function insertUser(user){
 }
 
 async function getUserByStudentId(student_id){
-    const sql = `SELECT * FROM users
+    const sql = `SELECT USER_ID, STUDENT_ID, NAME, EMAIL, DEPARTMENT, 
+                DATE_OF_BIRTH, HALL, HALL_ATTACHMENT, BATCH, 
+                STREET, CITY, POSTCODE,
+                NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
+                FROM USERS
                 WHERE student_id = :student_id`;
     const binds ={
         student_id : student_id
@@ -46,9 +50,24 @@ async function getUserByStudentId(student_id){
     return result[0];
 }
 
+async function checkPassword(user_id, password){
+    const sql = `SELECT 1 FROM users
+                WHERE user_id = :user_id
+                AND password = :password`;
+    const binds ={
+        user_id : user_id,
+        password : password
+    };
+    const result = (await database.execute(sql, binds)).rows;
+    return result.length > 0;
+}
 
 async function getUserById(user_id){
-    const sql = `SELECT * FROM users
+    const sql = `SELECT USER_ID, STUDENT_ID, NAME, EMAIL, DEPARTMENT, 
+                DATE_OF_BIRTH, HALL, HALL_ATTACHMENT, BATCH, 
+                STREET, CITY, POSTCODE,
+                NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC" 
+                FROM users
                 WHERE user_id = :user_id`;
     const binds ={
         user_id : user_id
@@ -58,7 +77,11 @@ async function getUserById(user_id){
 }
 
 async function getUserByEmail(email){
-    const sql = `SELECT * FROM users 
+    const sql = `SELECT USER_ID, STUDENT_ID, NAME, EMAIL, DEPARTMENT, 
+                DATE_OF_BIRTH, HALL, HALL_ATTACHMENT, BATCH, 
+                STREET, CITY, POSTCODE,
+                NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC" 
+                FROM users 
                 WHERE email = :email`;
     const binds ={
         email : email
@@ -83,7 +106,8 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
     // filtering
     let groups;
     const group_ids = { public : 1, private : 2} 
-    if(!search_data.search_filter || search_data.search_filter.length == 2){
+    
+    if(!search_data.search_filter || search_data.search_filter.length == 2 || search_data.search_filter.length == 0){
         if(viewer_id == user_id || followed) groups = `${group_ids.public}, ${group_ids.private}`;
         else groups = `${group_ids.public}`;
     }
@@ -97,9 +121,9 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
     }
 
     // sorting
-    let order_by = "TIMESTAMP DESC", search_term_str = "";
+    let order_by = "P.TIMESTAMP DESC", search_term_str = "";
     // HAVE TO IMPLEMENT A RANK FUNCTION LATER
-    if(search_data.sort_by === "popularity") order_by = `LIKES_COUNT DESC, TIMESTAMP DESC`;
+    if(search_data.sort_by === "popularity") order_by = `LIKES_COUNT DESC, P.TIMESTAMP DESC`;
 
     // searching
     if(search_data.search_term && search_data.search_term.length > 0) 
@@ -109,9 +133,9 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
     
 
     const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
-                INITCAP(U.NAME) "USERNAME", U.PROFILE_PIC "USER_PROFILE_PIC",
-                LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:viewer_id, P.POST_ID) "USER_LIKED", COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT"
-	                
+                INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
+                LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:viewer_id, P.POST_ID) "USER_LIKED", COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
+	            CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"    
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
                 WHERE P.USER_ID = :user_id
                 AND P.GROUP_ID IN (${groups}) ${search_term_str}
@@ -123,13 +147,6 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
     };
     
     result = (await database.execute(sql,binds)).rows;
-
-    // will change later
-    for(let post of result){
-        const IMAGES = ['/images/pfp2.png']
-        post.IMAGES = IMAGES;
-    }
-
     return result;
 }
 
@@ -189,7 +206,7 @@ async function searchProfile(search_data){
 
 
 async function getUserMiniData(user_id){
-    const sql = `SELECT USER_ID, STUDENT_ID, INITCAP(NAME) "NAME", PROFILE_PIC
+    const sql = `SELECT USER_ID, STUDENT_ID, INITCAP(NAME) "NAME", NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM users  
                 WHERE USER_ID = :user_id`;
     const binds ={
@@ -224,5 +241,6 @@ module.exports = {
     getUserProfilePosts,
     updateUser,
     getUserMiniData,
-    test
+    test,
+    checkPassword
 }

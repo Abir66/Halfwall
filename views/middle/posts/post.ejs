@@ -4,7 +4,7 @@
         <div class="user">
             <div class="profile-picture">
                 <!------Need to use user's profile pic later-->
-                <a href="/groups/group_id=<%= postData.GROUP_ID%>/user/user_id=<%= postData.USER_ID%>"> <img src="/images/pfp.jpg" alt="pfp"> </a>
+                <a href="/groups/group_id=<%= postData.GROUP_ID%>/user/user_id=<%= postData.USER_ID%>"> <img src="<%= postData.PROFILE_PIC %>" alt="<%= postData.USERNAME %>"> </a>
                 
             </div>
             <div class="ingo">
@@ -34,21 +34,26 @@
         <!--- Need to split the string by paragraphs and make individual paragraph tags for each ones -->
         <p><%= postData.TEXT %></p>
     </div> 
-    <% if (postData.IMAGES) { %>
-        <!--- Need convert this into a image sidebar. Should be implemented in another ejs -->
+    <% if (postData.FILES) { %>
+        
         <div id="imageSlider<%= postData.POST_ID %>" class="carousel slide" data-ride="carousel">
             <div class="container-fluid">
                 <div class="carousel-indicators">
-                    <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
+                    <% for( let index=0; index < postData.FILES.length; index++ ) { %>
                         <button type="button" data-bs-target="#imageSlider<%= postData.POST_ID %>" data-bs-slide-to="<%=index %>" <% if(index == 0){ %> class="active" <% } %> ></button>
-                    
                     <% } %> 
                 </div>
                 <div class="carousel-inner">  
-                    <% for( let index=0; index < postData.IMAGES.length; index++ ) { %>
-                        <div class="carousel-item <% if(index == 0){ %> active <% } %>  ">
-                            <div class="photo"><img src=<%=postData.IMAGES[index] %> alt="pfp2"></div>
-                        </div>
+                    <% for( let index=0; index < postData.FILES.length; index++ ) { %>
+                        <% if(postData.FILES[index].FILE_TYPE === 'IMAGE'){ %> 
+                            <div class="carousel-item <% if(index == 0){ %> active <% } %>  ">
+                                <div class="photo"><img src=<%=postData.FILES[index].FILE_LOCATION %> alt="POST_IMAGE"></div>
+                            </div>
+                        <% }else if(postData.FILES[index].FILE_TYPE === 'VIDEO'){ %>
+                            <div class="carousel-item <% if(index == 0){ %> active <% } %>  ">
+                                <video class = "video" controls><source src=<%= postData.FILES[index].FILE_LOCATION%> type="video/mp4" ></video>
+                            </div>
+                        <% } %> 
                     <% } %>  
                 </div>
                 <a  href="#imageSlider<%= postData.POST_ID %>" class="carousel-control-prev" role="button" data-bs-slide="prev"></a>
@@ -74,13 +79,33 @@
         </div>
     </div>
     
+    <hr>
     <div class="comments" style="display: none;">
-        <hr>
+        
         <p class="hide-comments" onclick="hideComments(<%= postData.POST_ID%>)">Hide comments</p>
         
         <div class="comments-list">
 
         </div>
     </div>
+
+
+    
+    
+    <div class="comment-image-preview" id="comment-image-preview-<%= postData.POST_ID%>"></div>
+
+    <div class="add-comment">
+        <form action="" class="comment-form">
+            <!-- comment attach preview  -->
+            <div class="comment-image-preview-container">
+                <input type="file" name="comment_image" class="comment-image-input" id="comment-image-file-input-<%= postData.POST_ID%>" accept="image/png, image/jpeg" onchange="comment_image_preview(<%= postData.POST_ID%>)" hidden>
+            </div>
+            <label for="comment-image-file-input-<%= postData.POST_ID%>" class="comment-attach-image-button"><i class="fa-solid fa-paperclip"></i></label>
+            <textarea class = "comment-text-input" name="comment_text_input" rows="1" placeholder="Write a comment..." oninput="textarea_auto_grow(this)" ></textarea>
+            <div class="comment-submit" onclick="send_comment(<%= postData.POST_ID%>, <%= postData.GROUP_ID%> )"><i class="fa-solid fa-paper-plane"></i></div>
+        </form>
+    </div>
+    
+
 
 </div>

@@ -65,7 +65,6 @@
 
 
 .middle .create-post .post-group select{
-
     padding-right: 1rem;
     display: inline-block;
     border: 1px solid var(--color-light);
@@ -123,6 +122,33 @@
 }
 
 
+/* ------------------- sell post ------------------------*/
+.middle .sell-post-info{
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap : 1rem;
+    font-size: 1rem;
+}
+
+.middle .sell-post-info label{
+    width: 20%;
+}
+
+.middle .sell-post-info select{
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    
+}
+
+.middle .sell-post-info input[type='number']{
+    border: 1px solid var(--color-light);
+}
+
+
+
 </style>
 
 <form action="" class="create-post">
@@ -146,7 +172,7 @@
                     <p class="username"><%= currentUser.NAME%></p>
                     
                     <div class="post-group">
-                        <% if (group) { %>
+                        <% if (typeof group !== 'undefined') { %>
                             <p class="group-name text-muted">in <%=group.GROUP_NAME%></p>
                         <% } else { %>
                             <div class="form-group">
@@ -164,7 +190,37 @@
                 <i class="fa-solid fa-xmark" onclick="replacewithmini()" style="font-size: 1.5rem; color: var(--color-gray);"></i>
             </div>
         </div>
+
+        <% if ((typeof group !== 'undefined') && group.GROUP_NAME === 'Marketplace') { %>
         
+            <div class="sell-post-info">
+                <label for="catagory">Catagory</label>
+                <select name="catagory" id="sell-post-catagory" required>
+                    <option value="Clothings">Clothings</option>
+                    <option value="Bicyle">Bicycle</option>
+                    <option value="Smartphones and Tabs">Smartphones and Tabs</option>
+                    <option value="Computer and accessories">Computer and accessories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+
+            <div class="sell-post-info">
+                <label for="condition">Condition</label>
+                <select name="condition" id="sell-post-condition" required>
+                    <option value="New">New</option>
+                    <option value="Used">Used</option>
+                </select>
+            </div>
+
+            <div class="sell-post-info">
+                <label for="price">Price</label>
+                <input class="post-data" type="number" name="price" id="sell-post-price" required/>
+            </div>
+
+        <% } %>
+
+
         <textarea class = "post-text" name="post-text" rows="10" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>"></textarea>
         
         <div class="create-postfiles-preview-container">
@@ -198,7 +254,7 @@
 
     }
 
-    async function replacewithmini(){
+    async function replacewithmini(clear_form = true){
         let create_post = document.querySelector('.create-post');
         // hide create-post-big
         const create_post_big = create_post.querySelector('.create-post-big');
@@ -206,14 +262,28 @@
         // show create-post-mini
         const create_post_mini = create_post.querySelector('.create-post-mini');
         create_post_mini.style.display = 'flex';
+
+
+        if(clear_form){
+            create_post.reset();
+            const create_post_files_preview_list = create_post.querySelector('.create-postfiles-preview-container #create-post-files-preview-list');
+            create_post_files_preview_list.innerHTML = '';
+            files = [];
+        }
+        
     }
 
 
     // prevent default form action
     document.querySelector('.create-post').addEventListener('submit', async (e) => {
         e.preventDefault();
-        post(<% if (group) {%><%=group.GROUP_ID%><%}%>);
-        console.log("here....");
+        // check validity of form
+        if(!document.querySelector('.create-post').checkValidity()){
+            return;
+        }
+        post(<% if (typeof group !== 'undefined') {%><%=group.GROUP_ID%><%}%>);
+        
+        
         
     } );
 
@@ -243,7 +313,15 @@
         // get all files from files array and add it to formdata
         files.forEach(file => { formData.append('files', file);} );
         
+
+        // print the values
+        for(const [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
         
+        // replace with mini form
+        replacewithmini();
+
         // send formdata to server via axios 
         const res = await axios({
             method: 'post',

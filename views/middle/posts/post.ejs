@@ -30,8 +30,18 @@
         </span>
     </div>
 
+    <% if (postData.GROUP_NAME === 'Marketplace') { %>
+    <div class="marketplace-info-container">
+        <div class="product-info"><strong>Catagory : </strong><%= postData.CATAGORY%></div>
+        <div class="product-info"><strong>Condition : </strong><%= postData.CONDITION%></div>
+        <div class="product-info"><strong>Price : </strong><%= postData.PRICE%></div>
+        <div class="product-info"><strong>Available : </strong><%= postData.AVAILABLE%></div>
+    </div>
+
+    <% } %>
+
+
     <div class="post-text">
-        <!--- Need to split the string by paragraphs and make individual paragraph tags for each ones -->
         <p><%= postData.TEXT %></p>
     </div> 
     <% if (postData.FILES) { %>

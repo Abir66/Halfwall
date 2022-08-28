@@ -83,7 +83,7 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
 
     data.post_text = data.post_text.replace(/\s+/g, " ").trim();
     
-    
+    console.log(data);
     
     await db_post.createPost(req.user.USER_ID, data, files);
     res.send('okay');

@@ -52,18 +52,19 @@ a:active {
     text-decoration: none;
 }
 
-.btn{
-    border : none;
+.btn {
+    border: none;
 }
 
-.btn:hover{
-    background-color: hsl(252, 75%, 60%);;
+.btn:hover {
+    background-color: hsl(252, 75%, 60%);
+    ;
     color: var(--color-white);
-    border-color:var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 
-p{
+p {
     margin: 0;
 }
 
@@ -78,7 +79,7 @@ p{
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     width: 2.7rem;
     aspect-ratio: 1/1;
     overflow: hidden;
@@ -117,7 +118,7 @@ img {
     background: var(--color-white);
     color: rgb(28, 26, 26);
     border: 1px solid var(--color-primary);
-    
+
 }
 
 .text-bold {
@@ -146,7 +147,7 @@ nav .container {
     justify-content: space-between;
 }
 
-nav .logo{
+nav .logo {
     width: 15vw;
     display: flex;
 }
@@ -160,7 +161,7 @@ nav .search-bar {
 
 nav .search-bar input[type="search"] {
     background: transparent;
-    width:40vw;
+    width: 40vw;
     margin-left: 1rem;
     font-size: 0.9rem;
     color: var(--color-dark);
@@ -279,7 +280,7 @@ main .container .left .profile {
     background: var(--color-primary);
 }
 
-.left .username{
+.left .username {
     font-size: 1rem;
     font-weight: 500;
 }
@@ -292,7 +293,7 @@ main .container .left .profile-picture {
 
 /* ========================== Middle ============================= */
 
-.middle .middle-card{
+.middle .middle-card {
     background: var(--color-white);
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
@@ -305,7 +306,7 @@ main .container .left .profile-picture {
 
 /* ============================================= Right ================================================= */
 
-main .container .right{
+main .container .right {
 
     height: max-content;
     position: sticky;
@@ -313,22 +314,22 @@ main .container .right{
     bottom: 0;
 }
 
-.right .right-box{
+.right .right-box {
     background: var(--color-white);
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     padding-left: 2rem;
     padding-right: 2rem;
-    margin-bottom: 1rem;  
+    margin-bottom: 1rem;
 }
 
-.right .right-menu{
+.right .right-menu {
     background: var(--color-white);
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     margin-bottom: 1rem;
     padding-top: 1rem;
-    padding-bottom: 1rem; 
+    padding-bottom: 1rem;
 }
 
 .right .right-box .search-bar {
@@ -345,7 +346,7 @@ main .container .right{
     width: 80%;
     margin-left: 1rem;
     font-size: 0.9rem;
-    color: var(--color-dark); 
+    color: var(--color-dark);
 }
 
 .right .right-box .search-bar input[type="text"] {
@@ -353,7 +354,7 @@ main .container .right{
     width: 80%;
     margin-left: 1rem;
     font-size: 0.9rem;
-    color: var(--color-dark); 
+    color: var(--color-dark);
 }
 
 .right .right-box .search-bar .input[type="search"]::placeholder {
@@ -365,12 +366,50 @@ main .container .right{
 }
 
 
-.right .right-box .subsection h4{
+.right .right-box .subsection h4 {
     font-size: 1rem;
     font-weight: 500;
-    border-bottom:  0.1rem solid var(--color-gray);
+    border-bottom: 0.1rem solid var(--color-gray);
 }
 
 .dropdown-toggle::after {
     content: none;
 }
+
+.right .right-box .number-range {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.right .right-box .number-range input {
+    width: 100%;
+    border: 1px solid var(--color-gray);
+
+    padding: 0.1rem 0.5rem;
+}
+
+
+/* ====================================== Drop-down-check-list =================================== */
+
+  .dropdown-check-list .dropdown-check-list-anchor {
+    cursor: pointer;
+    padding: 0.5rem 1rem ;
+    border: 1px solid var(--color-gray);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .dropdown-check-list ul.dropdown-check-list-items {
+    font-size: 0.9rem;
+    padding: 2px;
+    display: none;
+    border: 1px solid #ccc;
+  }
+ 
+  .dropdown-check-list.visible .dropdown-check-list-items {
+    display: block;
+  }

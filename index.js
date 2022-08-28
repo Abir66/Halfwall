@@ -24,6 +24,7 @@ const auth = require('./routes/users/auth');
 const user = require('./routes/users/user');
 const followRoute = require('./routes/users/follow');
 const post = require('./routes/posts/post');
+const marketplace = require('./routes/groups/marketplace');
 
 
 
@@ -43,6 +44,7 @@ app.use('/user', user);
 app.use('/follow', followRoute);
 app.use('/posts', post);
 app.use('/groups', group);
+app.use('/marketplace', marketplace);
 
 
 

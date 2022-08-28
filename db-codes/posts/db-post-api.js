@@ -1,6 +1,7 @@
 const Database = require('../database');
 const database = new Database();
 const default_values = require('../default_values');
+const constant_values = require('../constant_values');
 
 async function addLike(post_id, user_id){
     const sql = `INSERT INTO LIKES
@@ -146,6 +147,19 @@ async function createPost(user_id, post_data, files){
         file_insert_sql += ' SELECT 1 FROM DUAL';
         const file_insert_binds = { post_id : result.post_id }
         await database.execute(file_insert_sql, file_insert_binds);
+    }
+
+    // // if group is marketplace
+    if(post_data.group_id == constant_values.marketplace_group_id){
+        const sql = `INSERT INTO SELL_POSTS (POST_ID, CATAGORY, PRICE, CONDITION, AVAILABLE) VALUES (:post_id, :catagory, :price, :condition, :available)`;
+        const binds = {
+            post_id : result.post_id,
+            catagory : post_data.catagory,
+            price : post_data.price,
+            condition : post_data.condition,
+            available : 'Yes'
+        }
+        await database.execute(sql, binds);
     }
     
 }

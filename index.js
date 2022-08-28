@@ -14,7 +14,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')))
 
+// setting up server for socket.io
+const http = require('http');
+const socketio = require('socket.io');
+const server = http.createServer(app);
+const io = socketio(server);
 
+io.on('connection',socket => {
+    // console.log("New connection detected");
+    // console.log(socket.id);
+	// socket.on('kisu', msg =>{
+    //     console.log("got something");
+    //     io.to(socket.id).emit('sendMessage','keman asa vaya');
+    // })
+    // socket.on('disconnect',() => {
+    //     console.log("disconnecting  ",socket.id);
+        
+    // });
+})
 
 
 // import routers
@@ -34,6 +51,8 @@ const newsfeed = require('./routes/newsfeed/newsfeed');
 // group routers
 const group = require('./routes/groups/groups');
 
+// message routers
+const messages = require('./routes/message/message');
 
 
 
@@ -45,6 +64,7 @@ app.use('/follow', followRoute);
 app.use('/posts', post);
 app.use('/groups', group);
 app.use('/marketplace', marketplace);
+app.use('/message',messages);
 
 
 
@@ -57,6 +77,6 @@ app.use((err, req, res, next) => {
 
 
 const port = process.env.PORT || 5000;
-app.listen(port, ()=>{
+server.listen(port, ()=>{
     console.log(`Listening on port ${port}`);
 })

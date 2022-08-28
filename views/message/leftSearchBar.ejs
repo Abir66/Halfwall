@@ -1,0 +1,34 @@
+<style>
+    .message-search-palete{
+        background-color: hsl(252, 30%, 100%);
+        padding: 10px;
+    }
+    .message-search-bar {
+        background: hsl(252, 30%, 95%);
+        border-radius: 2rem;
+        padding: 0.6rem 1rem;
+    }
+    .message-search-bar input[type="search"] {
+        background: transparent;
+        width:30vw;
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        color: hsl(252, 30%, 17%);
+    }
+
+    .message-search-bar .input[type="search"]::placeholder {
+        color: hsl(252, 15%, 65%);
+    }
+
+    .message-chats{
+        margin-left: 15px;
+        color: #525252;
+    }
+
+</style>
+
+<div class="message-search-palete">
+    <h2 class="message-chats">Chats</h2>
+    <input type="search" class="message-search-bar" id="message-search-bar" placeholder="Search User">
+    <div id="message-search-results"></div>
+</div>

@@ -12,6 +12,8 @@ router.post('/signin', async (req, res) => {
     if (studentIDorEmail.length === 7 && !studentIDorEmail.includes('.') && !isNaN(studentIDorEmail)) studentID = parseInt(studentIDorEmail);
     else email = studentIDorEmail;
 
+
+
     if (studentID) result = await DB_user.getUserByStudentId(studentID);
     else if (email) result = await DB_user.getUserByEmail(email);
 

@@ -1,0 +1,118 @@
+<style>
+    #chat-message-body{
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        position: absolute;
+        margin: 0 auto;
+        width: 73.4em;
+        background-color: hsl(252, 30%, 100%);
+    }
+    #chat-header-name{
+        font-size: 28px;
+        color: #525252;
+        margin-left: 0.5em;
+    }
+    #chat-header{
+        height: 3rem;
+        box-shadow: 10px 0px 30px hsla(252, 75%, 60%, 0.1);;
+    }
+    #chat-body{
+        overflow-y: scroll;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column-reverse;
+        padding: 0.5em;
+        height: 85%;
+    }
+    .message-bar{
+        display: flex;
+        padding: 1em;
+        margin: 0.5em 0;
+        width: 40%;
+    }
+    .message-detail{
+        width: 80%;
+        display: inline-block;
+        padding: 0 1em 1em 1em;
+        border-radius: 10px 10px 10px 0;
+        background-color: var(--color-light);
+        padding: 0.5em;
+    }
+    .message-details-own{
+        text-align: right;
+        border-radius: 10px 10px 0 10px;
+        background-color: var(--color-primary);
+        padding: 0.5em;
+    }
+    .message-bar-deleted{
+        background-color: var(--color-white);
+        border: 2px solid var(--color-gray);
+        color: var(--color-black);
+    }
+    .message-bar-deleted-own{
+        text-align: right;
+        border-radius: 10px 10px 0 10px;
+        background-color: var(--color-white);
+        border: 2px solid var(--color-gray);
+        color: var(--color-black);
+    }
+    .chat-user-name{
+        font-size: 12px;
+        color: var(--color-gray);
+    }
+    .chat-user-name-own{
+        font-size: 12px;
+        color: var(--color-light);
+    }
+    .chat-user-name-deleted{
+        font-size: 12px;
+        color: var(--color-black);
+    }
+    .message-bar-own{
+        
+        flex-direction: row-reverse;
+        margin-left: auto;
+        right: 10px;
+    }
+    .chat-text-own{
+        color: var(--color-white);
+    }
+    .chat-text-deleted{
+        color: var(--color-black);
+    }
+    #chat-send-messages{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 0;
+        text-align: right;
+        visibility: hidden;
+    }
+    #write_message{
+        
+        margin: 0 1em;
+        padding: 0.6em;
+        padding-left: 1.5em;
+        width: 85%;
+        border-radius: 2em;
+        background-color: hsl(252, 30%, 95%);;
+    }
+    .message-send-button{
+        cursor: pointer;
+        color: hsl(252, 75%, 60%);
+    }
+</style>
+
+<div id="chat-message-body">
+    <div id="chat-header">
+        <p id="chat-header-name"></p>
+    </div>
+    <div id="chat-body">
+        
+    </div>
+    <form method="post" id="chat-send-messages">
+        <input type="text" name="write_message" id="write_message" placeholder="enter message">
+        <button type="submit" name="submit" class="fa-solid fa-paper-plane fa-lg message-send-button"></button>
+    </div>
+</div>

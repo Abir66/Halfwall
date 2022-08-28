@@ -1,0 +1,22 @@
+<style>
+    .message-sidebar {
+        
+        background: var(--color-white);
+        
+        height: 572px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        
+    }
+</style>
+
+<div class="message-sidebar" id="message-sidebar">
+    <% for( let index = 0; index < chat_list.length; index++ ) { %>
+        <%- include('conversationHead',{chat: chat_list[index],image:image_list[index]}); -%>
+    <% } %>
+</div>
+

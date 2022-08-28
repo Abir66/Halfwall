@@ -29,7 +29,7 @@ async function signin(){
     // console.log(IDorEmail+" "+pass);
     const res = await axios.post("/auth/signin", data)
     if(res.data === "success"){
-        window.location.replace("/newsfeed");
+        window.location.replace("/message");
     }else{
         message_field.innerHTML = res.data;
         message_field.setAttribute('visibility','visible');

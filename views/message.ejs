@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages </title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/680fc33537.js" crossorigin="anonymous"></script>
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .message-container {
+            width: 27%;
+            display: flex;
+        }
+        .message-main{
+            position: relative;
+            top: 4.1rem;
+        }
+        .message-conversation-head{
+            display: flex;
+            padding: 1em;
+            margin: 0.5em;
+            border-radius: 1em;
+        }
+        .message-head-active{
+            background-color:hsl(252, 100%, 90%);
+        }
+        .message-conversation-head-hover:hover{
+            background-color: hsl(252, 30%, 95%);
+        }
+        .message-last-chat{
+            display: flex;
+        }
+        .message-profile-picture{
+            height: 3.5em;
+            width: 3.5em;
+            margin: 0 1em;
+
+        }
+        .message-delete-message-own{
+            background: none;
+            padding: 1em;
+            
+        }
+        .message-delete-message-own-icon{
+            color: var(--color-gray);
+        }
+        .message-delete-message-own-icon:hover{
+            color: var(--color-black);
+        }
+        .message-delete-message-own-removed{
+            background: none;
+            padding: 1em;
+            visibility: hidden;
+        }
+        #found_users_search{
+            display: flex;
+            padding: 1em;
+            margin: 0.5em;
+            border-radius: 0.5em;
+        }
+        #found_users_search:hover{
+            background-color: var(--color-secondary);
+        }
+        .found-user-description{
+            align-items: center;
+        }
+        .found-user-name{
+            font-size: 20px;
+            color: var(--color-black);
+        }
+        .found-user-id{
+            font-size: 14px;
+            color: var(--color-gray);
+        }
+    </style>
+</head>
+
+
+<body>
+
+   
+
+    <!--- Navbar -->
+    <%- include('navbar/navbar'); -%>
+    <div class="message-main">
+        <div class="message-container">
+            <div class="message-left">
+                <%- include('message/leftSearchBar') %> 
+                <%- include('message/leftConversations',{chat_list: chat_list,image_list:image_list}) %> 
+            </div>
+            <div class="message-middle">
+                <%- include('message/messageBody') %> 
+            </div>
+            
+        </div>
+        
+    </div>
+
+
+
+
+</body>
+<script src="/socket.io/socket.io.js" ></script>
+<script>  
+    // setting up client side socket
+    // const socket = io();
+    // socket.on('sendMessage',message=>{
+    //     console.log("hello from the client side");
+    //     console.log(message); // it catches the message that server.js emits
+    // });
+    // socket.emit('kisu','ki korla');
+    
+    const chat_list = <%- JSON.stringify(chat_list) %>;
+    const cUser = <%- JSON.stringify(currentUser) %>;
+    let loadedConversationId = -1;
+
+    // saving current chat_id
+    let currentChatId = 0;
+
+    // Getting the message text
+    const messageForm = document.getElementById('chat-send-messages');
+    const textMessage = document.getElementById('write_message');
+
+    // searching for a user in the search bar
+    let typingTimer;
+    const message_search_bar = document.getElementById('message-search-bar');
+    const message_search_results = document.getElementById('message-search-results');
+    const doneTypingInterval = 700;
+    let blankUserId = 0;
+
+    message_search_bar.addEventListener("keyup",function(){
+        clearTimeout(typingTimer);
+        message_search_results.style.display = "none";
+        if(message_search_bar.value){
+            typingTimer = setTimeout(searchUsers,doneTypingInterval);
+        }else{
+            updateChatList();
+        }
+    })
+
+    message_search_bar.addEventListener("keydown",function(){
+        clearTimeout(typingTimer);
+    })
+
+    async function searchUsers(){
+        
+        let userList = (await axios.post("/message/getUsersList",{input:message_search_bar.value,currentUser:cUser.USER_ID})).data.result;
+        let htmlData = '';
+        const message_sidebar = document.getElementById('message-sidebar');
+        for(let index = 0;index<userList.length;index++){
+            let divData = `
+            <div id="found_users_search" onclick="loadMessageFromSearchBar(${userList[index].USER_ID})">
+                <div class="message-profile-picture">
+                    <img class="" style="border-radius: 2em;" src=${userList[index].PROFILE_PIC} alt="pfp">
+                </div>
+                <div class="found-user-description">
+                    <div class="found-user-name">${userList[index].NAME}</div>
+                    <div class="found-user-id">${userList[index].STUDENT_ID} </div>
+                </div>
+            </div>
+            `;
+            htmlData += divData;
+        }
+        message_sidebar.innerHTML = htmlData;
+    }
+
+    async function loadMessageFromSearchBar(user_id){
+        let conversationId = (await axios.post('message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
+        if(conversationId.length === 0){
+            loadedConversationId = -3;
+            updateChatList();
+            starBlankConversation(user_id);
+        }else{
+            message_search_bar.innerHTML = '';
+            currentChatId = conversationId[0].CONVERSATION_ID;
+            updateChatList();
+            loadedConversationId = -2;
+            openchat(conversationId[0].CONVERSATION_ID);
+            
+        }
+    }
+
+    async function starBlankConversation(user_id){
+        
+        const data = (await axios.post("/message/getUserInfo",{user_id: user_id})).data.result;
+        document.getElementById("chat-header-name").innerHTML = data.NAME;
+        const chatBody = document.getElementById("chat-body");
+        let innerData = "";
+        
+        document.getElementById("chat-send-messages").style.visibility = "visible"; 
+        let lastDiv = `<div id="message-last-child"></div>`;
+        innerData+=lastDiv;
+        chatBody.innerHTML = innerData;
+        blankUserId = user_id;
+
+
+    }
+
+    
+
+    messageForm.addEventListener('submit',async function(e){
+        e.preventDefault();
+        let text = textMessage.value;
+        if(text.length === 0)
+            return;
+        if(loadedConversationId === -3){
+            let new_conversation_id = (await axios.post('/message/createConversation',{user_id:blankUserId,currentUser:cUser.USER_ID})).data.result;
+            currentChatId = new_conversation_id;
+        }
+        let message = {
+            chat_id : currentChatId,
+            user_id : cUser.USER_ID,
+            text : text,
+        }
+        const data = (await axios.post("/message/insertMessage",{message:message})).data;
+        if(data.result !== -1){
+            textMessage.value = '';
+            const chatBody = document.getElementById("message-last-child");
+            let innerData = "";
+            
+            let html = `
+            <div class="message-bar message-bar-own" id="message-id-${data.result}">
+                <div class="message-profile-picture">
+                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                </div>
+                <div class="message-details-own message-detail">
+                    <p class="chat-user-name-own">YOU</p><p class="chat-user-text chat-text-own">${text}</p>
+                </div>
+                <button class="message-delete-message-own" onclick="deleteMessage(${data.result})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>
+            </div>
+            `;
+            innerData += html;
+            chatBody.insertAdjacentHTML("afterend",innerData);
+            updateChatList();
+        }
+    });
+
+    async function updateChatList(){
+        const data = (await axios.post("/message/getChatList",{user_id:cUser.USER_ID})).data;
+        const new_chat_list = data.chat_list;
+        const new_image_list = data.image_list;
+        const message_sidebar = document.getElementById('message-sidebar');
+
+        let innerT = "";
+        for( let index = 0; index < new_chat_list.length; index++ ){
+            let token = '';
+            if(new_chat_list[index].USER_ID === cUser.USER_ID){
+                token = `<p class="message-chatHead-name">You: &nbsp</p>`;
+            }else{
+                token = `<p>${new_chat_list[index].NAME.split(" ")[0]}: &nbsp</p>`;
+            }
+            let s = `
+            <div class="message-conversation-head message-conversation-head-hover" id="chat-thumbnail-${new_chat_list[index].CONVERSATION_ID}" onclick="openchat(${new_chat_list[index].CONVERSATION_ID})">
+                <div class="message-profile-picture">
+                    <img class="" style="border-radius: 2em;" src=${new_image_list[index]} alt="pfp">
+                </div>
+                <div class="message-head-description">
+                    <label>${new_chat_list[index].NAME}</label>
+                    <div class="message-last-chat">
+                        ${token}  
+                        <sapn>${new_chat_list[index].TEXT} </span>
+                    </div>
+                </div>
+            </div>
+            `;
+            innerT += s;
+        }
+        message_sidebar.innerHTML = innerT;
+        if(loadedConversationId != -3 && currentChatId>0){
+            let thumbnail_id = "chat-thumbnail-"+currentChatId;
+            document.getElementById(thumbnail_id).classList.add("message-head-active");
+            document.getElementById(thumbnail_id).classList.remove("message-conversation-head-hover");
+        }
+        if(loadedConversationId !== -3)
+            loadedConversationId = -1;
+
+    }
+
+    async function openchat(chat_id){
+        let thumbnail_id = '';
+        if(loadedConversationId !== -2){
+            if(currentChatId > 0){
+                thumbnail_id = "chat-thumbnail-"+currentChatId;
+                document.getElementById(thumbnail_id).classList.remove("message-head-active");
+                document.getElementById(thumbnail_id).classList.add("message-conversation-head-hover");
+            }
+            thumbnail_id = "chat-thumbnail-"+chat_id;
+            document.getElementById(thumbnail_id).classList.add("message-head-active");
+            document.getElementById(thumbnail_id).classList.remove("message-conversation-head-hover");
+        }
+        
+        currentChatId = chat_id;
+        document.getElementById("chat-header-name").innerHTML = getChatName(chat_id);
+        const data = (await axios.post("/message/getMessages",{chat_id: chat_id})).data;
+        const currentUser = data.currentUser;
+        const chatData = data.messages;
+        const chatBody = document.getElementById("chat-body");
+        let innerData = "";
+        
+        document.getElementById("chat-send-messages").style.visibility = "visible"; 
+        let lastDiv = `<div id="message-last-child"></div>`;
+        innerData+=lastDiv;
+        for(let i=chatData.length-1;i>=0;i--){
+            let separateClass = "message-bar-others";
+            let separateDeatails = "";  
+            let title = chatData[i].USER_NAME;
+            let chatUserName = "chat-user-name";
+            let chatText = "chat-text";
+            let deleteMessage = "";
+            if(chatData[i].USER_ID == currentUser.USER_ID){
+                title = "You"
+                separateClass = "message-bar-own"
+                separateDeatails = "message-details-own"
+                chatUserName = "chat-user-name-own";
+                chatText = "chat-text-own";
+                deleteMessage = `<button class="message-delete-message-own" id="message-delete-message-own-${chatData[i].MESSAGE_ID}" onclick="deleteMessage(${chatData[i].MESSAGE_ID})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>`;
+            }
+            if(chatData[i].TYPE === "DELETED"){
+                separateDeatails = "message-bar-deleted";
+                if(chatData[i].USER_ID == currentUser.USER_ID){
+                    separateDeatails = "message-bar-deleted-own";
+                    deleteMessage = `<button class="message-delete-message-own-removed"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>`;
+                }
+                chatText = "chat-text-deleted";
+                chatUserName = "chat-user-name-deleted";
+
+            }
+            let html = `
+            <div class="message-bar ${separateClass} " id="message-id-${chatData[i].MESSAGE_ID}">
+                <div class="message-profile-picture">
+                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                </div>
+                <div class="${separateDeatails} message-detail">
+                    <p class="${chatUserName}">${title}</p><p class="chat-user-text ${chatText}">${chatData[i].TEXT}</p>
+                </div>
+                ${deleteMessage}
+                
+            </div>
+            `;
+            innerData += html;
+        }
+        
+        chatBody.innerHTML = innerData;
+        if(loadedConversationId !== -3)
+            loadedConversationId = -1;
+    }
+
+    async function deleteMessage(message_id){
+        console.log("deleting ",message_id);
+        let data = (await axios.post('/message/deleteMessage',{message_id:message_id})).data.result;
+        console.log(data);
+        if(data === 'success'){
+            let message_to_be_deleted = "message-id-"+message_id;
+            let message_to_be_deleted_btn = "message-delete-message-own"+message_id;
+            const message_plate = document.getElementById(message_to_be_deleted);
+            message_plate.innerHTML = `
+                <div class="message-profile-picture">
+                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                </div>
+                <div class="message-bar-deleted-own message-detail">
+                    <p class="chat-user-name-deleted">YOU</p><p class="chat-user-text chat-text-deleted">This message has been deleted</p>
+                </div>
+                <button class="message-delete-message-own-removed"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>
+            `
+            updateChatList();
+        }
+    }
+
+    function getChatName(chat_id){
+        for(let index=0;index<chat_list.length;index++){
+            if(chat_list[index].CONVERSATION_ID === chat_id)
+                return chat_list[index].NAME;
+        }
+    }
+</script>
+</html>

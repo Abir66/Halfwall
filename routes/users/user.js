@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
 const { response } = require('express');
 const utils = require('../../routerControllers/utils.js');
+const { profile_picture_upload } = require('../../middlewares/file-upload');
+const default_values = require('../../db-codes/default_values');
 
 
 router.get('/user_id=:user_id', verify, async (req, res) => {
@@ -63,7 +65,6 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
             right.push(follow_requests);
         }
     }
-
 
     right.push({location : 'profile-search', data : search_data});
     
@@ -164,6 +165,34 @@ router.get('/find-users',verify,async(req,res)=>{
         middle : middle
     });
     
+})
+
+
+
+router.post('/update-profile-picture', verify, profile_picture_upload.single('profile_picture'), async (req, res) => {
+    if(req.body.action === 'remove-pfp'){
+        if(req.user.PROFILE_PIC === default_values.default_pfp){
+            res.send('You cannot remove your default profile picture');
+            return;
+        }
+        await DB_user.updateProfilePicture(req.user.USER_ID);
+        res.send('success');
+        return;
+    }
+
+    let file_path = undefined;
+    if(!req.file){
+        res.send('No file uploaded');
+        return;
+    }
+
+    if(req.file) {
+        file_path = req.file.path.replace(/\\/g, '/');
+        file_path = file_path.substring(file_path.indexOf('/'));
+    }
+
+    await DB_user.updateProfilePicture(req.user.USER_ID, file_path);
+    res.send('success');
 })
 
 

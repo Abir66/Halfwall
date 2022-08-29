@@ -7,6 +7,8 @@ const DB_user = require('../../db-codes/users/db-user-api');
 const DB_group = require('../../db-codes/groups/db-group-api.js');
 const DB_group_member = require('../../db-codes/groups/db-group-member-api.js');
 const utils = require('../../routerControllers/utils.js');
+const { group_cover_upload } = require('../../middlewares/file-upload.js');
+const default_values = require('../../db-codes/default_values');
 
 
 
@@ -355,6 +357,36 @@ router.post('/group_id=:group_id/leave-group', verify, async(req, res) => {
     const group_id = req.params.group_id;
     const result = await DB_group_member.leaveGroup(group_id, req.user.USER_ID);
     return res.send(result);
+})
+
+
+router.post('/group_id=:group_id/update-group-cover', verify, verifyAdmin, group_cover_upload.single('group_cover'), async(req, res) => {
+
+    console.log(req.body.action)
+    if(req.body.action === 'remove-group-cover'){
+        console.log(res.locals.group.COVER_PHOTO, default_values.default_group_cover )
+        if(res.locals.group.COVER_PHOTO === default_values.default_group_cover){
+            res.send("Can't remove default cover");
+            return;
+        }
+        await DB_group.updateGroupCover(req.params.group_id);
+        res.send('success');
+        return;
+    }
+
+    let file_path = undefined;
+    if(!req.file){
+        res.send('No file uploaded');
+        return;
+    }
+
+    if(req.file) {
+        file_path = req.file.path.replace(/\\/g, '/');
+        file_path = file_path.substring(file_path.indexOf('/'));
+    }
+
+    await DB_group.updateGroupCover(req.params.group_id, file_path);
+    res.send('success');
 })
 
 module.exports = router;

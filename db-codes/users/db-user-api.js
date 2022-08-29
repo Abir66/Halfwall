@@ -216,6 +216,18 @@ async function getUserMiniData(user_id){
     return result[0];
 }
 
+async function updateProfilePicture(user_id, profile_pic){
+    console.log(user_id, profile_pic);
+    const sql = `UPDATE users
+                SET PROFILE_PIC = :profile_pic
+                WHERE USER_ID = :user_id`;
+    const binds ={
+        user_id : user_id,
+        profile_pic : profile_pic
+    };
+    return (await database.execute(sql, binds)).rows;
+}
+
 async function test(){
 
     const sql = `SELECT U.NAME, 
@@ -242,5 +254,6 @@ module.exports = {
     updateUser,
     getUserMiniData,
     test,
-    checkPassword
+    checkPassword,
+    updateProfilePicture
 }

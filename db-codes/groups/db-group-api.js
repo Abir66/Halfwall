@@ -123,6 +123,7 @@ async function getGroupAbout(group_id){
 
     const sql = `SELECT GROUP_ID, GROUP_NAME, GROUP_PRIVACY,
                 GROUP_DESCRIPTION, TO_CHAR(TIME_OF_CREATION, 'HH:MM DD-MON-YYYY') "TIME_OF_CREATION",
+                NVL(COVER_PHOTO, '${default_values.default_group_cover}') "COVER_PHOTO",
                 (SELECT COUNT(*) AS POST_COUNT FROM POSTS P WHERE P.GROUP_ID = :group_id) AS POST_COUNT
                 FROM GROUPS WHERE GROUP_ID = :group_id`;
     const binds = {
@@ -184,6 +185,22 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
 }
 
 
+async function updateGroupCover(group_id, cover_photo){
+    console.log(group_id, cover_photo);
+    const sql = `UPDATE GROUPS 
+                SET COVER_PHOTO = :cover_photo 
+                WHERE GROUP_ID = :group_id`;
+    const binds = {
+        group_id : group_id,
+        cover_photo : cover_photo
+    }
+
+    
+    const result = (await database.execute(sql, binds)).rows;
+    return result;
+}
+
+
 // export
 module.exports = {
     createGroup,
@@ -193,6 +210,7 @@ module.exports = {
     getGroupsForUser,
     getGroupAbout,
     getGroupPosts,
-    updateGroup
+    updateGroup,
+    updateGroupCover
 }
 

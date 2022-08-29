@@ -11,6 +11,7 @@
 
     .middle .group-header .group-photo{
         width: 100%;
+        position: relative;
     }
 
     .middle .group-header .group-photo img{
@@ -61,17 +62,94 @@
         margin-left: auto;
         
     }
+    /* css for cover photo update */
+    .group-cover-picture-update{
+      position: absolute;
+      height: 20%;
+      aspect-ratio: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-gray);
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--color-white);
+      top: 78%;
+      right: 1%;
+      z-index: 100;
+      font-size: 1.2vw;
+    }
+    .group-cover-preview{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .group-cover-priview-design{
+        height: 15vw;
+        aspect-ratio: 16/6;
+        border-radius: 0.6em ;
+    }
+    .group-cover-container-inside-modal{
+        position: relative;
+        height: 15vW;
+        width: auto;
+        margin: 2vw;
+    }
+    .group-cover-preview-remove{
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: red;
+    }
+    .group-image-edit-options{
+        margin: 1vw 0;
+        cursor: pointer;
+    }
 
 </style>
 
 
 
 <div class="group-header">
-
+    
     <div class="group-photo">
         <img src="<%=group.COVER_PHOTO%>"  alt="groupphoto">
+        <% if(isAdmin){ %> 
+          <button class="group-cover-picture-update" data-bs-toggle="modal" data-bs-target="#groupCoverUpdateModal">
+            <i class="fa-solid fa-camera" ></i>
+          </button>
+        <% } %>
     </div>
-    
+     
+    <!-- Modal -->
+    <div class="modal fade" id="groupCoverUpdateModal" tabindex="" role="dialog" aria-labelledby="groupCoverUpdate" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+      <div class="modal-content">
+          <form action="" id="group-cover-update-form">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="groupCoverUpdate">Update Cover Photo</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div> 
+              <div class="group-cover-preview" id="group-cover-preview-<%= group.GROUP_ID%>"></div>
+              <div class="modal-body group-cover-update-modal-body">
+              
+                      <div class="group-cover-preview-container" id="group-cover-preview-container-<%= group.GROUP_ID%>">
+                          <input type="file" name="group_cover" class="group-cover-input" id="group-cover-file-input-<%= group.GROUP_ID%>" accept="image/png, image/jpeg" onchange="group_cover_update_image_preview(<%= group.GROUP_ID%>)" hidden>
+                      </div>
+                      <label for="group-cover-file-input-<%= group.GROUP_ID%>" class="group-attach-image-button group-image-edit-options"><i class="fa-solid fa-2xl fa-circle-plus"></i>&nbsp; <span id="select-cover-pic-line">Select a cover photo</span></label>
+                      <div  class="group-attach-image-button-remove-dp group-image-edit-options" onclick="save_group_cover(<%=group.GROUP_ID%>,`remove_pfp` )"><i class="fa-solid fa-2xl fa-circle-minus"></i>&nbsp; <span id="select-cover-pic-line">Remove current cover photo</span></div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" onclick="save_group_cover(<%=group.GROUP_ID%>,`new_pfp` )">Save changes</button>
+              </div>
+           </form>
+          
+      </div>
+      </div>
+  </div>
     <div class="group-info">
         <h3 class = "group-name"><%= group.GROUP_NAME %> </h3>
         <div class="group-details">
@@ -189,6 +267,71 @@
 
 
 <script>
+    // editting group cover photo
+    async function group_cover_update_image_preview(group_id){
+
+        const file_input = document.getElementById(`group-cover-file-input-${group_id}`);
+        const file = file_input.files[0];
+        const image_preview = document.getElementById(`group-cover-preview-${group_id}`)
+        image_preview.innerHTML = "";
+        const advice = document.getElementById('select-cover-pic-line');
+        // if file is an image
+        console.log("-----inside group cover update")
+        if (file.type.match("image.*")) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let div = document.createElement("div");
+                div.classList.add("group-cover-container-inside-modal")
+                let img = document.createElement("img");
+                img.classList.add("group-cover-priview-design")
+                img.src = e.target.result;
+                div.appendChild(img);
+                image_preview.appendChild(div);
+                advice.innerText = "Select another cover pic";
+                // add a close button
+                let coverRemoveContainer = document.createElement('div');
+                coverRemoveContainer.classList.add("group-cover-preview-remove");
+                let close_button = document.createElement("i");
+                close_button.className = `fa-solid fa-xl fa-circle-xmark `;
+                coverRemoveContainer.appendChild(close_button);
+                close_button.onclick = function(){
+                    image_preview.innerHTML = "";
+                    file_input.value = "";
+                    advice.innerText = "Select a cover photo";
+                }
+
+                div.appendChild(coverRemoveContainer);
+            }
+            reader.readAsDataURL(file);
+        }
+        }
+        async function save_group_cover(group_id,type){
+        const cover_update_from = document.getElementById("group-cover-update-form");
+        const form_data = new FormData(cover_update_from);
+        const path = document.getElementById(`group-cover-file-input-${group_id}`).value;
+        if(path.length === 0)
+            return;
+        // form data buzhi nai... so emne korsi
+        // value asbe emon "C:\\fakepath\\Tanvirsaad_titanic_with_wings_eb0eb13e-c670-435d-9187-90a670c1cfea.png" or ""
+        // type is either new_pfp or remove_pfp
+        document.location.reload();
+        return ;
+
+
+        try{
+            res = await axios({
+                // ki korbi kor uporer return ta sorais
+            })
+            if(res.data.result === 'success'){
+                document.location.reload();
+            }
+        }catch(err){
+
+        }
+        }
+
+
+
     async function deleteGroup(group_id){
         // send axios request to delete group
         const response = await axios.post(`/groups/group_id=${group_id}/delete-group`);

@@ -84,7 +84,7 @@
             </span>
             <span class="likes-count" id="likes-count-<%= postData.POST_ID%>" onclick="getLikersList(<%=postData.POST_ID%>)"  ><%= postData.LIKES_COUNT %> </span>
         </div>
-        <div class="comments-count" onclick="showComments(<%= postData.GROUP_ID%>, <%= postData.POST_ID%>)">
+        <div class="comments-count" id="comments-count-<%= postData.POST_ID %>" onclick="showComments(<%= postData.GROUP_ID%>, <%= postData.POST_ID%>,<%=currentUser.USER_ID%>)">
             <%= postData.COMMENT_COUNT%> comments
         </div>
     </div>
@@ -112,7 +112,7 @@
             </div>
             <label for="comment-image-file-input-<%= postData.POST_ID%>" class="comment-attach-image-button"><i class="fa-solid fa-paperclip"></i></label>
             <textarea class = "comment-text-input" name="comment_text_input" rows="1" placeholder="Write a comment..." oninput="textarea_auto_grow(this)" ></textarea>
-            <div class="comment-submit" onclick="send_comment(<%= postData.POST_ID%>, <%= postData.GROUP_ID%> )"><i class="fa-solid fa-paper-plane"></i></div>
+            <div class="comment-submit" onclick="send_comment(<%= postData.POST_ID%>, <%= postData.GROUP_ID%>, <%= currentUser.USER_ID%>)"><i class="fa-solid fa-paper-plane"></i></div>
         </form>
     </div>
     

@@ -114,6 +114,7 @@ async function getComments(post_id){
 }
 
 
+
 async function createPost(user_id, post_data, files){
 
     const sql = `BEGIN
@@ -205,6 +206,38 @@ async function getCommentByID(comment_id){
     
     return result;
 }
+async function deleteComment(comment_id){
+    const sql = `
+    BEGIN
+        DELETE_COMMENT(:comment_id,:result);
+    END;
+    `;
+
+    const binds = {
+        comment_id:comment_id,
+        result: {
+            dir: oracledb.BIND_OUT, 
+            type: oracledb.VARCHAR2
+        }
+    }
+    result = (await database.execute(sql,binds)).outBinds;
+
+    return result;
+}
+async function getCommentCount(post_id){
+    const sql = `
+        SELECT COUNT(*) AS N
+        FROM COMMENTS
+        WHERE POST_ID = :post_id
+    `;
+
+    const binds = {
+        post_id:post_id
+    }
+
+    result = (await database.execute(sql,binds)).rows[0].N;
+    return result;
+}
 
 
 module.exports = {
@@ -218,6 +251,9 @@ module.exports = {
     getComments,
     createPost,
     createComment,
-    getCommentByID
+    getCommentByID,
+    deleteComment,
+    getCommentCount,
+    
 }
 

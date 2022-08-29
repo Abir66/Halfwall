@@ -19,7 +19,7 @@ router.get('/',verify,async (req,res)=>{
         if(chat_list.USER_ID === req.user.USER_ID)
             namelength = "YOU";
         namelength = namelength.length;
-        if(chat.TEXT.length > Math.max(18-namelength,0))
+        if(chat.TEXT !== null && chat.TEXT.length > Math.max(18-namelength,0))
                 chat.TEXT = chat.TEXT.slice(0,Math.max(18-namelength,0))+ "...";
     }
     let data = {
@@ -45,7 +45,7 @@ router.post('/getChatList',verify,async (req,res) =>{
         if(chat_list.USER_ID === req.user.USER_ID)
             namelength = "YOU";
         namelength = namelength.length;
-        if(chat.TEXT.length > Math.max(18-namelength,0))
+        if(chat.TEXT !== null && chat.TEXT.length > Math.max(18-namelength,0))
                 chat.TEXT = chat.TEXT.slice(0,Math.max(18-namelength,0))+ "...";
     }
     let data = {

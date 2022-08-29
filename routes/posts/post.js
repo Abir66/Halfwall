@@ -53,6 +53,16 @@ router.get('/getComments', async (req, res) => {
     res.send(comments);
 })
 
+router.post('/deleteComment',async(req,res)=>{
+    const result = await db_post.deleteComment(req.body.comment_id);
+    res.send({result:result});
+})
+
+router.post('/getCommentCount',async(req,res)=>{
+    const result = await db_post.getCommentCount(req.body.post_id);
+    res.send({result:result});
+})
+
 
 
 router.post('/create-post', verify, posts_upload.array('files',100), async (req, res) => {

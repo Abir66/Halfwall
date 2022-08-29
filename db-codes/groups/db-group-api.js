@@ -24,6 +24,7 @@ async function createGroup(group, admin_id){
             type: oracledb.NUMBER
         }
     }
+    console.log(binds);
     const result =  (await database.execute(sql, binds)).outBinds;
     return result;
 }

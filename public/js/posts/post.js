@@ -1,3 +1,6 @@
+
+
+
 // like post
 async function like(post_id){
     console.log('like')
@@ -44,10 +47,14 @@ async function getLikersList(post_id){
 }
 
 
-async function addComment(comment_list, comment, group_id){
+async function addComment(comment_list, comment, group_id,currentUser_id){
+    let div = "";
+    if(currentUser_id === comment.USER_ID){ /// here need to add admin priviledges
+        div = `<span onclick=deleteComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-trash"></i></span>`;
+    }
 
     const comment_str = ` 
-            <div class="comment">
+            <div class="comment" id="comment-id-${comment.COMMENT_ID}">
                 <div class="profile-picture">
                     <a href="/groups/group_id=${group_id}/user/user_id=${comment.USER_ID}"> <img src="${comment.PROFILE_PIC}" alt="pfp"> </a>
                 </div>
@@ -57,19 +64,35 @@ async function addComment(comment_list, comment, group_id){
                         <p class="comment-username"><a href="/groups/group_id=${group_id}/user/user_id=${comment.USER_ID}"> ${comment.USERNAME} </a>
                         <small class = "comment-time text-muted">${comment.TIMESTAMP}</small></p>
                     </div>
-
-                    ${(!comment.TEXT || comment.TEXT == null) ? '' : '<div class="comment-text"><p>' + comment.TEXT + '</p></div>'}
+                    <div class="">
+                        ${(!comment.TEXT || comment.TEXT == null) ? '' : '<div class="comment-data-portion"><div class="comment-text"><p>' + comment.TEXT + `</p></div>${div}</div>`}
+                        
                     
-                
-                    ${comment.IMAGE ? `<div class="comment-image"><img src="${comment.IMAGE}" alt="comment-image"></div>` : ""}
+                        ${comment.IMAGE ? `<div class="comment-data-portion"><div class="comment-image"><img src="${comment.IMAGE}" alt="comment-image"></div>${(!comment.TEXT || comment.TEXT == null) ? `${div}`:""}</div>` : ""}
+
+                    </div>
+                    
                 </div>
             </div>
             `;
-    
+
         comment_list.innerHTML += comment_str;
 }
 
-async function showComments(group_id, post_id){
+async function deleteComment(comment_id,post_id){
+    console.log(comment_id," ",post_id);
+    const result = (await axios.post('/posts/deleteComment',{comment_id:comment_id})).data.result;
+    if(result.result === 'success'){
+        const cmt = document.getElementById("comment-id-"+comment_id);
+        cmt.remove();
+        const count = (await axios.post('/posts/getCommentCount',{post_id:post_id})).data.result;
+        let post_div = "comments-count-"+post_id;
+        const count_div = document.getElementById(post_div);
+        count_div.innerText = count+" comments";
+    }
+}
+
+async function showComments(group_id, post_id, currentUserId){
     
     const res = await axios.get("/posts/getComments/", {params : {post_id : post_id}});
 
@@ -94,7 +117,7 @@ async function showComments(group_id, post_id){
     }
 
     
-    for(let comment of res.data)  await addComment(comments_list, comment, group_id);
+    for(let comment of res.data)  await addComment(comments_list, comment, group_id,currentUserId);
 }
 
 
@@ -166,17 +189,15 @@ document.querySelector('.create-post').addEventListener('submit', async (e) => {
 } );
 
 
-async function send_comment(post_id, group_id){
+async function send_comment(post_id, group_id,currentUser_id){
     
     // get the post element
     const post = document.getElementById(`post-${post_id}`);
 
     // get the comment form data
     const form_data = new FormData(post.querySelector('.comment-form'));
-    
     // get comment-text value
     const comment_text = form_data.get('comment_text_input');
-
 
     // check if both image and input is empty
     if(form_data.get('comment_image').name == "" && (!comment_text || comment_text.trim()===''))return;
@@ -234,6 +255,6 @@ async function send_comment(post_id, group_id){
     
 
     // add comment to the list
-    await addComment(comments_list, res.data.comment, group_id);
+    await addComment(comments_list, res.data.comment, group_id,currentUser_id);
 
 }

@@ -26,16 +26,20 @@
 .view-user-profile .user {
     width: 25%;
     aspect-ratio: 1/1;
+    
 }
 .view-user-profile .profile-picture{
-    width: 100%;
-    border-radius: 100%;
+    width: 100%;    
+    position: relative;
+}
+.profile-picture-border{
     border: 5px solid hsl(252, 75%, 60%);
-    padding: 4px;
+    outline-offset: 15px;
 }
 .view-user-profile .profile-picture img{
     width: 100%;
     height: 100%;
+    padding: 0.2vw;
     border-radius: 100%;
 }
 .view-user-profile .side{
@@ -83,15 +87,90 @@
 .view-user-profile .user-info p{
     font-size: 0.9rem;
 }
+.profile-picture-update{
+    position: absolute;
+    height: 30%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-gray);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--color-white);
+    top: 70%;
+    right: 0;
+    z-index: 100;
+    font-size: 1.2vw;
+}
+.profile-image-preview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.profile-image-priview-design{
+    height: 15vw;
+    width: auto;
+    border-radius: 50%;
+}
+.profile-image-container-inside-modal{
+    position: relative;
+    height: 15vW;
+    width: auto;
+    margin: 2vw;
+}
+.profile-picture-preview-remove{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: red;
+}
+.profile-image-edit-options{
+    margin: 1vw 0;
+    cursor: pointer;
+}
 </style>
 
 <div class="view-user-profile">
     <div class="head">
-        <div class="user">
+        <div class="user"">
             <div class="profile-picture">
                 <!------Need to use user's profile pic later-->
-                <img src="<%= user.PROFILE_PIC %>" alt="<%= user.NAME %>" >
+                <img class="profile-picture-border" src="<%= user.PROFILE_PIC %>" alt="<%= user.NAME %>" >
+                <button class="profile-picture-update" data-bs-toggle="modal" data-bs-target="#profileUpdateModal">
+                    <i class="fa-solid fa-camera" ></i>
+                </button>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="profileUpdateModal" tabindex="" role="dialog" aria-labelledby="profilePictureUpdate" aria-hidden="true">
+                <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <form action="" id="profile-picture-update-form">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="profilePictureUpdate">Update Profile Picture</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div> 
+                        <div class="profile-image-preview" id="profile-image-preview-<%= user.USER_ID%>"></div>
+                        <div class="modal-body profile-picture-update-modal-body">
+                        
+                                <div class="profile-image-preview-container" id="profile-image-preview-container-<%= user.USER_ID%>">
+                                    <input type="file" name="profile_image" class="profile-image-input" id="profile-image-file-input-<%= user.USER_ID%>" accept="image/png, image/jpeg" onchange="profile_picture_update_image_preview(<%= user.USER_ID%>)" hidden>
+                                </div>
+                                <label for="profile-image-file-input-<%= user.USER_ID%>" class="profile-attach-image-button profile-image-edit-options"><i class="fa-solid fa-2xl fa-circle-plus"></i>&nbsp; <span id="select-profile-pic-line">Select a profile pic</span></label>
+                                <div  class="profile-attach-image-button-remove-dp profile-image-edit-options" onclick="save_profile_image(<%=user.USER_ID%>,`remove_pfp` )"><i class="fa-solid fa-2xl fa-circle-minus"></i>&nbsp; <span id="select-profile-pic-line">Remove current profile pic</span></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="save_profile_image(<%=user.USER_ID%>,`new_pfp` )">Save changes</button>
+                        </div>
+                     </form>
+                    
+                </div>
+                </div>
+            </div>
+            
         </div>
         <div class="side">
             <div class="popularity">
@@ -170,6 +249,69 @@
 <script>
 
     var user_modal = new bootstrap.Modal(document.getElementById('user-modal'), {});
+
+    async function profile_picture_update_image_preview(user_id){
+
+        const file_input = document.getElementById(`profile-image-file-input-${user_id}`);
+        const file = file_input.files[0];
+        const image_preview = document.getElementById(`profile-image-preview-${user_id}`)
+        image_preview.innerHTML = "";
+        const advice = document.getElementById('select-profile-pic-line');
+        // if file is an image
+        if (file.type.match("image.*")) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let div = document.createElement("div");
+                div.classList.add("profile-image-container-inside-modal")
+                let img = document.createElement("img");
+                img.classList.add("profile-image-priview-design")
+                img.src = e.target.result;
+                div.appendChild(img);
+                image_preview.appendChild(div);
+                advice.innerText = "Select another profile pic";
+                // add a close button
+                let profileRemoveContainer = document.createElement('div');
+                profileRemoveContainer.classList.add("profile-picture-preview-remove");
+                let close_button = document.createElement("i");
+                close_button.className = `fa-solid fa-xl fa-circle-xmark `;
+                profileRemoveContainer.appendChild(close_button);
+                close_button.onclick = function(){
+                    image_preview.innerHTML = "";
+                    file_input.value = "";
+                    advice.innerText = "Select a profile pic";
+                }
+
+                div.appendChild(profileRemoveContainer);
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+    async function save_profile_image(user_id,type){
+        console.log("-----inside saving profile picture------");
+        const profile_update_from = document.getElementById("profile-picture-update-form");
+        const form_data = new FormData(profile_update_from);
+        const path = document.getElementById(`profile-image-file-input-${user_id}`).value;
+        if(path.length === 0)
+            return;
+        // form data buzhi nai... so emne korsi
+        // value asbe emon "C:\\fakepath\\Tanvirsaad_titanic_with_wings_eb0eb13e-c670-435d-9187-90a670c1cfea.png" or ""
+        // type is either new_pfp or remove_pfp
+        document.location.reload();
+        return ;
+
+        
+        try{
+            res = await axios({
+                // ki korbi kor uporer return ta sorais
+            })
+            if(res.data.result === 'success'){
+                document.location.reload();
+            }
+        }catch(err){
+    
+        }
+    }
+
 
     async function requestFollow(USER_ID){
         const data = {

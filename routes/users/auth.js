@@ -3,7 +3,7 @@ const router = require('express').Router();
 const DB_user = require('../../db-codes/users/db-user-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
-
+const DB_storage = require('../../db-codes/files/storage-files');
 
 router.post('/signin', async (req, res) => {
     let result = [], errors = [], studentID, email;
@@ -113,6 +113,25 @@ router.post('/signup', async (req, res) => {
     console.log("user created")
     res.send("success");
 })
+
+
+// test route
+router.get('/test', verify, (req, res) => {
+  
+    DB_storage.storageCleanup();
+
+    res.send("success");
+    // let middle = [{type : "create-post", location : "posts/test"}];
+    // res.render('index', {
+    //     type : "newsfeed",
+    //     currentUser : req.user,
+    //     group: undefined,
+    //     title : 'test',
+    //     left : ['left-profile', 'sidebar'],
+    //     right : [],
+    //     middle : middle
+    // });
+});
 
 
 

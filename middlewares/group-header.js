@@ -3,16 +3,24 @@ const jwt = require('jsonwebtoken');
 const DB_user = require('../db-codes/users/db-user-api');
 const DB_group = require('../db-codes/groups/db-group-api');
 const DB_group_member = require('../db-codes/groups/db-group-member-api');
+const constant_values = require('../db-codes/constant_values');
 
 async function group_header(req,res,next){
     
     const group_id = req.params.group_id;
+
+    if(group_id == constant_values.marketplace_group_id){
+        res.redirect('/marketplace/' + req.params.user_id);
+        return;
+    }
+
     const group = await DB_group.getGroup(req.params.group_id);
 
     if(!group){
         res.status(404).send('Group not found');
         return;
     }
+
 
     const isMember = await DB_group_member.isMember(group_id, req.user.USER_ID);
     const isAdmin = await DB_group_member.isAdmin(group_id, req.user.USER_ID);

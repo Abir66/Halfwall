@@ -147,7 +147,43 @@
     border: 1px solid var(--color-light);
 }
 
+/* ------------------- sell post ------------------------*/
+.middle .tuition-post-info{
+    margin: 1rem 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap : 1rem;
+    font-size: 1rem;
+}
 
+.middle .tuition-post-info label{
+    width: 25%;
+}
+
+.middle .tuition-post-info select{
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    
+}
+
+.middle .tuition-post-info input{
+    border: 1px solid var(--color-light);
+    
+}
+
+
+.middle .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
+    cursor: pointer;
+    padding: 0 0.5rem ;
+    border: 1px solid var(--color-light);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
 
 </style>
 
@@ -217,7 +253,75 @@
                 <label for="price">Price</label>
                 <input class="post-data" type="number" name="price" id="sell-post-price" required/>
             </div>
+        <%} else if ((typeof group !== 'undefined') && group.GROUP_NAME === 'Tution') { %>
+        
+            <div class="tuition-post-info">
+                <label for="class">Class</label>
+                <select name="class" id="tuition-post-class" required>
+                    <option value="Below class 9">Below class 9</option>
+                    <option value="9">Class 9</option>
+                    <option value="10">Class 10</option>
+                    <option value="HSC 1st year">HSC 1st year</option>
+                    <option value="HSC 2nd year">HSC 2nd year</option>
+                    <option value="Admission test">Admission test</option>
+                    <option value="English Medium O level">English Medium O level</option>
+                    <option value="English Medium AS level">English Medium AS level</option>
+                    <option value="English Medium A level">English Medium A level</option>
+                    <option value="others">others</option>
+                </select>
+            </div>
 
+            <div class="tuition-post-info">
+                <label for="subject">Subject</label>
+                    <div class="dropdown-check-list" id="tuition-post-subject" tabindex="100">
+                        <div class="dropdown-check-list-anchor"><div>Subject</div><div><i class="fa-solid fa-caret-down"></i></div></div>
+                        <ul class="dropdown-check-list-items">
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Physics"  >Physics</li>
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Math" >Math</li>
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Chemistry"  >Chemistry</li>
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Biology"  >Biology</li>
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="ICT"  >ICT</li>
+                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Others"  >Others</li>
+                          
+                          </ul>
+                    </div>
+                
+                    <script type="text/javascript">
+                        var checkList = document.getElementById('tuition-post-subject');
+                        checkList.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function(evt) {
+                            if (checkList.classList.contains('visible')) checkList.classList.remove('visible');
+                            else checkList.classList.add('visible');
+                        }
+                    </script>
+        
+                
+            </div>
+
+            <div class="tuition-post-info">
+                <label for="location">Location</label>
+                <input class = "post-data" type="text" name="location" required>
+            </div>
+
+
+            <div class="tuition-post-info">
+                <label for="class">Remuneration</label>
+                <input class = "post-data" type="number" name="remuneration" required placeholder="10000">
+            </div>
+
+            <div class="tuition-post-info">
+                <label for="preference">preference</label>
+                <select name="preference" id="tuition-post-preference" required>
+                    <option value="N/A" selected>N/A</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="tuition-post-info">
+                <label for="student_count">No. of students</label>
+                <input class = "post-data" type="number" name="student_count" required value="1">
+            </div>
+        
         <% } %>
 
 
@@ -306,6 +410,27 @@
         // get all input of type text data from form and add it to formdata
         const inputs = form.querySelectorAll('input.post-data, select');
         inputs.forEach(input => { formData.append(input.name, input.value);} );
+
+
+        var checkboxes = document.querySelectorAll('input.tuition-subject');
+        if(checkboxes && checkboxes.length > 0){
+            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+            if(!checkedOne){
+                alert('Please select at least one subject');
+                return;
+            }
+        }
+
+               
+        checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if(checkbox.checked){
+                formData.append(checkbox.name, checkbox.value);
+            }
+        } );
+
+
+        
     
         if(!group_id) group_id = form.querySelector('#post-privacy').value === 'PUBLIC' ? 1 : 2;
         formData.append('group_id', group_id);
@@ -317,6 +442,11 @@
         // print the values
         for(const [key, value] of formData.entries()) {
             console.log(key, value);
+        }
+
+        if(!(group_id && group_id===5) && form.querySelector('.post-text').value === '' && files.length === 0){
+            alert('Please enter text or upload files');
+            return;
         }
         
         // replace with mini form

@@ -42,16 +42,9 @@ const user = require('./routes/users/user');
 const followRoute = require('./routes/users/follow');
 const post = require('./routes/posts/post');
 const marketplace = require('./routes/groups/marketplace');
-
-
-
-// newsfeed routers
+const tuition = require('./routes/groups/tuition');
 const newsfeed = require('./routes/newsfeed/newsfeed');
-
-// group routers
 const group = require('./routes/groups/groups');
-
-// message routers
 const messages = require('./routes/message/message');
 
 
@@ -65,6 +58,7 @@ app.use('/posts', post);
 app.use('/groups', group);
 app.use('/marketplace', marketplace);
 app.use('/message',messages);
+app.use('/tuition',tuition);
 
 
 

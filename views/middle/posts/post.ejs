@@ -38,6 +38,15 @@
         <div class="product-info"><strong>Available : </strong><%= postData.AVAILABLE%></div>
     </div>
 
+    <% } else if (postData.GROUP_NAME === 'Tution') { %>
+        <div class="marketplace-info-container">
+            <div class="product-info"><strong>Class : </strong><%= postData.CLASS%></div>
+            <div class="product-info"><strong>Subjects : </strong><%= postData.SUBJECTS.map( a => a.SUBJECT).join(', ')%></div>
+            <div class="product-info"><strong>Renumeration : </strong><%= postData.REMUNERATION %></div>
+            <% if (postData.STUDENT_COUNT > 1) { %><div class="product-info"><strong>Students : </strong><%= postData.STUDENT_COUNT%></div><% } %>
+            <% if (postData.PREFERENCE != 'N/A') { %> <div class="product-info"><strong>Preference : </strong><%= postData.PREFERENCE%></div> <% } %>
+            <% if (postData.BOOKED==='Yes') { %><div class="product-info"><strong style="color: var(--color-danger);">Booked</strong></div><% } %>
+        </div>
     <% } %>
 
 

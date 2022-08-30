@@ -1,6 +1,7 @@
 
 
 
+
 // like post
 async function like(post_id){
     console.log('like')
@@ -50,7 +51,17 @@ async function getLikersList(post_id){
 async function addComment(comment_list, comment, group_id,currentUser_id, add_to_top){
     let div = "";
     if(currentUser_id === comment.USER_ID){ /// here need to add admin priviledges
-        div = `<span onclick=deleteComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-trash"></i></span>`;
+        // div = `<span class="icon_pointer" onclick=><i class="fa-solid fa-ellipsis"></i></span>`;
+        div = `
+        <span class="edit dropdown show icon_pointer">
+                <button class="fa-solid fa-ellipsis dropdown-toggle" style="background-color: transparent;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <div id="delete-comment" class="dropdown-item" onclick=deleteComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-trash"></i> &nbsp Delete</div>
+                    <div id="edit-comment" class="dropdown-item" onclick=editComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</div>
+                </div>
+        </span>
+        `;
     }
 
     const comment_str = ` 
@@ -80,6 +91,8 @@ async function addComment(comment_list, comment, group_id,currentUser_id, add_to
         else comment_list.innerHTML = comment_str + comment_list.innerHTML;
 }
 
+var comment_modal = new bootstrap.Modal(document.getElementById('comment-edit-modal'), {});
+
 async function deleteComment(comment_id,post_id){
     console.log(comment_id," ",post_id);
     const result = (await axios.post('/posts/deleteComment',{comment_id:comment_id})).data.result;
@@ -91,6 +104,133 @@ async function deleteComment(comment_id,post_id){
         const count_div = document.getElementById(post_div);
         count_div.innerText = count+" comments";
     }
+}
+
+let image_remove_flag = -1;
+let current_comment_editing = -1;
+
+async function editComment(comment_id,post_id){
+    current_comment_editing = comment_id;
+    const comment_data = (await axios.post('/posts/getCommentById',{comment_id:comment_id})).data.result;
+    const comment_text = document.getElementById("edit-comment-in-modal");
+    comment_text.value = comment_data.TEXT;
+    loadCommentImage(comment_data);
+    comment_modal.show();
+}
+
+async function close_comment_picture_update(resetForm = true){
+    
+    document.getElementById('comment-image-preview').innerHTML = '';
+
+    // clear form
+    if(resetForm) document.getElementById('comment-edit-form').reset();
+
+}
+
+async function loadCommentImage(comment){
+
+        const image_preview = document.getElementById(`comment-image-preview`)
+        image_preview.innerHTML = "";
+
+        if (true) {
+
+                let div = document.createElement("div");
+                div.classList.add("comment-image-container-inside-modal")
+                let img = document.createElement("img");
+                img.classList.add("comment-image-priview-design")
+                img.src = comment.IMAGE;
+                div.appendChild(img);
+                image_preview.appendChild(div);
+                // add a close button
+                let imageRemoveContainer = document.createElement('div');
+                imageRemoveContainer.classList.add("comment-picture-preview-remove");
+                let close_button = document.createElement("i");
+                close_button.className = `fa-solid fa-xl fa-circle-xmark `;
+                imageRemoveContainer.appendChild(close_button);
+                close_button.onclick = function(){
+                    image_preview.innerHTML = "";
+                    image_remove_flag = -2;
+                }
+
+                div.appendChild(imageRemoveContainer);
+            
+        }
+}
+
+async function comment_image_upload_image_preview(){
+    image_remove_flag = -3;
+    const file_input = document.getElementById(`comment-image-file-input`);
+    const file = file_input.files[0];
+    const image_preview = document.getElementById(`comment-image-preview`)
+    image_preview.innerHTML = "";
+    // if file is an image
+    if (file.type.match("image.*")) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            let div = document.createElement("div");
+            div.classList.add("comment-image-container-inside-modal")
+            let img = document.createElement("img");
+            img.classList.add("comment-image-priview-design")
+            img.src = e.target.result;
+            div.appendChild(img);
+            image_preview.appendChild(div);
+            // add a close button
+            let profileRemoveContainer = document.createElement('div');
+            profileRemoveContainer.classList.add("comment-picture-preview-remove");
+            let close_button = document.createElement("i");
+            close_button.className = `fa-solid fa-xl fa-circle-xmark `;
+            profileRemoveContainer.appendChild(close_button);
+            close_button.onclick = function(){
+                image_preview.innerHTML = "";
+                file_input.value = "";
+                image_remove_flag = -2;
+            }
+
+            div.appendChild(profileRemoveContainer);
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+async function update_comment(){
+    let action = "";
+    if(image_remove_flag === -2){
+        action = "remove-pfp";
+    }else{
+        action = "update_pfp";
+    }
+    let comment_text = document.getElementById("edit-comment-in-modal").value;
+    let form_data;
+    if(action == 'update_pfp'){
+        const form = document.getElementById(`comment-edit-form`);
+        form_data = new FormData(form);
+    }
+
+    else form_data = new FormData();
+    form_data.append('action', action);
+    close_comment_picture_update(false);
+
+    let res;
+    console.log("sending data to change comment");
+    try{
+        res = await axios({
+            method: 'post',
+            url: `/post/update-comment`,
+            data: form_data,
+            comment_id: current_comment_editing,
+            comment_text: comment_text,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+    }catch(err){
+        alert(err);
+    }
+
+    if(res.data === 'success') console.log("updated comment image");
+    else alert(res.data);
+
+   
 }
 
 async function showComments(group_id, post_id, currentUserId, load_more = false){

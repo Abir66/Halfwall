@@ -26,12 +26,11 @@ closeIcon.addEventListener("click", () => {
 });
 
 async function showNotification(text,link,image){
+    const temp = document.getElementById("toast_notification");
     if(toast_flag){
-        toast.classList.remove("active");
-        console.log("hello");
+        temp.classList.remove("active");    
     }
     toast_flag = true;
-    console.log(text,link,image);
     let image_link = "";
     let anchor_link = "";
     if(image)

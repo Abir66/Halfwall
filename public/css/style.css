@@ -415,6 +415,10 @@ main .container .right {
   }
 
 
+.icon_pointer{
+    cursor: pointer;
+}
+
 
 /* ====================================== toast =================================== */
 .toast_notification{

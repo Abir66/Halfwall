@@ -63,7 +63,10 @@ router.post('/getCommentCount',async(req,res)=>{
     const result = await db_post.getCommentCount(req.body.post_id);
     res.send({result:result});
 })
-
+router.post('/getCommentById',async (req,res)=>{
+    const result = await db_post.getCommentByID(req.body.comment_id);
+    res.send({result:result});
+})
 
 
 router.post('/create-post', verify, posts_upload.array('files',100), async (req, res) => {
@@ -129,6 +132,30 @@ router.post('/post_id=:post_id/comment', verify, verifyAccessToViewPost, comment
     result.comment = new_comment;
     res.send(result);
 
+})
+
+router.post('/update-comment', verify, comments_upload.single('comment_image'), async (req, res) => {
+    if(req.body.action === 'remove-pfp'){
+        // delete from uploads
+        console.log("----updating comment without image");
+        let result = await db_post.updateComment(req.body.comment_id,req.body.comment_text);
+        res.send('success');
+        return;
+    }
+
+    // let file_path = undefined;
+    // if(!req.file){
+    //     res.send('No file uploaded');
+    //     return;
+    // }
+
+    // if(req.file) {
+    //     file_path = req.file.path.replace(/\\/g, '/');
+    //     file_path = file_path.substring(file_path.indexOf('/'));
+    // }
+
+    // await DB_user.updateProfilePicture(req.user.USER_ID, file_path);
+    // res.send('success');
 })
 
 module.exports = router;

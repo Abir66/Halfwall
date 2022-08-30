@@ -35,6 +35,7 @@ const profile_picture_storage = multer.diskStorage({
 });
 
 
+
 const group_cover_storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/uploads/group-covers');
@@ -66,5 +67,6 @@ module.exports = {
     posts_upload,
     profile_picture_upload,
     group_cover_upload,
-    comments_upload
+    comments_upload,
+
 }

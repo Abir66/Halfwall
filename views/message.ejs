@@ -20,8 +20,7 @@
     <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
     <link rel="stylesheet" href="/css/style.css">
 
-    <!-- notification script -->
-    <script src="/js/notification.js"></script>
+    
 
     <style>
         .message-container {
@@ -88,6 +87,14 @@
             font-size: 14px;
             color: var(--color-gray);
         }
+        .refresh_message{
+            display: flex;
+            justify-content: center;
+            padding: 2em;
+        }
+        .refresh_message_icon{
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -111,12 +118,26 @@
         </div>
         
     </div>
+    <!-- toast -->
+    <a class="toast_notification" id="toast_notification">
+        <div class="toast-content">
+            <img src="" class="toast_nofivication_image" id="toast_nofivication_image" alt="">
+
+            <div id="toast_notification_text">
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark close"></i>
+
+        <div class="progress"></div>
+    </a>
 
 
 
 
 </body>
 <script src="/socket.io/socket.io.js" ></script>
+<!-- notification script -->
+<script src="/js/notification.js"></script>
 <script>  
     // setting up client side socket
     // const socket = io();
@@ -129,6 +150,7 @@
     const chat_list = <%- JSON.stringify(chat_list) %>;
     const cUser = <%- JSON.stringify(currentUser) %>;
     let loadedConversationId = -1;
+    let top_message_id = -1;
 
     // saving current chat_id
     let currentChatId = 0;
@@ -304,19 +326,29 @@
             document.getElementById(thumbnail_id).classList.add("message-head-active");
             document.getElementById(thumbnail_id).classList.remove("message-conversation-head-hover");
         }
-        
         currentChatId = chat_id;
         document.getElementById("chat-header-name").innerHTML = getChatName(chat_id);
         const data = (await axios.post("/message/getMessages",{chat_id: chat_id})).data;
         const currentUser = data.currentUser;
         const chatData = data.messages;
+        console.log('-----time stamp convertion------');
+        let date = new Date();
+        console.log(date.toLocaleString());
+        top_message_id = (chatData[chatData.length-1]).MESSAGE_ID;
         const chatBody = document.getElementById("chat-body");
-        let innerData = "";
-        
-        document.getElementById("chat-send-messages").style.visibility = "visible"; 
+        document.getElementById("chat-send-messages").style.visibility = "visible";
         let lastDiv = `<div id="message-last-child"></div>`;
-        innerData+=lastDiv;
-        for(let i=chatData.length-1;i>=0;i--){
+        chatBody.innerHTML = lastDiv;
+
+        loadMessages(chat_id,chatData,currentUser,chatBody);
+
+        if(loadedConversationId !== -3)
+            loadedConversationId = -1;
+    }
+
+    async function loadMessages(chat_id,chatData,currentUser,chatBody){
+        let innerData = "";
+        for(let i=0;i<chatData.length;i++){
             let separateClass = "message-bar-others";
             let separateDeatails = "";  
             let title = chatData[i].USER_NAME;
@@ -356,9 +388,22 @@
             innerData += html;
         }
         
-        chatBody.innerHTML = innerData;
-        if(loadedConversationId !== -3)
-            loadedConversationId = -1;
+        let refresh_message_button = `<div id="refresh_message" class="refresh_message" onclick="refreshMessage(${chat_id},${top_message_id})"><i class="fa-solid fa-rotate-right refresh_message_icon"></i></div>`;
+        if(chatData.length !== 0)
+            innerData+=refresh_message_button;
+        
+        chatBody.innerHTML += innerData;
+    }
+
+    async function refreshMessage(chat_id,first_message_id){
+        const data = (await axios.post("/message/getMessages",{chat_id: chat_id,first_message_id:first_message_id})).data;
+        const chatBody = document.getElementById("chat-body");
+        const refresh_message_icon = document.getElementById("refresh_message");
+        refresh_message_icon.remove();
+        top_message_id = (data.messages[(data.messages).length-1]).MESSAGE_ID;
+        loadMessages(chat_id,data.messages,data.currentUser,chatBody);
+        
+        
     }
 
     async function deleteMessage(message_id){

@@ -1,0 +1,55 @@
+<style>
+    #edit-comment-in-modal{
+        margin: 0 1em;
+        padding: 0.6em;
+        width: 95%;
+        border-radius: 2em;
+        background-color: hsl(252, 30%, 95%);;
+    }
+    .comment-image-preview{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    .comment-image-priview-design{
+        height: 15vw;
+        width: auto;
+    }
+    .comment-image-container-inside-modal{
+        position: relative;
+        height: 15vW;
+        width: auto;
+        margin: 2vw;
+    }
+    .comment-picture-preview-remove{
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: red;
+    }
+</style>
+
+<div class="modal fade" id="comment-edit-modal" tabindex="" role="dialog" aria-labelledby="commentEdit" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+    <div class="modal-content">
+        <form action="" id="comment-edit-form">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentEdit">Edit Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="close_comment_edit()"></button>
+            </div> 
+            <div class="modal-body comment-edit-modal-body">
+                <input type="text" name="" id="edit-comment-in-modal">
+                <div class="comment-image-preview" id="comment-image-preview"></div>
+                <div class="comment-image-preview-container" id="comment-image-preview-container">
+                    <input type="file" name="comment-image" class="comment-image-input" id="comment-image-file-input" accept="image/png, image/jpeg" onchange="comment_image_upload_image_preview()" hidden>
+                </div>
+                <label for="comment-image-file-input" class="comment-attach-image-button comment-image-edit-options"><i class="fa-solid fa-2xl fa-circle-plus"></i>&nbsp; <span id="select-profile-pic-line">Select another photo</span></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="update_comment()">Save changes</button>
+            </div>
+         </form>
+    </div>
+    </div>
+</div>

@@ -31,7 +31,7 @@ async function getMessagesList(conversation_id, limit, cursor_id ){
         ON M.USER_ID = U.USER_ID
         WHERE CONVERSATION_ID = :conversation_id
         ${cursor_str}
-        ORDER BY M.TIMESTAMP 
+        ORDER BY M.TIMESTAMP DESC
         ${limit_str}
     `
     const binds = {

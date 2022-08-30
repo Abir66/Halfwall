@@ -228,6 +228,25 @@ async function createComment(comment){
 
 }
 
+async function updateComment(comment_id,comment_text,image){
+    const sql = `
+    BEGIN
+    UPDATE_COMMENT(:comment_id,:comment_text,:image)
+    END
+    `;
+    const binds = {
+        comment_text: comment_text,
+        comment_id: comment_id,
+        image: image,
+        result: {
+            dir: oracledb.BIND_OUT, 
+            type: oracledb.VARCHAR2
+        }
+    }
+
+    const result =  (await database.execute(sql, binds)).outBinds;
+    return result;
+}
 async function getCommentByID(comment_id){
     const sql = `SELECT C.COMMENT_ID, C.POST_ID, C.TEXT, C.IMAGE, TO_CHAR(C.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 U.USER_ID, INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"

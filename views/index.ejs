@@ -33,7 +33,8 @@
 <body>
 
     <%- include('middle/modals/user-modal')%> 
-    
+    <%- include('middle/modals/comment-edit-modal')%>
+     
     <% let bodyObjects = {} %>
 
 
@@ -88,7 +89,7 @@
     </main>
 
     <!-- toast -->
-    <a class="toast_notification">
+    <a class="toast_notification" id="toast_notification">
         <div class="toast-content">
             <img src="" class="toast_nofivication_image" id="toast_nofivication_image" alt="">
 

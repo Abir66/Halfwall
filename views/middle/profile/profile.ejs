@@ -221,6 +221,7 @@
 
 
 <% if (user.USER_ID == currentUser.USER_ID) { %>
+
 <!-- Modal -->
 <div class="modal fade" id="profile-picture-update-modal" tabindex="" role="dialog" aria-labelledby="profilePictureUpdate" aria-hidden="true">
     <div class="modal-dialog " role="document">
@@ -265,6 +266,7 @@
     async function profile_picture_update_image_preview(user_id){
 
         const file_input = document.getElementById(`profile-image-file-input`);
+        console.log(file_input.files);
         const file = file_input.files[0];
         const image_preview = document.getElementById(`profile-image-preview`)
         image_preview.innerHTML = "";

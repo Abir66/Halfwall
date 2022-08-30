@@ -18,6 +18,11 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
     const following_count = await DB_follow.getFollowingCount(req.params.user_id);
     const post_count = await DB_user.getPostCount(req.params.user_id);
 
+    // if not user found error 404
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
     user.post_count = post_count.POST_COUNT;
     user.follower_count = follower_cout.FOLLOWER_COUNT;
     user.following_count = following_count.FOLLOWING_COUNT;

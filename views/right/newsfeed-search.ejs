@@ -1,5 +1,5 @@
 <div class="right-box">
-    <form action = "/newsfeed/" method = "get" >
+    <form id = 'newsfeed-rightbox-search' action = "/newsfeed/" method = "get" >
         <div class="heading" style="display: flex; justify-content: space-between;"> 
             <h3 style="font-size: 1.1rem;">Search & filter</h3>
             <% if (data.searched) { %>
@@ -32,3 +32,25 @@
 
     </form>
 </div>
+
+<script>
+
+  // get the form element
+  document.getElementById('newsfeed-rightbox-search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    var form=document.getElementById('newsfeed-rightbox-search');//retrieve the form as a DOM element
+    if(typeof timestamp !== 'undefined'){
+      
+      var input = document.createElement('input');
+      input.setAttribute('name', 'timestamp');
+      input.setAttribute('value', timestamp);
+      input.setAttribute('type', 'hidden')
+      form.appendChild(input);
+    }
+    
+    form.submit()
+})
+
+
+
+</script>

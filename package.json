@@ -30,6 +30,7 @@
     "node": "^16.17.0",
     "oracledb": "^5.4.0",
     "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
     "uuid": "^8.3.2",
     "ws": "^8.8.1"
   }

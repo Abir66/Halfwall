@@ -16,22 +16,13 @@ app.use(express.static(path.join(__dirname, './public')))
 
 // setting up server for socket.io
 const http = require('http');
-const socketio = require('socket.io');
 const server = http.createServer(app);
-const io = socketio(server);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-io.on('connection',socket => {
-    // console.log("New connection detected");
-    // console.log(socket.id);
-	// socket.on('kisu', msg =>{
-    //     console.log("got something");
-    //     io.to(socket.id).emit('sendMessage','keman asa vaya');
-    // })
-    // socket.on('disconnect',() => {
-    //     console.log("disconnecting  ",socket.id);
-        
-    // });
-})
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
 
 
 // import routers
@@ -62,12 +53,14 @@ app.use('/tuition',tuition);
 
 
 
+
 // default error handler
 app.use((err, req, res, next) => {
     console.log(err);
     if(err) res.status(500).send(err.message);
     else res.send('success')
 })
+
 
 
 const port = process.env.PORT || 5000;

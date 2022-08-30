@@ -171,7 +171,7 @@
                     <% if (user.followed) { %>
                         <button class="btn btn-blank" onclick="unfollow(<%=user.USER_ID%>)">Following</button>
                     <% } else if (user.requested) { %>
-                        <button class="btn btn-blank" onclick="removeFollowRequestToUser(<%=user.USER_ID%>)">Requested</button>
+                        <button class="btn btn-blank" onclick="unfollow(<%=user.USER_ID%>)">Requested</button>
                     <% } else { %>
                         <button class="btn btn-primary" onclick="requestFollow(<%=user.USER_ID%>)">Follow</button>
                     <% } %>
@@ -335,7 +335,7 @@
 
     async function requestFollow(USER_ID){
         const data = {
-            USER_ID : USER_ID
+            USER_ID : USER_ID,
         }
         const res = await axios.post("/follow/requestFollow", data)
 
@@ -348,21 +348,21 @@
 
     async function unfollow(USER_ID){
         const data = {
-            USER_ID : USER_ID
+            USER_ID : USER_ID,
         }
         const res = await axios.post("/follow/unfollow", data)
 
         if(res.data === "success"){
             window.location.reload();
         }else{
-            console.log("error in remove follow")
+            console.log("error in unfollow")
         }
     }
 
 
     async function removeFollower(USER_ID){
         const data = {
-            USER_ID : USER_ID
+            USER_ID : USER_ID,
         }
         const res = await axios.post("/follow/removeFollower", data)
         if(res.data === "success"){
@@ -373,18 +373,8 @@
     }
 
 
-    async function removeFollowRequestToUser(USER_ID){
-        const data = {
-            USER_ID : USER_ID
-        }
-        const res = await axios.post("/follow/removeFollowRequestToUser", data)
-        if(res.data === "success"){
-            window.location.reload();
-        }else{
-            console.log("error in remove follow req")
-        }
-    }
 
+    
     async function getFollowerList(user_id, currentUser_id){
 
         const res = await axios.get("/follow/getFollowerList/", {params : {USER_ID : user_id}});

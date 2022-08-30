@@ -27,8 +27,8 @@
                                 <a href="/user/user_id=${follower.USER_ID}"  class="modal-userlist-username">${follower.NAME}</a>
                             </div>
                             <div class = "modal-userlist-action-buttons">
-                                <button class="followRequest-list-accept btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'accept')">Accept</button>
-                                <button class="followRequest-list-remove btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'remove')">Remove</button>
+                                <button class="followRequest-list-accept btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'ACCEPT-FOLLOW')">Accept</button>
+                                <button class="followRequest-list-remove btn btn-primary"  onclick = "processFollowRequest(${follower.USER_ID}, 'REMOVE-FOLLOW')">Remove</button>
                             </div>
                         </div>`;
             modalBody.innerHTML += str;

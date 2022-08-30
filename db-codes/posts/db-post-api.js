@@ -78,6 +78,7 @@ async function getGroupAndUserOfPost(post_id){
 }
 
 async function getPost(post_id, user_id){
+    console.log(post_id, user_id);
     const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 INITCAP(U.NAME) "USERNAME",  NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
@@ -228,25 +229,30 @@ async function createComment(comment){
 
 }
 
-async function updateComment(comment_id,comment_text,image){
-    const sql = `
-    BEGIN
-    UPDATE_COMMENT(:comment_id,:comment_text,:image)
-    END
-    `;
-    const binds = {
-        comment_text: comment_text,
-        comment_id: comment_id,
-        image: image,
-        result: {
-            dir: oracledb.BIND_OUT, 
-            type: oracledb.VARCHAR2
-        }
-    }
+async function updateComment(comment_id,comment_text, remove_image, new_image){
 
-    const result =  (await database.execute(sql, binds)).outBinds;
-    return result;
+    console.log(comment_id)
+    let set_image_str = '';
+    if(new_image) set_image_str = `, IMAGE = '${new_image}'`;
+    else if(remove_image){ set_image_str = `, IMAGE = NULL`; }
+
+    
+    const sql = `UPDATE COMMENTS SET TEXT = :text ${set_image_str} WHERE COMMENT_ID = :comment_id`;
+    
+    const binds = {
+        comment_id : comment_id,
+        text : comment_text
+    }
+    
+    console.log(sql);
+    await database.execute(sql, binds);
+
+    // get the comment
+    const comment = await getCommentByID(comment_id);
+    return comment;
+    
 }
+
 async function getCommentByID(comment_id){
     const sql = `SELECT C.COMMENT_ID, C.POST_ID, C.TEXT, C.IMAGE, TO_CHAR(C.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 U.USER_ID, INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
@@ -261,24 +267,23 @@ async function getCommentByID(comment_id){
     
     return result;
 }
-async function deleteComment(comment_id){
-    const sql = `
-    BEGIN
-        DELETE_COMMENT(:comment_id,:result);
-    END;
-    `;
 
+async function deleteComment(comment_id){
+    const sql = `DELETE FROM COMMENTS WHERE COMMENT_ID = :comment_id`;
     const binds = {
         comment_id:comment_id,
-        result: {
-            dir: oracledb.BIND_OUT, 
-            type: oracledb.VARCHAR2
-        }
     }
-    result = (await database.execute(sql,binds)).outBinds;
 
-    return result;
+    try{
+        await database.execute(sql, binds);
+        return 'success'
+    }catch(err){
+        console.log(err);
+        return 'something went wrong'
+    }
+   
 }
+
 async function getCommentCount(post_id){
     const sql = `
         SELECT COUNT(*) AS N
@@ -292,6 +297,22 @@ async function getCommentCount(post_id){
 
     result = (await database.execute(sql,binds)).rows[0].N;
     return result;
+}
+
+async function getCommentMetadata(comment_id){
+    console.log('comment_id', comment_id)
+    const sql = `select C.COMMENT_ID, C.POST_ID, C.USER_ID,
+                P.GROUP_ID, P.USER_ID "POST_USER_ID" 
+                from comments c join posts p on c.post_id = p.post_id
+                where c.comment_id = :comment_id`;
+    
+    const binds = {
+        comment_id:comment_id
+    }
+
+    result = (await database.execute(sql,binds)).rows[0];
+    return result;
+
 }
 
 
@@ -309,6 +330,8 @@ module.exports = {
     getCommentByID,
     deleteComment,
     getCommentCount,
+    updateComment,
+    getCommentMetadata,
     
 }
 

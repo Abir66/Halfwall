@@ -32,9 +32,26 @@ async function verifyAccessToViewPost(req,res,next){
     next()
 }
 
+async function verifyAccessToDeleteComment(req,res,next){
 
+    console.log(req.params.comment_id);
+    const comment_metaData = await DB_post.getCommentMetadata(req.params.comment_id);
+    
+    let deleteAccess = false;
+
+    if(comment_metaData.USER_ID == req.user.USER_ID || comment_metaData.POST_USER_ID == req.user.USER_ID) deleteAccess = true;
+
+    else{
+        const isAdmin = await DB_group_member.isAdmin(comment_metaData.GROUP_ID, req.user.USER_ID);
+        if(isAdmin) deleteAccess = true;
+    }
+
+    if(deleteAccess) next();
+    else return res.status(403).send('Access denied');
+}
 
 
 module.exports = {
-    verifyAccessToViewPost
+    verifyAccessToViewPost,
+    verifyAccessToDeleteComment
 };

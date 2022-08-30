@@ -1,7 +1,3 @@
-
-
-
-
 // like post
 async function like(post_id){
     console.log('like')
@@ -50,8 +46,7 @@ async function getLikersList(post_id){
 
 async function addComment(comment_list, comment, group_id,currentUser_id, add_to_top){
     let div = "";
-    if(currentUser_id === comment.USER_ID){ /// here need to add admin priviledges
-        // div = `<span class="icon_pointer" onclick=><i class="fa-solid fa-ellipsis"></i></span>`;
+    if(currentUser_id === comment.USER_ID){ 
         div = `
         <span class="edit dropdown show icon_pointer">
                 <button class="fa-solid fa-ellipsis dropdown-toggle" style="background-color: transparent;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
@@ -91,26 +86,34 @@ async function addComment(comment_list, comment, group_id,currentUser_id, add_to
         else comment_list.innerHTML = comment_str + comment_list.innerHTML;
 }
 
-var comment_modal = new bootstrap.Modal(document.getElementById('comment-edit-modal'), {});
 
 async function deleteComment(comment_id,post_id){
-    console.log(comment_id," ",post_id);
-    const result = (await axios.post('/posts/deleteComment',{comment_id:comment_id})).data.result;
-    if(result.result === 'success'){
+
+    const res = await axios.post(`/posts/deleteComment/comment_id=${comment_id}`, {});
+    if(res.data === 'success'){
         const cmt = document.getElementById("comment-id-"+comment_id);
         cmt.remove();
-        const count = (await axios.post('/posts/getCommentCount',{post_id:post_id})).data.result;
-        let post_div = "comments-count-"+post_id;
-        const count_div = document.getElementById(post_div);
-        count_div.innerText = count+" comments";
+        
+        // get post element
+        console.log(post_id);
+        const post = document.getElementById("post-"+post_id);
+        
+        const comments_count = post.querySelector('.comments-count');
+        const current_comments_count = parseInt(comments_count.innerText.split(' ')[0]);
+            comments_count.innerText = (current_comments_count - 1) + " comments";
     }
 }
 
-let image_remove_flag = -1;
-let current_comment_editing = -1;
+
+var comment_modal = new bootstrap.Modal(document.getElementById('comment-edit-modal'), {});
+let remove_current_comment_image = false;
+let current_comment_edit_id = -1;
+let current_comment_edit_post_id = -1;
+
 
 async function editComment(comment_id,post_id){
-    current_comment_editing = comment_id;
+    current_comment_edit_id = comment_id;
+    current_comment_edit_post_id = post_id;
     const comment_data = (await axios.post('/posts/getCommentById',{comment_id:comment_id})).data.result;
     const comment_text = document.getElementById("edit-comment-in-modal");
     comment_text.value = comment_data.TEXT;
@@ -121,48 +124,49 @@ async function editComment(comment_id,post_id){
 async function close_comment_picture_update(resetForm = true){
     
     document.getElementById('comment-image-preview').innerHTML = '';
-
+    
     // clear form
     if(resetForm) document.getElementById('comment-edit-form').reset();
-
+    remove_current_comment_image = false;
+    current_comment_edit_id = -1;
+    current_comment_edit_post_id = -1;
 }
+
 
 async function loadCommentImage(comment){
 
         const image_preview = document.getElementById(`comment-image-preview`)
         image_preview.innerHTML = "";
-
-        if (true) {
-
-                let div = document.createElement("div");
-                div.classList.add("comment-image-container-inside-modal")
-                let img = document.createElement("img");
-                img.classList.add("comment-image-priview-design")
-                img.src = comment.IMAGE;
-                div.appendChild(img);
-                image_preview.appendChild(div);
-                // add a close button
-                let imageRemoveContainer = document.createElement('div');
-                imageRemoveContainer.classList.add("comment-picture-preview-remove");
-                let close_button = document.createElement("i");
-                close_button.className = `fa-solid fa-xl fa-circle-xmark `;
-                imageRemoveContainer.appendChild(close_button);
-                close_button.onclick = function(){
-                    image_preview.innerHTML = "";
-                    image_remove_flag = -2;
-                }
-
-                div.appendChild(imageRemoveContainer);
-            
+        remove_current_comment_image = false;
+        if(!comment.IMAGE) return;
+        let div = document.createElement("div");
+        div.classList.add("comment-image-container-inside-modal")
+        let img = document.createElement("img");
+        img.classList.add("comment-image-priview-design")
+        img.src = comment.IMAGE;
+        div.appendChild(img);
+        image_preview.appendChild(div);
+        // add a close button
+        let imageRemoveContainer = document.createElement('div');
+        imageRemoveContainer.classList.add("comment-picture-preview-remove");
+        let close_button = document.createElement("i");
+        close_button.className = `fa-solid fa-xl fa-circle-xmark `;
+        imageRemoveContainer.appendChild(close_button);
+        close_button.onclick = function(){
+            image_preview.innerHTML = "";
+            remove_current_comment_image = true;
         }
+        div.appendChild(imageRemoveContainer);
+        
 }
 
 async function comment_image_upload_image_preview(){
-    image_remove_flag = -3;
+    
     const file_input = document.getElementById(`comment-image-file-input`);
     const file = file_input.files[0];
     const image_preview = document.getElementById(`comment-image-preview`)
     image_preview.innerHTML = "";
+    remove_current_comment_image = true;
     // if file is an image
     if (file.type.match("image.*")) {
         let reader = new FileReader();
@@ -183,7 +187,6 @@ async function comment_image_upload_image_preview(){
             close_button.onclick = function(){
                 image_preview.innerHTML = "";
                 file_input.value = "";
-                image_remove_flag = -2;
             }
 
             div.appendChild(profileRemoveContainer);
@@ -193,41 +196,44 @@ async function comment_image_upload_image_preview(){
 }
 
 async function update_comment(){
-    let action = "";
-    if(image_remove_flag === -2){
-        action = "remove-pfp";
-    }else{
-        action = "update_pfp";
-    }
+    
     let comment_text = document.getElementById("edit-comment-in-modal").value;
     let form_data;
-    if(action == 'update_pfp'){
-        const form = document.getElementById(`comment-edit-form`);
-        form_data = new FormData(form);
-    }
-
-    else form_data = new FormData();
-    form_data.append('action', action);
+    
+    const form = document.getElementById(`comment-edit-form`);
+    form_data = new FormData(form);
+    
+    // append comment text
+    form_data.append('comment_text',comment_text);
+    form_data.append('comment_id',current_comment_edit_id);
+    form_data.append('post_id',current_comment_edit_post_id);
+    form_data.append('remove_image', remove_current_comment_image);
     close_comment_picture_update(false);
 
     let res;
-    console.log("sending data to change comment");
     try{
         res = await axios({
             method: 'post',
-            url: `/post/update-comment`,
+            url: `/posts/update-comment`,
             data: form_data,
-            comment_id: current_comment_editing,
-            comment_text: comment_text,
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
     }catch(err){
-        alert(err);
+        
     }
 
-    if(res.data === 'success') console.log("updated comment image");
+    // reset form
+    document.getElementById('comment-edit-form').reset();
+
+    if(res.data.result === 'success') {
+        comment_modal.hide();
+        const comment = res.data.comment;
+        const comment_div = document.getElementById(`comment-id-${comment.COMMENT_ID}`);
+        comment_div.innerHTML = "";
+        addComment(comment_div, comment, comment.GROUP_ID, comment.USER_ID, false);
+    }
     else alert(res.data);
 
    

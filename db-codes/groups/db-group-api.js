@@ -152,7 +152,7 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
         admin_posts = ` AND P.USER_ID IN (SELECT USER_ID FROM GROUP_MEMBERS WHERE GROUP_ID = :group_id AND STATUS = 'ADMIN')`;
 
     if(search_data.group_post_filter && search_data.group_post_filter.includes('followings'))
-        followings = ` AND P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id)`;
+        followings = ` AND P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id AND STATUS = 'FOLLOWING')`;
 
     if(search_data.post_user_id){
         post_user = ` AND P.USER_ID = ${search_data.post_user_id}`;

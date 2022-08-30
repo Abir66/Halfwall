@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const db_post = require('../../db-codes/posts/db-post-api');
 const { verify } = require('../../middlewares/user-verification');
-const { verifyAccessToViewPost } = require('../../middlewares/post-verification');
+const { verifyAccessToViewPost, verifyAccessToDeleteComment } = require('../../middlewares/post-verification');
 const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
 const constant_values = require('../../db-codes/constant_values');
 
@@ -28,14 +28,14 @@ router.post('/unlike/post_id=:post_id', verify, async (req, res) => {
     res.send(data);
 })
 
-router.get('/getLikersList', async (req, res) => {
+router.get('/getLikersList', verify, async (req, res) => {
     const liker_list = await db_post.getLikersList(req.query.POST_ID);
     res.send(liker_list);
 })
 
 router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res) => {
     if(!res.locals.postViewAccess) return res.status(403).send('Access denied');
-    const post = await db_post.getPost(req.params.post_id);
+    const post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
     console.log(post);
    
     res.render('index', {
@@ -48,25 +48,6 @@ router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res)
     });
 })
 
-
-router.get('/getComments', async (req, res) => {
-    const comments = await db_post.getComments(req.query.post_id, constant_values.comment_limit, req.query.last_comment_id);
-    res.send(comments);
-})
-
-router.post('/deleteComment',async(req,res)=>{
-    const result = await db_post.deleteComment(req.body.comment_id);
-    res.send({result:result});
-})
-
-router.post('/getCommentCount',async(req,res)=>{
-    const result = await db_post.getCommentCount(req.body.post_id);
-    res.send({result:result});
-})
-router.post('/getCommentById',async (req,res)=>{
-    const result = await db_post.getCommentByID(req.body.comment_id);
-    res.send({result:result});
-})
 
 
 router.post('/create-post', verify, posts_upload.array('files',100), async (req, res) => {
@@ -104,6 +85,8 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
 } )
 
 
+
+// ------------------------------comments ---------------------------------------
 router.post('/post_id=:post_id/comment', verify, verifyAccessToViewPost, comments_upload.single('comment_image') ,async (req, res) => {
 
     let file_path = undefined;
@@ -134,28 +117,38 @@ router.post('/post_id=:post_id/comment', verify, verifyAccessToViewPost, comment
 
 })
 
-router.post('/update-comment', verify, comments_upload.single('comment_image'), async (req, res) => {
-    if(req.body.action === 'remove-pfp'){
-        // delete from uploads
-        console.log("----updating comment without image");
-        let result = await db_post.updateComment(req.body.comment_id,req.body.comment_text);
-        res.send('success');
-        return;
+
+router.get('/getComments', verify, async (req, res) => {
+    const comments = await db_post.getComments(req.query.post_id, constant_values.comment_limit, req.query.last_comment_id);
+    res.send(comments);
+})
+
+router.post('/deleteComment/comment_id=:comment_id', verify, verifyAccessToDeleteComment, async(req,res)=>{
+    const result = await db_post.deleteComment(req.params.comment_id);
+    res.send(result);
+})
+
+
+router.post('/getCommentById', verify,  async (req,res)=>{
+    const result = await db_post.getCommentByID(req.body.comment_id);
+    res.send({result:result});
+})
+
+
+router.post('/update-comment', verify, comments_upload.single('comment-image'), async (req, res) => {
+    console.log(req.body)
+    let file_path = undefined, remove_image = false;
+    if(req.file) {
+        file_path = req.file.path.replace(/\\/g, '/');
+        file_path = file_path.substring(file_path.indexOf('/'));
+        remove_image = true;
     }
 
-    // let file_path = undefined;
-    // if(!req.file){
-    //     res.send('No file uploaded');
-    //     return;
-    // }
+    remove_image = remove_image || req.body.remove_image;
+    const updated_comment = await db_post.updateComment(req.body.comment_id,req.body.comment_text, remove_image, file_path);
+    const data = {result : 'success', comment : updated_comment};
+    res.send(data);
 
-    // if(req.file) {
-    //     file_path = req.file.path.replace(/\\/g, '/');
-    //     file_path = file_path.substring(file_path.indexOf('/'));
-    // }
-
-    // await DB_user.updateProfilePicture(req.user.USER_ID, file_path);
-    // res.send('success');
 })
 
 module.exports = router;

@@ -15,7 +15,7 @@ async function getGroupMembers(group_id, status = 'ADMIN', search_data = {}){
     if(search_data.search_term && search_data.search_term.length > 0) search_str = `AND (UPPER(U.NAME) LIKE UPPER('%${search_data.search_term}%') OR U.STUDENT_ID LIKE '%${search_data.search_term}%')`;
 
     // followings only
-    if(search_data.member_filter && search_data.member_filter.includes('followings')) followings = `AND GM.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = ${search_data.user_id})`;
+    if(search_data.member_filter && search_data.member_filter.includes('followings')) followings = `AND GM.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = ${search_data.user_id} AND STATUS = 'FOLLOWING')`;
 
     const sql = `SELECT U.USER_ID, U.STUDENT_ID, U.NAME, NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC", GM.TIMESTAMP
                 FROM GROUP_MEMBERS GM JOIN USERS U on GM.USER_ID = U.USER_ID

@@ -20,6 +20,8 @@
     <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
     <link rel="stylesheet" href="/css/style.css">
 
+    
+
 </head>
 
 <body>
@@ -34,9 +36,12 @@
 
 
     <main>
+        <button id="toast_click" style="height: 20px;width:50px" onclick=`showNotification()`>
+            Click me
+        </button>
         <div class="container">
 
-
+            
             <div class="left">
                 <% for( let index = 0; index < left.length; index++ ) { %>
                     <%- include('left/' + left[index]); -%>
@@ -76,6 +81,21 @@
         </div>
     </main>
 
+    <!-- toast -->
+    <a class="toast_notification">
+        <div class="toast-content">
+            <img src="" class="toast_nofivication_image" id="toast_nofivication_image" alt="">
+
+            <div id="toast_notification_text">
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark close"></i>
+
+        <div class="progress"></div>
+    </a>
+    
+
+
     
     <% for( let bodyObject of Object.values(bodyObjects) ) { %>
         <% if (bodyObject.css) { %> <link rel="stylesheet" href="<%= bodyObject.css %>"><% } %>
@@ -83,4 +103,6 @@
     <% } %>
 
 </body>
+<!-- notification script -->
+<script src="/js/notification.js"></script>
 </html>

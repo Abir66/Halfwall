@@ -5,6 +5,8 @@ const cors = require('cors');
 const ejs = require("ejs");
 const multer = require('multer');
 
+const { socketConnection } = require('./middlewares/socketConnect');
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 
@@ -17,12 +19,8 @@ app.use(express.static(path.join(__dirname, './public')))
 // setting up server for socket.io
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 
-io.on('connection', (socket) => {
-    console.log('a user connected');
-});
+socketConnection(server);
 
 
 // import routers

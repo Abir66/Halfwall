@@ -11,7 +11,6 @@
         
     }
 </style>
-<% console.log(chat_list); %>
 <div class="message-sidebar" id="message-sidebar">
     <% for( let index = 0; index < chat_list.length; index++ ) { %>
         <%- include('conversationHead',{chat: chat_list[index],image:image_list[index]}); -%>

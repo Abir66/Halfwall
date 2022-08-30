@@ -1,4 +1,4 @@
-const button = document.getElementById("toast_click");
+
 const toast = document.querySelector(".toast_notification");
 const toast_text = document.getElementById("toast_notification_text");
 const closeIcon = document.querySelector(".close");
@@ -7,11 +7,6 @@ let toast_flag  = false;
 
 let timer1, timer2;
 
-button.addEventListener("click", () => {
-    let link = "https://www.google.com/";
-    let image = "/images/pfp.jpg";
-    showNotification("hello world my frien",link,image);
-});
 
 closeIcon.addEventListener("click", () => {
     toast.classList.remove("active");

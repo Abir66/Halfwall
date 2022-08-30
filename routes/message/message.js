@@ -68,6 +68,10 @@ router.post('/getMessages',verify,async (req,res)=>{
 
 router.post('/insertMessage',verify,async (req,res) => {
     const result = await DB_message.insertMessage(req.body.message);
+    console.log(req.body);
+    const users = await DB_message.getPartnerName(req.body.chat_id,req.user.USER_ID);
+    
+
     res.send({result:result});
 })
 
@@ -93,7 +97,6 @@ router.post('/getUserInfo',verify,async (req,res) =>{
 
 router.post('/createConversation',verify,async (req,res) =>{
     const result = (await DB_message.createConversation(req.body.user_id,req.body.currentUser));
-    console.log(result," ----------inside message.js");
     const result2 = (await DB_message.createConversationMember(req.body.user_id,result));
     const result3 = (await DB_message.createConversationMember(req.body.currentUser,result));
     res.send({result:result});

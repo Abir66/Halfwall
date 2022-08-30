@@ -2,6 +2,7 @@ require('dotenv').config();
 const router = require('express').Router();
 const { verify } = require('../../middlewares/user-verification.js');
 const DB_message = require('../../db-codes/message/db-message-api.js');
+const constant_values = require('../../db-codes/constant_values');
 
 
 router.get('/',verify,async (req,res)=>{
@@ -57,7 +58,7 @@ router.post('/getChatList',verify,async (req,res) =>{
 })
 
 router.post('/getMessages',verify,async (req,res)=>{
-    const result = await DB_message.getMessagesList(req.body.chat_id);
+    const result = await DB_message.getMessagesList(req.body.chat_id, constant_values.message_limit, req.body.first_message_id);
     let data = {
         currentUser : req.user,
         messages : result

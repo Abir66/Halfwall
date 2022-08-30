@@ -139,7 +139,7 @@
 }
 
 .middle .post .add-comment i{
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-top: 0.5rem;
     color: var(--color-primary);
     cursor: pointer;
@@ -174,6 +174,7 @@
     position: relative;
 }
 
+
 .middle .comment-image-preview i{
     font-size: 1.5rem;
     color: var(--color-danger);
@@ -200,4 +201,15 @@
     margin-bottom: 0;
     font-size: 1rem;
     
+}
+
+/* ----------------------- No comments --------------------*/
+.middle .post .no-comments{
+    margin-bottom: 1rem;
+}
+
+/* ----------------------- load more comments --------------------*/
+.middle .post .load-more-comments{
+    margin-bottom: 1rem;
+    cursor: pointer;
 }

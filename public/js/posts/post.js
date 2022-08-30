@@ -47,7 +47,7 @@ async function getLikersList(post_id){
 }
 
 
-async function addComment(comment_list, comment, group_id,currentUser_id){
+async function addComment(comment_list, comment, group_id,currentUser_id, add_to_top){
     let div = "";
     if(currentUser_id === comment.USER_ID){ /// here need to add admin priviledges
         div = `<span onclick=deleteComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-trash"></i></span>`;
@@ -76,7 +76,8 @@ async function addComment(comment_list, comment, group_id,currentUser_id){
             </div>
             `;
 
-        comment_list.innerHTML += comment_str;
+        if(!add_to_top) comment_list.innerHTML += comment_str;
+        else comment_list.innerHTML = comment_str + comment_list.innerHTML;
 }
 
 async function deleteComment(comment_id,post_id){
@@ -92,28 +93,60 @@ async function deleteComment(comment_id,post_id){
     }
 }
 
-async function showComments(group_id, post_id, currentUserId){
+async function showComments(group_id, post_id, currentUserId, load_more = false){
     
-    const res = await axios.get("/posts/getComments/", {params : {post_id : post_id}});
+    const params = {post_id: post_id};
 
     // get the post element
     const post = document.getElementById(`post-${post_id}`);
 
+    // get the comments list of this post
+    const comments_list = post.querySelector('.comments-list');
+    
+    // show load more comments button
+    const load_more_comments = post.querySelector('.load-more-comments');
+    load_more_comments.style.display = 'block';
+
+    // hide no more comments
+    const no_more_comments = post.querySelector('.no-comments');
+    no_more_comments.style.display = 'none';
+
+
+    if(load_more){
+        // get the last element in the comment list
+        const last_comment = comments_list.lastElementChild;
+        const last_comment_id = last_comment.id.split('-')[2];
+        params.last_comment_id = last_comment_id;
+    }
+
+    else comments_list.innerHTML = "";
+
+    // get the comments
+    const res = await axios.get("/posts/getComments/", {params : params});
+
     //update comments count of this post get element by class
     const comments_count = post.querySelector('.comments-count');
-    comments_count.innerHTML = `${res.data.length} comments`;
+    const current_comments_count = parseInt(comments_count.innerText.split(' ')[0]);
+    const current_comments_list_length = comments_list.childElementCount;
+    if(current_comments_list_length + res.data.length > current_comments_count)
+            comments_count.innerText = current_comments_count + res.data.length + " comments";
+   
 
+    
     // set display of comments to block
     const comments = post.querySelector('.comments');
     comments.style.display = "block";
     
-    // get the comments list
-    const comments_list = post.querySelector('.comments-list');
-    comments_list.innerHTML = "";
-
     if(res.data.length == 0){
-        comments_list.innerHTML += `<div class = "no-comments">No comments yet</div>`;
-        return;
+        // hide load more button if no more comments
+        if(load_more){
+            const load_more_btn = post.querySelector('.load-more-comments');
+            load_more_btn.style.display = "none";
+        }
+
+        // show no comments
+        const no_comments = post.querySelector('.no-comments');
+        no_comments.style.display = "block";
     }
 
     
@@ -129,6 +162,14 @@ async function hideComments(post_id){
     const comments = post.querySelector('.comments');
     comments.style.display = "none";
 
+    // set display of load more button to none
+    const load_more_btn = post.querySelector('.load-more-comments');
+    load_more_btn.style.display = "none";
+
+    // set display of no comments to none
+    const no_comments = post.querySelector('.no-comments');
+    no_comments.style.display = "none";
+
     // clear the comments list
     const comments_list = post.querySelector('.comments-list');
     comments_list.innerHTML = "";
@@ -139,8 +180,6 @@ async function textarea_auto_grow(element) {
     element.style.height = (element.scrollHeight)+"px";
 }
 
-
-// prevent default behaviour of all form submit
 
 
 async function comment_image_preview(post_id){
@@ -255,6 +294,6 @@ async function send_comment(post_id, group_id,currentUser_id){
     
 
     // add comment to the list
-    await addComment(comments_list, res.data.comment, group_id,currentUser_id);
+    await addComment(comments_list, res.data.comment, group_id,currentUser_id, true);
 
 }

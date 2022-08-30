@@ -98,12 +98,19 @@ async function getPost(post_id, user_id){
 }
 
 
-async function getComments(post_id){
+async function getComments(post_id, limit, cursor_id){
+    
+    let limit_str = '', cursor_str = '';
+    if(limit) limit_str = `FETCH FIRST ${limit} ROWS ONLY`;
+    
+    if(cursor_id) cursor_str = ` AND COMMENT_ID > ${cursor_id}`;
     const sql = `SELECT C.COMMENT_ID, C.POST_ID, C.TEXT, C.IMAGE, TO_CHAR(C.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 U.USER_ID, INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM COMMENTS C LEFT JOIN USERS U ON C.USER_ID = U.USER_ID
                 WHERE C.POST_ID = :post_id
-                ORDER BY C.TIMESTAMP ASC`;
+                ${cursor_str}
+                ORDER BY C.TIMESTAMP ASC
+                ${limit_str}`;
 
     const binds ={
         post_id : post_id

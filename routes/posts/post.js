@@ -3,6 +3,7 @@ const db_post = require('../../db-codes/posts/db-post-api');
 const { verify } = require('../../middlewares/user-verification');
 const { verifyAccessToViewPost } = require('../../middlewares/post-verification');
 const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
+const constant_values = require('../../db-codes/constant_values');
 
 // need to add a middleware to check if the user has access to the post
 router.post('/like/post_id=:post_id', verify, async (req, res) => {
@@ -49,7 +50,7 @@ router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res)
 
 
 router.get('/getComments', async (req, res) => {
-    const comments = await db_post.getComments(req.query.post_id);
+    const comments = await db_post.getComments(req.query.post_id, constant_values.comment_limit, req.query.last_comment_id);
     res.send(comments);
 })
 

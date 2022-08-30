@@ -106,6 +106,12 @@
         <div class="comments-list">
 
         </div>
+
+        <div class = "no-comments" style="display: none;">No comments yet</div>
+
+        <div class="load-more-comments" onclick="showComments(<%= postData.GROUP_ID%>, <%= postData.POST_ID%>,<%=currentUser.USER_ID%>, true)">
+            Load more comments
+        </div>
     </div>
 
 
@@ -119,7 +125,7 @@
             <div class="comment-image-preview-container">
                 <input type="file" name="comment_image" class="comment-image-input" id="comment-image-file-input-<%= postData.POST_ID%>" accept="image/png, image/jpeg" onchange="comment_image_preview(<%= postData.POST_ID%>)" hidden>
             </div>
-            <label for="comment-image-file-input-<%= postData.POST_ID%>" class="comment-attach-image-button"><i class="fa-solid fa-paperclip"></i></label>
+            <label for="comment-image-file-input-<%= postData.POST_ID%>" class="comment-attach-image-button"><i class="fa-solid fa-image"></i></label>
             <textarea class = "comment-text-input" name="comment_text_input" rows="1" placeholder="Write a comment..." oninput="textarea_auto_grow(this)" ></textarea>
             <div class="comment-submit" onclick="send_comment(<%= postData.POST_ID%>, <%= postData.GROUP_ID%>, <%= currentUser.USER_ID%>)"><i class="fa-solid fa-paper-plane"></i></div>
         </form>

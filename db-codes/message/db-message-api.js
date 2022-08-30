@@ -1,9 +1,7 @@
 const Database = require('../database');
 const database = new Database();
+const default_values = require('../default_values');
 
-let default_values = {
-    default_pfp : "/images/pfp.jpg"
-}
 
 async function getConversationList(user_id){
     const sql = `SELECT C.* , INITCAP(U.NAME) AS NAME, MESSAGES.TEXT,U.USER_ID, INITCAP(U.NAME) AS USER_NAME,U.STUDENT_ID,NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
@@ -19,13 +17,22 @@ async function getConversationList(user_id){
 }
 
 
-async function getMessagesList(conversation_id){
+async function getMessagesList(conversation_id, limit, cursor_id ){
+
+    let limit_str = '', cursor_str = '';
+    if(limit) limit_str = `FETCH FIRST ${limit} ROWS ONLY`;
+    if(cursor_id) cursor_str = ` AND M.MESSAGE_ID < ${cursor_id}`;
+
+
     const sql = `
-        SELECT M.*,INITCAP(U.NAME) "USER_NAME"
+        SELECT M.MESSAGE_ID, M.CONVERSATION_ID, M.TEXT, TO_CHAR(M.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP", M.TYPE,
+        U.USER_ID, INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
         FROM MESSAGES M JOIN USERS U
         ON M.USER_ID = U.USER_ID
         WHERE CONVERSATION_ID = :conversation_id
+        ${cursor_str}
         ORDER BY M.TIMESTAMP 
+        ${limit_str}
     `
     const binds = {
         conversation_id: conversation_id
@@ -104,7 +111,8 @@ async function getUsersListForMessageSearch(input,currentUser){
         INITCAP(STREET) STREET, INITCAP(CITY) CITY, POSTCODE,
         NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
         FROM USERS
-        WHERE ((UPPER(NAME) LIKE UPPER('%'||:temp ||'%')) OR (TO_CHAR(STUDENT_ID) = :temp) OR (EMAIL = :email)) AND (USER_ID != :currentUser) 
+        WHERE ((UPPER(NAME) LIKE UPPER('%'||:temp ||'%')) OR (TO_CHAR(STUDENT_ID) = :temp) OR (EMAIL = :email)) AND (USER_ID != :currentUser)
+
         
     `;
     temp = input.toString().toUpperCase().trim();

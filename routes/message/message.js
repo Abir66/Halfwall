@@ -3,6 +3,7 @@ const router = require('express').Router();
 const { verify } = require('../../middlewares/user-verification.js');
 const DB_message = require('../../db-codes/message/db-message-api.js');
 const constant_values = require('../../db-codes/constant_values');
+const { sendMessage } = require('../../middlewares/socketConnect');
 
 
 router.get('/',verify,async (req,res)=>{
@@ -68,9 +69,16 @@ router.post('/getMessages',verify,async (req,res)=>{
 
 router.post('/insertMessage',verify,async (req,res) => {
     const result = await DB_message.insertMessage(req.body.message);
-    console.log(req.body);
-    const users = await DB_message.getPartnerName(req.body.chat_id,req.user.USER_ID);
-    
+    const users = await DB_message.getPartnerName(req.body.message.chat_id,req.user.USER_ID);
+    const msg = await DB_message.getMessageByMessageId(result);
+    let room = users.USER_ID.toString();
+    let key = "message";
+    let m = {
+        chat_id: req.body.message.chat_id,
+        message: msg,
+
+    }
+    sendMessage(room,key,m);
 
     res.send({result:result});
 })
@@ -81,7 +89,22 @@ router.post('/getUsersList',verify,async (req,res)=>{
 })
 
 router.post('/deleteMessage',verify,async (req,res)=>{
+    console.log(req.body);
     const result = await DB_message.deleteMessage(req.body.message_id);
+    const users = await DB_message.getPartnerName(req.body.chat_id,req.user.USER_ID);
+    console.log(users);
+    const msg = await DB_message.getMessageByMessageId(req.body.message_id);
+    let room = users.USER_ID.toString();
+    let key = "message";
+    console.log(msg);
+    let m = {
+        chat_id: req.body.chat_id,
+        message: msg,
+
+    }
+    console.log(m);
+    console.log(m);
+    sendMessage(room,key,m);
     res.send({result:result});
 })
 

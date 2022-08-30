@@ -107,7 +107,6 @@
     <%- include('navbar/navbar'); -%>
     
     <div class="message-main">
-        <button onclick="doSomething()">oy cunt</button>
         <div class="message-container">
             <div class="message-left">
                 <%- include('message/leftSearchBar') %> 
@@ -151,11 +150,8 @@
          
     });
     socket.on("message",msg=>{
-            console.log(msg);
+           updateAfterSocketResponse(msg); 
     })
-    function doSomething(){
-        socket.emit('kisu','4');
-    }
     
     const chat_list = <%- JSON.stringify(chat_list) %>;
     const cUser = <%- JSON.stringify(currentUser) %>;
@@ -269,12 +265,12 @@
             let html = `
             <div class="message-bar message-bar-own" id="message-id-${data.result}">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                    <img class="" style="border-radius: 2em;" src=${cUser.PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="message-details-own message-detail">
                     <p class="chat-user-name-own">YOU</p><p class="chat-user-text chat-text-own">${text}</p>
                 </div>
-                <button class="message-delete-message-own" onclick="deleteMessage(${data.result})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>
+                <button class="message-delete-message-own" onclick="deleteMessage(${data.result},${currentChatId})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>
             </div>
             `;
             innerData += html;
@@ -337,6 +333,7 @@
             document.getElementById(thumbnail_id).classList.remove("message-conversation-head-hover");
         }
         currentChatId = chat_id;
+        console.log(currentChatId);
         document.getElementById("chat-header-name").innerHTML = getChatName(chat_id);
         const data = (await axios.post("/message/getMessages",{chat_id: chat_id})).data;
         const currentUser = data.currentUser;
@@ -368,7 +365,7 @@
                 separateDeatails = "message-details-own"
                 chatUserName = "chat-user-name-own";
                 chatText = "chat-text-own";
-                deleteMessage = `<button class="message-delete-message-own" id="message-delete-message-own-${chatData[i].MESSAGE_ID}" onclick="deleteMessage(${chatData[i].MESSAGE_ID})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>`;
+                deleteMessage = `<button class="message-delete-message-own" id="message-delete-message-own-${chatData[i].MESSAGE_ID}" onclick="deleteMessage(${chatData[i].MESSAGE_ID},${chat_id})"><i class="fa-solid fa-trash message-delete-message-own-icon"></i></button>`;
             }
             if(chatData[i].TYPE === "DELETED"){
                 separateDeatails = "message-bar-deleted";
@@ -383,7 +380,7 @@
             let html = `
             <div class="message-bar ${separateClass} " id="message-id-${chatData[i].MESSAGE_ID}">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                    <img class="" style="border-radius: 2em;" src=${chatData[i].PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="${separateDeatails} message-detail">
                     <p class="${chatUserName}">${title}</p><p class="chat-user-text ${chatText}">${chatData[i].TEXT}</p>
@@ -413,8 +410,8 @@
         
     }
 
-    async function deleteMessage(message_id){
-        let data = (await axios.post('/message/deleteMessage',{message_id:message_id})).data.result;
+    async function deleteMessage(message_id,chat_id){
+        let data = (await axios.post('/message/deleteMessage',{message_id:message_id,chat_id:chat_id})).data.result;
         if(data === 'success'){
             let message_to_be_deleted = "message-id-"+message_id;
             let message_to_be_deleted_btn = "message-delete-message-own"+message_id;
@@ -430,6 +427,46 @@
             `
             updateChatList();
         }
+    }
+
+    async function updateAfterSocketResponse(msg){
+        console.log(msg.oponent," ",cUser);
+        if(msg.message.CONVERSATION_ID === currentChatId){
+            let message_to_be_updated = "message-id-"+msg.message.MESSAGE_ID;
+            message_to_be_updated = document.getElementById(message_to_be_updated);
+            if(message_to_be_updated !== null){
+                let html = "";
+                if(msg.message.TYPE === "DELETED"){
+                    html = `
+                    <div class="message-profile-picture">
+                        <img class="" style="border-radius: 2em;" src=${msg.message.PROFILE_PIC} alt="pfp">
+                    </div>
+                    <div class="message-bar-deleted message-detail">
+                        <p class="chat-user-name-deleted">${msg.message.NAME}</p><p class="chat-user-text chat-text-deleted">This message has been deleted</p>
+                    </div>
+                    `;
+                }else{
+                    
+                }
+                message_to_be_updated.innerHTML = html;
+            }else{
+                html = `
+                        <div class="message-bar message-bar-others " id="message-id-${msg.message.MESSAGE_ID}">
+                            <div class="message-profile-picture">
+                                <img class="" style="border-radius: 2em;" src=${msg.message.PROFILE_PIC} alt="pfp">
+                            </div>
+                            <div class=" message-detail">
+                                <p class="chat-user-name">${msg.message.NAME}</p><p class="chat-user-text chat-text">${msg.message.TEXT}</p>
+                            </div>
+                            
+                        </div>
+                    `;
+                    const chatBody = document.getElementById("message-last-child");
+                    chatBody.insertAdjacentHTML("afterend",html);
+            }
+            
+        }
+        updateChatList();
     }
 
     function getChatName(chat_id){

@@ -154,7 +154,7 @@
            updateAfterSocketResponse(msg); 
     });
     socket.on("notification",data=>{
-        console.log(data);
+        console.log(data.SENDER_ID," liked something ");
     })
     const flag = <%= recever_id %>;
     const chat_list = <%- JSON.stringify(chat_list) %>;
@@ -376,7 +376,7 @@
         for(let i=0;i<chatData.length;i++){
             let separateClass = "message-bar-others";
             let separateDeatails = "";  
-            let title = chatData[i].USER_NAME;
+            let title = chatData[i].USERNAME;
             let chatUserName = "chat-user-name";
             let chatText = "chat-text";
             let deleteMessage = "";
@@ -439,7 +439,7 @@
             const message_plate = document.getElementById(message_to_be_deleted);
             message_plate.innerHTML = `
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src="/images/pfp.jpg" alt="pfp">
+                    <img class="" style="border-radius: 2em;" src=${cUser.PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="message-bar-deleted-own message-detail">
                     <p class="chat-user-name-deleted">YOU</p><p class="chat-user-text chat-text-deleted">This message has been deleted</p>

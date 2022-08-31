@@ -3,6 +3,7 @@ const db_post = require('../../db-codes/posts/db-post-api');
 const { verify } = require('../../middlewares/user-verification');
 const { verifyAccessToViewPost, verifyAccessToDeleteComment } = require('../../middlewares/post-verification');
 const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
+const {notification} = require('../../middlewares/socketConnect');
 const constant_values = require('../../db-codes/constant_values');
 
 // need to add a middleware to check if the user has access to the post
@@ -13,6 +14,20 @@ router.post('/like/post_id=:post_id', verify, async (req, res) => {
 
     const data = { likes_count : likes_count.LIKES_COUNT}
     if(user_liked) data.user_liked = true;
+
+    let demoData = [{
+        RECEIVER_ID : '4',
+        SENDER_ID : '1',
+        DATA: "some data",
+    },
+    {
+        RECEIVER_ID : '4',
+        SENDER_ID : '2',
+        DATA: "some data",
+    }
+    ]
+    notification(demoData);
+
     res.send(data);
 })
 

@@ -16,21 +16,6 @@ async function getConversationList(user_id){
     return result;
 }
 
-async function getMessageByMessageId(message_id){
-    const sql = `
-        SELECT M.MESSAGE_ID, M.CONVERSATION_ID, M.TEXT, M.TYPE, TO_CHAR(M.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
-        U.USER_ID, U.STUDENT_ID, U.NAME, NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC" 
-            FROM MESSAGES M LEFT JOIN USERS U ON M.USER_ID = U.USER_ID
-            WHERE MESSAGE_ID = :message_id
-    `
-    const binds = {
-        message_id:message_id,
-    }
-    const result = (await database.execute(sql,binds)).rows[0];
-    return result;
-
-}
-
 
 async function getMessagesList(conversation_id, limit, cursor_id ){
 
@@ -49,7 +34,6 @@ async function getMessagesList(conversation_id, limit, cursor_id ){
         ORDER BY M.TIMESTAMP DESC
         ${limit_str}
     `
-    
     const binds = {
         conversation_id: conversation_id
     }
@@ -70,7 +54,10 @@ async function getPartnerName(convo_id,user_id){
         convo_id: convo_id
         
     }
+    console.log(binds);
     const result = (await database.execute(sql,binds)).rows[0];
+    console.log("results");
+    console.log(result);
 
     return result;
     
@@ -226,6 +213,5 @@ module.exports = {
     getConversationIdByUserId,
     getUserInfo,
     createConversation,
-    createConversationMember,
-    getMessageByMessageId
+    createConversationMember
 }

@@ -36,6 +36,7 @@ const newsfeed = require('./routes/newsfeed/newsfeed');
 const group = require('./routes/groups/groups');
 const messages = require('./routes/message/message');
 const notification = require('./routes/users/notification');
+const public_forum = require('./routes/groups/public-forum');
 
 
 
@@ -49,6 +50,7 @@ app.use('/groups', group);
 app.use('/marketplace', marketplace);
 app.use('/message',messages);
 app.use('/tuition',tuition);
+app.use('/public-forum',public_forum);
 app.use('/notification',notification);
 
 

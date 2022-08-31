@@ -1,5 +1,6 @@
 const marketplace_group_id = 4;
 const tuition_group_id = 5;
+const public_forum_group_id = 3;
 const comment_limit = 2;
 const message_limit = 2;
 const notification_limit = 2;
@@ -11,5 +12,6 @@ module.exports = {
     tuition_group_id,
     comment_limit,
     message_limit,
-    notification_limit
+    notification_limit,
+    public_forum_group_id
 }

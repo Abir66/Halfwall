@@ -1,0 +1,56 @@
+<div class="right-box">
+    <form id = 'public-forum-rightbox-search' action = "/public-forum/" method = "get" >
+        <div class="heading" style="display: flex; justify-content: space-between;"> 
+            <h3 style="font-size: 1.1rem;">Search & filter</h3>
+            <% if (data.searched) { %>
+                <a href="/public-forum/"><h5 class="text-muted" style="font-size: 1rem;">clear</h5></a>
+            <% } %>            
+        </div>
+
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="display: inblock;"></i>
+            <input type="search" name = "public_forum_search_term" placeholder="Search in public_forum" <% if (data.search_term) { %> value = <%= data.search_term %> <% } %> >
+        </div>
+
+        <div class="subsection">
+            <h4><i class="uil uil-filter"></i>Sort By</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="public_forum_sort_by" value="time" id="public_forum_search_sortByTime" <% if (data.sort_by === "time") { %> checked <% } %>>
+                <label class="form-check-label" for="public_forum_search_sortByTime">
+                  Time
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="public_forum_sort_by" value="popularity" id="public_forum_search_popularity" <% if (data.sort_by === "popularity") { %> checked <% } %>>
+                <label class="form-check-label" for="public_forum_search_popularity">
+                  Popularity
+                </label>
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100% ; margin-top: 1rem;">Search</button>
+
+    </form>
+</div>
+
+<script>
+
+  // get the form element
+  document.getElementById('public-forum-rightbox-search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    var form=document.getElementById('public-forum-rightbox-search');//retrieve the form as a DOM element
+    if(typeof timestamp !== 'undefined'){
+      
+      var input = document.createElement('input');
+      input.setAttribute('name', 'timestamp');
+      input.setAttribute('value', timestamp);
+      input.setAttribute('type', 'hidden')
+      form.appendChild(input);
+    }
+    
+    form.submit()
+})
+
+
+
+</script>

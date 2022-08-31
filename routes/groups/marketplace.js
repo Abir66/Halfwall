@@ -33,7 +33,7 @@ router.get('/:user_id?', verify, async(req, res) => {
 
     
 
-    const posts = await DB_marletplace.getPosts(req.user.user_id, search_data);
+    const posts = await DB_marletplace.getPosts(req.user.USER_ID, search_data);
     res.locals.middle.push({type : "posts", data : posts})
 
     

@@ -174,19 +174,19 @@ async function createPost(user_id, post_data, files){
 
     else if(post_data.group_id == constant_values.tuition_group_id){
 
-        const sql = `INSERT INTO TUITION_POSTS (POST_ID, CLASS, REMUNERATION, STUDENT_COUNT, PREFERENCE) 
-                    VALUES (:post_id, :class, :remuneration, :student_count, :preference)`;
+        const sql = `INSERT INTO TUITION_POSTS (POST_ID, CLASS, REMUNERATION, STUDENT_COUNT, PREFERENCE, LOCATION) 
+                    VALUES (:post_id, :class, :remuneration, :student_count, :preference, :location)`;
 
         const binds = {
             post_id : result.post_id,
             class : post_data.class,
             remuneration : post_data.remuneration,
             student_count : post_data.student_count,
-            preference : post_data.preference
+            preference : post_data.preference,
+            location : post_data.location
         }
 
         await database.execute(sql, binds);
-
 
         // insert all subjects into tuition_subjects table
         if(post_data.subjects.length > 0){

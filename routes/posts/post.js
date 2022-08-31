@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const db_post = require('../../db-codes/posts/db-post-api');
+const dp_notification = require('../../db-codes/users/db-notification-api')
 const { verify } = require('../../middlewares/user-verification');
 const { verifyAccessToViewPost, verifyAccessToDeleteComment } = require('../../middlewares/post-verification');
 const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
@@ -14,19 +15,8 @@ router.post('/like/post_id=:post_id', verify, async (req, res) => {
 
     const data = { likes_count : likes_count.LIKES_COUNT}
     if(user_liked) data.user_liked = true;
-
-    let demoData = [{
-        RECEIVER_ID : '4',
-        SENDER_ID : '1',
-        DATA: "some data",
-    },
-    {
-        RECEIVER_ID : '4',
-        SENDER_ID : '2',
-        DATA: "some data",
-    }
-    ]
-    notification(demoData);
+    const result = await dp_notification.sendNotification();
+    notification(result);
 
     res.send(data);
 })

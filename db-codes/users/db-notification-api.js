@@ -26,9 +26,6 @@ async function sendNotification(){
             last_notification_id : last_notification_id
         };
         await database.execute(sql, binds);
-        
-        console.log(result);
-        // should send notifications
     }
 }
 

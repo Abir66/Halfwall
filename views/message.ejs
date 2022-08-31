@@ -210,9 +210,10 @@
 
     async function loadMessageFromSearchBar(user_id){
         let conversationId = (await axios.post('message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
+        console.log("loaded from search bar ",conversationId);
         if(conversationId.length === 0){
-            loadedConversationId = -3;
             updateChatList();
+            loadedConversationId = -3;
             starBlankConversation(user_id);
         }else{
             message_search_bar.innerHTML = '';
@@ -243,19 +244,28 @@
     
 
     messageForm.addEventListener('submit',async function(e){
+        console.log(loadedConversationId);
         e.preventDefault();
+        console.log(loadedConversationId);
         let text = textMessage.value;
         if(text.length === 0)
             return;
         if(loadedConversationId === -3){
+            console.log("sending axios data for -3");
+            console.log(blankUserId,cUser.USER_ID);
             let new_conversation_id = (await axios.post('/message/createConversation',{user_id:blankUserId,currentUser:cUser.USER_ID})).data.result;
+            console.log(new_conversation_id);
             currentChatId = new_conversation_id;
+            loadedConversationId = -1;
         }
         let message = {
             chat_id : currentChatId,
             user_id : cUser.USER_ID,
             text : text,
         }
+        console.log("after submiting to new public");
+        console.log(loadedConversationId);
+        console.log(message);
         const data = (await axios.post("/message/insertMessage",{message:message})).data;
         if(data.result !== -1){
             textMessage.value = '';

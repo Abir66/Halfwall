@@ -35,6 +35,7 @@ const tuition = require('./routes/groups/tuition');
 const newsfeed = require('./routes/newsfeed/newsfeed');
 const group = require('./routes/groups/groups');
 const messages = require('./routes/message/message');
+const notification = require('./routes/users/notification');
 
 
 
@@ -48,6 +49,7 @@ app.use('/groups', group);
 app.use('/marketplace', marketplace);
 app.use('/message',messages);
 app.use('/tuition',tuition);
+app.use('/notification',notification);
 
 
 

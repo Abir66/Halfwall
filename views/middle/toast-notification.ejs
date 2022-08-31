@@ -1,0 +1,42 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast-notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto toast-title">Bootstrap</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <a href="" class="notification-link">
+        <div class="toast-body">
+            Hello, world! This is a toast message.
+        </div>
+    </a>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function showToastNotification(notification_type, text, link) {
+
+            console.log('okayyy')
+            const toast_notification = document.getElementById('toast-notification')
+
+            // get the toast title element
+            const toast_title = toast_notification.querySelector('.toast-title')
+            toast_title.innerText = notification_type;
+
+            // get notification-link element
+            const notification_link = toast_notification.querySelector('.notification-link')
+            notification_link.href = link;
+
+            // get the toast body element
+            const toast_body = toast_notification.querySelector('.toast-body')
+            toast_body.innerText = text;
+
+            const toast = new bootstrap.Toast(toast_notification)
+            toast.show()
+        
+    }
+
+</script>

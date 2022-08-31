@@ -1,0 +1,135 @@
+<style>
+    .modal {
+        margin-top: 50px;
+    }
+    
+
+    .modal .notification-list .notification{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal .notification-list .notification .notification-body{
+        display: flex;
+        justify-content: flex-start;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+
+    }
+   
+    .modal-userlist-userinfo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+   
+    .modal-content{
+        padding : var(--card-padding);
+    }
+
+
+</style>
+
+
+<div class="modal fade modal-lg" tabindex="-1" id="notification-modal">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-list">
+
+
+                </div>
+
+
+                <div class="load-more-notification" onclick="loadMoreNotification()" style="cursor: pointer;">Load more notification</div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    async function addNotification(notification_list, notification){
+        
+        let notification_str = `
+        <div class="notification" id='notification-${notification.NOTIFICATION_ID}'>
+
+            <a href="${notification.LINK}">
+                <div class="notification-body">
+                    <div class="profile-picture"> <img src="${notification.PROFILE_PIC}" alt=""> </div>
+                    <div class="notification-text">${notification.TEXT}</div>
+                </div>
+            </a>
+            <button type="button" class="btn-close" onclick='clearNotification(${notification.NOTIFICATION_ID})'></button>
+        </div>
+        `
+
+        notification_list.innerHTML += notification_str;
+    }
+
+    var notification_modal = new bootstrap.Modal(document.getElementById('notification-modal'), {});
+
+    async function showNotifications(){
+        const res = await axios.get("/notification", {params : {}});
+        
+        const notifications = res.data;
+
+        const modalBody = document.getElementById('notification-modal').querySelector('.modal-body');
+       
+       // get notification list
+        const notificationList = modalBody.querySelector('.notification-list');
+        notificationList.innerHTML = '';
+
+        for (let notification of notifications){
+            console.log(notification);
+            addNotification(notificationList, notification);
+        }
+
+        notification_modal.show();
+    }
+
+    async function loadMoreNotification(){
+        // get the notification id of the last one in the notification list
+        const notification_list = document.getElementById('notification-modal').querySelector('.notification-list');
+        const last_notification = notification_list.lastElementChild;
+        
+        last_notification_id = last_notification.id.split('-')[1];
+       
+        const res = await axios.get("/notification", {params : {last_notification_id : last_notification_id}});
+        const notifications = res.data;
+
+        const modalBody = document.getElementById('notification-modal').querySelector('.modal-body');
+       
+       // get notification list
+        const notificationList = modalBody.querySelector('.notification-list');
+
+        if(notifications.length == 0) document.getElementById('notification-modal').querySelector('.load-more-notification').style.display = 'none';
+        
+        for (let notification of notifications){
+            console.log(notification);
+            addNotification(notificationList, notification);
+        }
+    }
+
+    async function clearNotification(notification_id){
+        const res = await axios.post("/notification/clear", {notification_id : notification_id});
+        if(res.data === 'success'){
+            document.getElementById(`notification-${notification_id}`).remove();
+        }
+    }
+
+
+
+</script>

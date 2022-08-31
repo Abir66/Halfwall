@@ -315,6 +315,22 @@ async function getCommentMetadata(comment_id){
 
 }
 
+async function deletePost(post_id){
+    const sql = `DELETE FROM POSTS WHERE POST_ID = :post_id`;
+    const binds = {
+        post_id:post_id,
+    }
+
+    try{
+        await database.execute(sql, binds);
+        return 'success'
+    }catch(err){
+        console.log(err);
+        return 'something went wrong'
+    }
+
+}
+
 
 module.exports = {
     addLike,
@@ -332,6 +348,7 @@ module.exports = {
     getCommentCount,
     updateComment,
     getCommentMetadata,
+    deletePost
     
 }
 

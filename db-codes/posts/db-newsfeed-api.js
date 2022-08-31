@@ -27,8 +27,8 @@ async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp,
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
-                WHERE P.USER_ID = :user_id 
-                OR P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id AND STATUS = 'FOLLOWING')
+                WHERE (P.USER_ID = :user_id 
+                OR P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id AND STATUS = 'FOLLOWING'))
                 AND P.GROUP_ID IN (1,2) ${search_term_str}
                 ${cursor_str}
                 ORDER BY ${order_by}

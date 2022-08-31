@@ -4,10 +4,11 @@ const default_values = require('../default_values');
 
 
 async function getConversationList(user_id){
-    const sql = `SELECT C.* , INITCAP(U.NAME) AS NAME, MESSAGES.TEXT,U.USER_ID, INITCAP(U.NAME) AS USER_NAME,U.STUDENT_ID,NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
-    FROM CONVERSATIONS C,MESSAGES,USERS U,CONVERSATION_MEMBERS CM
-    WHERE C.MESSAGE_ID = MESSAGES.MESSAGE_ID AND MESSAGES.USER_ID = U.USER_ID AND CM.CONVERSATION_ID = C.CONVERSATION_ID AND CM.USER_ID = :user_id
-    ORDER BY C.TIMESTAMP DESC
+    const sql = `SELECT C.* , INITCAP(U.NAME) AS NAME, M.TEXT,U.USER_ID, INITCAP(U.NAME) AS USER_NAME,U.STUDENT_ID,
+                NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
+        FROM CONVERSATIONS C JOIN  MESSAGES M ON C.MESSAGE_ID = M.MESSAGE_ID JOIN USERS U ON M.USER_ID = U.USER_ID JOIN CONVERSATION_MEMBERS CM ON C.CONVERSATION_ID = CM.CONVERSATION_ID
+        WHERE CM.USER_ID = :user_id
+		ORDER BY C.TIMESTAMP DESC
     `;
     const binds = {
         user_id: user_id
@@ -130,6 +131,21 @@ async function getUsersListForMessageSearch(input,currentUser){
 
 }
 
+async function getMessageByMessageId(message_id){
+    const sql = `
+        SELECT M.MESSAGE_ID, M.CONVERSATION_ID, M.TEXT, M.TYPE, TO_CHAR(M.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
+        U.USER_ID, U.STUDENT_ID, U.NAME, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC" 
+            FROM MESSAGES M LEFT JOIN USERS U ON M.USER_ID = U.USER_ID
+            WHERE MESSAGE_ID = :message_id
+    `
+    const binds = {
+        message_id:message_id,
+    }
+    const result = (await database.execute(sql,binds)).rows[0];
+    return result;
+
+}
+
 async function getConversationIdByUserId(user_id,currentUser){
     const sql = `
         SELECT CONVERSATION_ID
@@ -213,5 +229,7 @@ module.exports = {
     getConversationIdByUserId,
     getUserInfo,
     createConversation,
-    createConversationMember
+    createConversationMember,
+    getMessageByMessageId
+
 }

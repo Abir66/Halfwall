@@ -1,6 +1,9 @@
 const Database = require('../database');
 const database = new Database();
 
+const stroage_file = require('../files/storage-files');
+
+
 // require defaults
 const default_values = require('../default_values');
 
@@ -197,6 +200,7 @@ async function updateGroupCover(group_id, cover_photo){
 
     
     const result = (await database.execute(sql, binds)).rows;
+    stroage_file.storageCleanup();
     return result;
 }
 

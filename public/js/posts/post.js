@@ -19,6 +19,15 @@ function fixLikes(data, post_id){
     else document.getElementById(`like-button-${post_id}`).innerHTML = `<i class="fa-regular fa-heart" onclick="like(${post_id})"></i>` 
 }
 
+async function deletePost(post_id){
+    console.log("delete post", post_id)
+    const res = await axios.post(`/posts/delete/post_id=${post_id}`, {post_id: post_id});
+    if(res.data === 'success') {
+        // hide the post
+        document.getElementById(`post-${post_id}`).style.display = "none";
+    }
+}
+
 async function getLikersList(post_id){
 
     const res = await axios.get("/posts/getLikersList/", {params : {POST_ID : post_id}});

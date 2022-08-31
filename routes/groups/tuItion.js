@@ -39,10 +39,11 @@ router.get('/:user_id?', verify, async(req, res) => {
     res.render('index', {
         type : "group",
         currentUser : req.user,
+        location : search_data.location,
         group: {GROUP_ID : constant_values.tuition_group_id, GROUP_NAME : "Tution"},
         title :  "Halfwall | Tution-e",
         left : ['left-profile', 'sidebar'],
-        right : [],
+        right : [{location : 'tution-search', data : search_data}],
     });
 
 

@@ -90,6 +90,15 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
 } )
 
 
+// delete post
+router.post('/delete/post_id=:post_id', verify, async (req, res) => {
+    console.log(req.params.post_id);
+    await db_post.deletePost(req.params.post_id);
+    res.send('success');
+} )
+
+
+
 
 // ------------------------------comments ---------------------------------------
 router.post('/post_id=:post_id/comment', verify, verifyAccessToViewPost, comments_upload.single('comment_image') ,async (req, res) => {

@@ -175,7 +175,7 @@
                     <% } else { %>
                         <button class="btn btn-primary" onclick="requestFollow(<%=user.USER_ID%>)">Follow</button>
                     <% } %>
-                    <button class="btn btn-primary">Message</button>
+                    <a href="/message/<%= user.USER_ID %>" class="btn btn-primary">Message</a>
                 <% } else { %>
                     <a href="/user/editProfile"><button class="edit-profile btn btn-primary">edit-profile</button></a></a>
                 <% } %>

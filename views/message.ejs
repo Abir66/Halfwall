@@ -139,7 +139,7 @@
 </body>
 <script src="/socket.io/socket.io.js" ></script>
 <!-- notification script -->
-<script src="/js/notification.js"></script>
+
 <script>  
     // setting up client side socket
     let count = 0;
@@ -175,6 +175,10 @@
     const message_search_results = document.getElementById('message-search-results');
     const doneTypingInterval = 700;
     let blankUserId = 0;
+    
+    if(flag > 0){
+        loadMessageFromSearchBar(flag);
+    }
 
     message_search_bar.addEventListener("keyup",function(){
         clearTimeout(typingTimer);
@@ -185,6 +189,8 @@
             updateChatList();
         }
     })
+
+
 
     message_search_bar.addEventListener("keydown",function(){
         clearTimeout(typingTimer);
@@ -214,7 +220,7 @@
 
     async function loadMessageFromSearchBar(user_id){
         console.log("inside loadmessage");
-        let conversationId = (await axios.post('message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
+        let conversationId = (await axios.post('/message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
         console.log("loaded from search bar ",conversationId);
         if(conversationId.length === 0){
             updateChatList();

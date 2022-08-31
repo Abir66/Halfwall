@@ -6,7 +6,7 @@ const constant_values = require('../../db-codes/constant_values');
 const { sendMessage } = require('../../middlewares/socketConnect');
 
 
-router.get('/',verify,async (req,res)=>{
+router.get('/:recever_id?',verify,async (req,res)=>{
     const currentUser = req.user;
     const chat_list = await DB_message.getConversationList(req.user.USER_ID);
     const image_list = [];
@@ -25,6 +25,9 @@ router.get('/',verify,async (req,res)=>{
                 chat.TEXT = chat.TEXT.slice(0,Math.max(18-namelength,0))+ "...";
     }
     let recever_id = 0;
+    if(req.params.recever_id){
+        recever_id = req.params.recever_id;
+    }
     let data = {
         currentUser: currentUser,
         chat_list: chat_list,
@@ -127,7 +130,6 @@ router.post('/createConversation',verify,async (req,res) =>{
     const result3 = (await DB_message.createConversationMember(req.body.currentUser,result));
     res.send({result:result});
 })
-
 
 
 module.exports = router;

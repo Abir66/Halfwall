@@ -24,10 +24,12 @@ router.get('/',verify,async (req,res)=>{
         if(chat.TEXT !== null && chat.TEXT.length > Math.max(18-namelength,0))
                 chat.TEXT = chat.TEXT.slice(0,Math.max(18-namelength,0))+ "...";
     }
+    let recever_id = 0;
     let data = {
         currentUser: currentUser,
         chat_list: chat_list,
-        image_list: image_list
+        image_list: image_list,
+        recever_id: recever_id,
     }
     res.render('message',data);
 })
@@ -109,6 +111,7 @@ router.post('/deleteMessage',verify,async (req,res)=>{
 })
 
 router.post('/getConversationIdByUserId',verify,async (req,res)=>{
+    console.log(req.body);
     const result = (await DB_message.getConversationIdByUserId(req.body.user_id,req.body.currentUser));
     res.send({result:result});
 })
@@ -124,5 +127,7 @@ router.post('/createConversation',verify,async (req,res) =>{
     const result3 = (await DB_message.createConversationMember(req.body.currentUser,result));
     res.send({result:result});
 })
+
+
 
 module.exports = router;

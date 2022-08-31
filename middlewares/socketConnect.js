@@ -18,5 +18,6 @@ exports.socketConnection = (server) => {
 };
 
 exports.sendMessage = (roomId, key, message) => io.to(roomId).emit(key, message);
+exports.sendNofification = (roomId,key,data) => io.to(roomId).emit(key,data);
 
 exports.getRooms = () => io.sockets.adapter.rooms;

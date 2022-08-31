@@ -49,6 +49,7 @@ async function getMessagesList(conversation_id, limit, cursor_id ){
         ORDER BY M.TIMESTAMP DESC
         ${limit_str}
     `
+    
     const binds = {
         conversation_id: conversation_id
     }

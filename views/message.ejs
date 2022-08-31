@@ -152,8 +152,11 @@
     });
     socket.on("message",msg=>{
            updateAfterSocketResponse(msg); 
+    });
+    socket.on("notification",data=>{
+        console.log(data);
     })
-    
+    const flag = <%= recever_id %>;
     const chat_list = <%- JSON.stringify(chat_list) %>;
     const cUser = <%- JSON.stringify(currentUser) %>;
     let loadedConversationId = -1;
@@ -210,6 +213,7 @@
     }
 
     async function loadMessageFromSearchBar(user_id){
+        console.log("inside loadmessage");
         let conversationId = (await axios.post('message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
         console.log("loaded from search bar ",conversationId);
         if(conversationId.length === 0){

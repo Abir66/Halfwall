@@ -4,7 +4,6 @@ const dp_notification = require('../../db-codes/users/db-notification-api')
 const { verify } = require('../../middlewares/user-verification');
 const { verifyAccessToViewPost, verifyAccessToDeleteComment } = require('../../middlewares/post-verification');
 const { posts_upload, comments_upload } = require('../../middlewares/file-upload');
-const {notification} = require('../../middlewares/socketConnect');
 const constant_values = require('../../db-codes/constant_values');
 
 // need to add a middleware to check if the user has access to the post
@@ -16,7 +15,7 @@ router.post('/like/post_id=:post_id', verify, async (req, res) => {
     const data = { likes_count : likes_count.LIKES_COUNT}
     if(user_liked) data.user_liked = true;
     const result = await dp_notification.sendNotification();
-    notification(result);
+    
 
     res.send(data);
 })
@@ -41,7 +40,6 @@ router.get('/getLikersList', verify, async (req, res) => {
 router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res) => {
     if(!res.locals.postViewAccess) return res.status(403).send('Access denied');
     const post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
-    console.log(post);
    
     res.render('index', {
         type : "post",
@@ -51,6 +49,17 @@ router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res)
         right : [],
         middle : [{type : 'post', data : post}]
     });
+})
+
+router.get('/getPostData/post_id=:post_id', verify, async (req, res) => {
+
+    const post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
+    if(!post || post.USER_ID != req.user.USER_ID) {
+        res.send({result : 'access denied'});
+        return;
+    }
+    res.send({result : 'success', post : post});
+
 })
 
 

@@ -23,7 +23,7 @@
                 <a id="copy-link" class="dropdown-item" href="#"><i class="fa-solid fa-link"></i> &nbsp Copy Link</a>
                 <% if (currentUser.USER_ID === postData.USER_ID) { %> 
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</a>
+                    <a class="dropdown-item" href="#" onclick="editPost(<%=postData.POST_ID%>)"><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</a>
                     <a class="dropdown-item" href="#" onclick="deletePost(<%=postData.POST_ID%>)"><i class="fa-solid fa-trash"></i>&nbsp Delete Post</a>
                 <% } %> 
               </div> 
@@ -54,7 +54,8 @@
     <div class="post-text">
         <p><%= postData.TEXT %></p>
     </div> 
-    <% if (postData.FILES) { %>
+    <% if (postData.FILES && postData.FILES != null) {
+        postData.FILES = JSON.parse(postData.FILES); %>
         
         <div id="imageSlider<%= postData.POST_ID %>" class="carousel slide" data-ride="carousel">
             <div class="container-fluid">
@@ -92,7 +93,7 @@
                 <i class="fa-regular fa-heart" onclick="like(<%=postData.POST_ID%>)"></i>
             <% } %>
             </span>
-            <span class="likes-count" id="likes-count-<%= postData.POST_ID%>" onclick="getLikersList(<%=postData.POST_ID%>)"  ><%= postData.LIKES_COUNT %> </span>
+            <span class="likes-count icon-pointer" id="likes-count-<%= postData.POST_ID%>" onclick="getLikersList(<%=postData.POST_ID%>)"  ><%= postData.LIKES_COUNT %> </span>
         </div>
         <div class="comments-count" id="comments-count-<%= postData.POST_ID %>" onclick="showComments(<%= postData.GROUP_ID%>, <%= postData.POST_ID%>,<%=currentUser.USER_ID%>)">
             <%= postData.COMMENT_COUNT%> comments

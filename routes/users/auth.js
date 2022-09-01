@@ -4,6 +4,7 @@ const DB_user = require('../../db-codes/users/db-user-api');
 const jwt = require('jsonwebtoken');
 const { verify } = require('../../middlewares/user-verification.js');
 const DB_storage = require('../../db-codes/files/storage-files');
+const DB_newsfeed = require('../../db-codes/posts/db-newsfeed-api');
 
 router.post('/signin', async (req, res) => {
     let result = [], errors = [], studentID, email;
@@ -116,21 +117,35 @@ router.post('/signup', async (req, res) => {
 
 
 // test route
-router.get('/test', verify, (req, res) => {
-  
-    DB_storage.storageCleanup();
+router.get('/test', verify, async (req, res) => {
 
-    res.send("success");
-    // let middle = [{type : "create-post", location : "posts/test"}];
-    // res.render('index', {
-    //     type : "newsfeed",
-    //     currentUser : req.user,
-    //     group: undefined,
-    //     title : 'test',
-    //     left : ['left-profile', 'sidebar'],
-    //     right : [],
-    //     middle : middle
-    // });
+    let middle = [{type : "create-post", location : "posts/create_post"}];
+
+    const search_data = {}
+    
+    if(req.query.newsfeed_search_term || req.query.newsfeed_sort_by){
+        search_data.searched = true;
+        search_data.search_term = req.query.newsfeed_search_term.trim();
+        search_data.sort_by = req.query.newsfeed_sort_by;
+    }
+
+    const posts = await DB_newsfeed.getNewsFeedPostsForUserID2(req.user.USER_ID, search_data);
+    
+
+    middle.push({type : "posts", data : posts});
+    
+
+    res.render('index', {
+        type : "newsfeed",
+        currentUser : req.user,
+        group: undefined,
+        title : 'Newsfeed',
+        left : ['left-profile', 'sidebar'],
+        right : [{location : 'newsfeed-search', data : search_data}],
+        middle : middle,
+        
+    });
+    
 });
 
 

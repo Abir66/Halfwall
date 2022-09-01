@@ -23,13 +23,46 @@
     
 
     <style>
-        .message-container {
-            width: 27%;
+
+        .fullscreen{
+            height: 100vh;
             display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
-        .message-main{
+
+        nav{
             position: relative;
-            top: 4.1rem;
+            flex: 0 1 auto;
+        }
+
+        .message-main{
+            flex: 1 1 auto;
+            overflow-y: auto;
+            width: 100%;
+            
+        }
+
+        .message-container {
+            width: 100vw;
+            display: flex;
+            height: 100%;
+        }
+
+        .message-left{
+            width: 30%;
+            height: 100%;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-container .message-middle{
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .message-conversation-head{
             display: flex;
@@ -80,11 +113,11 @@
             align-items: center;
         }
         .found-user-name{
-            font-size: 20px;
+            font-size: 1rem;
             color: var(--color-black);
         }
         .found-user-id{
-            font-size: 14px;
+            font-size: 0.8rem;
             color: var(--color-gray);
         }
         .refresh_message{
@@ -102,8 +135,10 @@
 <body>
 
    
+    <div class="fullscreen">
 
-    <!--- Navbar -->
+
+        <!--- Navbar -->
     <%- include('navbar/navbar'); -%>
     
     <div class="message-main">
@@ -111,14 +146,18 @@
             <div class="message-left">
                 <%- include('message/leftSearchBar') %> 
                 <%- include('message/leftConversations',{chat_list: chat_list,image_list:image_list}) %> 
+                <div class="left-footer"></div>
             </div>
             <div class="message-middle">
                 <%- include('message/messageBody') %> 
+                <div class="left-footer"></div>
             </div>
             
         </div>
         
     </div>
+    
+    
     <!-- toast -->
     <a class="toast_notification" id="toast_notification">
         <div class="toast-content">
@@ -136,6 +175,9 @@
     <%-include('middle/toast-notification')  %> 
 
 
+
+    </div>
+    
 </body>
 <script src="/socket.io/socket.io.js" ></script>
 <!-- notification script -->

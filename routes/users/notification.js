@@ -12,8 +12,8 @@ const constant_values = require('../../db-codes/constant_values');
 
 
 router.get('/', verify, async (req, res) => {
-    
-    const notifications = await DB_notification.getNotificationForUser(req.user.USER_ID, constant_values.notification_limit, req.query.cursor_id);
+    console.log('heree', req.user.USER_ID, constant_values.notification_limit, req.query.last_notification_id );
+    const notifications = await DB_notification.getNotificationForUser(req.user.USER_ID, constant_values.notification_limit, req.query.last_notification_id);
     res.send(notifications);
 })
 

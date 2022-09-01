@@ -16,7 +16,7 @@ router.get('/', verify, async (req, res) => {
         search_data.sort_by = req.query.newsfeed_sort_by;
     }
 
-    const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID, search_data, limit = 3);
+    const posts = await DB_newsfeed.getNewsFeedPostsForUserID(req.user.USER_ID, search_data);
     
 
     middle.push({type : "posts", data : posts});

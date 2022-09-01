@@ -17,16 +17,13 @@
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <!-- Socket io-->
+    <script src="/socket.io/socket.io.js"></script>
+
     <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
     <link rel="stylesheet" href="/css/style.css">
 
-    <script >
-        <% if (typeof timestamp !== 'undefined') { %>
-            let timestamp = `<%= timestamp %>`;
-        <% } %>
-    </script>
-    
-    <script src="/socket.io/socket.io.js"></script>
+    <script > <% if (typeof timestamp !== 'undefined') { %> let timestamp = `<%= timestamp %>`; <% } %> </script>
 
 </head>
 
@@ -34,8 +31,11 @@
 
     <%- include('middle/modals/user-modal')%> 
     <%- include('middle/modals/comment-edit-modal')%>
+    <%- include('middle/modals/post-edit-modal')%>
+
+    
      
-    <% let bodyObjects = {} %>
+    <% let bodyObjects = {css :[], js:[]} %>
 
 
     <!--- Navbar -->
@@ -62,11 +62,19 @@
                         <%- include('middle/groups/group', {groupData : middle[index].data}); -%>
 
                     <% } else if (middle[index].type === 'post') { %>
-                        <% if(!bodyObjects.post) { bodyObjects.post = { css : "/css/post.css", js : '/js/posts/post.js' }}%>
+                        <% if(!bodyObjects.post) {
+                            bodyObjects.post = true; 
+                            bodyObjects.css.push("/css/post.css")
+                            bodyObjects.js.push("/js/posts/post.js");
+                            bodyObjects.js.push("/js/posts/comment.js");}%>
                         <%- include('middle/posts/post', {postData : middle[index].data}); -%>
 
                     <% } else if (middle[index].type === 'posts') { %>
-                        <% if(!bodyObjects.post) { bodyObjects.post = { css : "/css/post.css", js : '/js/posts/post.js' }}%>
+                        <% if(!bodyObjects.post) {
+                            bodyObjects.post = true; 
+                            bodyObjects.css.push("/css/post.css")
+                            bodyObjects.js.push("/js/posts/post.js");
+                            bodyObjects.js.push("/js/posts/comment.js");}%>
                         <% for( let post of middle[index].data) { %> <%- include('middle/posts/post', {postData : post}); -%><% } %>
                     
                     <% } else { %>
@@ -94,12 +102,30 @@
     <!--  notification modal  -->
     <%- include('middle/modals/notification-modal')%>
     
-    <% for( let bodyObject of Object.values(bodyObjects) ) { %>
-        <% if (bodyObject.css) { %> <link rel="stylesheet" href="<%= bodyObject.css %>"><% } %>
-        <% if (bodyObject.js) { %> <script src="<%= bodyObject.js %>"></script> <% } %>
-    <% } %>
+    <% for( let css of bodyObjects.css  ) { %> <link rel="stylesheet" href="<%= css %>"> <% } %>
+    <% for( let js of bodyObjects.js  ) { %> <script src="<%= js %>"></script> <% } %>
 
 </body>
 <!-- notification script -->
 <script src="/js/notification.js"></script>
+<script>
+
+let count = 0;
+    const socket = io();
+    socket.on('connect',()=>{
+         let user_id = <%=currentUser.USER_ID%>;
+         let room = user_id.toString();
+         socket.emit('handshake', room);
+         
+    });
+    socket.on("message",msg=>{
+           updateAfterSocketResponse(msg); 
+    });
+    socket.on("notification",data=>{
+        showToastNotification('Notification', data.TEXT, data.LINK)
+        console.log(data);
+    })
+
+
+</script>
 </html>

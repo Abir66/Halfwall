@@ -1,0 +1,231 @@
+<style>
+
+    #edit-post-in-modal{
+        margin: 0 1em;
+        padding: 0.6em;
+       
+        border-radius: 2em;
+        background-color: hsl(252, 30%, 95%);;
+    }
+
+
+
+.post-edit-modal-body .edit-post {
+   padding: 1rem;
+}
+
+.post-edit-modal-body .edit-post .post-info {
+   margin-bottom: 1rem;
+}
+
+
+.post-edit-modal-body .edit-post .post-info .user{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+
+
+.post-edit-modal-body .edit-post .post-info .username {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.post-edit-modal-body .edit-post .post-info .head{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.post-edit-modal-body .edit-post .post-text  {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--color-light);
+    margin-bottom: 1rem;
+}
+
+
+.post-edit-modal-body .edit-post .post-group select{
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    margin-left: 0;
+}
+
+
+.post-edit-modal-body .edit-post .post-footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post-edit-modal-body .edit-post .post-footer .btn{
+    font-size: 0.7rem;
+}
+
+.post-edit-modal-body .edit-post .post-footer .btn-blank{
+    border-color: var(--color-gray);
+}
+
+
+.post-edit-modal-body .edit-post #edit-post-files-preview-list{
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.post-edit-modal-body .edit-post .file-preview{
+    width: 20%;
+   
+}
+
+.post-edit-modal-body .edit-post .file-preview .file{
+    width: 100%;
+    
+}
+
+.post-edit-modal-body .edit-post .file-preview{
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.post-edit-modal-body .edit-post .file-preview .previw-close-button{
+    background-color: red;
+    padding: 0 1rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+
+/* ------------------- sell post ------------------------*/
+.post-edit-modal-body .sell-post-info{
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap : 1rem;
+    font-size: 1rem;
+}
+
+.post-edit-modal-body .sell-post-info label{
+    width: 20%;
+}
+
+.post-edit-modal-body .sell-post-info select{
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    
+}
+
+.post-edit-modal-body .sell-post-info input[type='number']{
+    border: 1px solid var(--color-light);
+}
+
+/* ------------------- sell post ------------------------*/
+.post-edit-modal-body .tuition-post-info{
+    margin: 1rem 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap : 1rem;
+    font-size: 1rem;
+}
+
+.post-edit-modal-body .tuition-post-info label{
+    width: 25%;
+}
+
+.post-edit-modal-body .tuition-post-info select{
+    padding-right: 1rem;
+    display: inline-block;
+    border: 1px solid var(--color-light);
+    box-sizing: border-box;
+    
+}
+
+.post-edit-modal-body .tuition-post-info input{
+    border: 1px solid var(--color-light);
+    
+}
+
+
+.post-edit-modal-body .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
+    cursor: pointer;
+    padding: 0 0.5rem ;
+    border: 1px solid var(--color-light);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+</style>
+
+<div class="modal fade" id="post-edit-modal" tabindex="" role="dialog" aria-labelledby="postEdit" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+    <div class="modal-content">
+       
+            <div class="modal-header">
+                <h5 class="modal-title" id="postEdit">Edit post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> 
+            <div class="modal-body post-edit-modal-body">
+                
+                <form action="" class="edit-post-form">
+
+                    <div class="edit-post">
+                        
+                        <!-- post info -->
+                        <div class="post-info">
+                            <div class="head">
+                                <div class="user">
+                                <div class="profile-picture">
+                                    <img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>">
+                                </div>
+                                
+                                <div class="info">
+                                    <p class="username"><%= currentUser.NAME%></p>
+                                    
+                                    <div class="post-group">
+                                        
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                
+                            </div>
+                        </div>
+                
+                        <textarea class = "post-text" name="post-text" rows="10"></textarea>
+                        
+                        <div class="edit-postfiles-preview-container">
+                            <input type="file" id="edit-post-file-input" accept="image/png, image/jpeg, video/mp4" onchange="preview()" multiple hidden>
+                            <div id="edit-post-files-preview-list"></div>
+                        </div>
+                
+                        <div class="post-footer">
+                            <label for="edit-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
+                        </div>
+
+                    </div>
+                    
+                    
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="update_post()">Save changes</button>
+            </div>
+        
+    </div>
+    </div>
+</div>

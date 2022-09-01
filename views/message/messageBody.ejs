@@ -3,11 +3,11 @@
         display: flex;
         flex-flow: column;
         height: 100%;
-        position: absolute;
-        margin: 0 auto;
-        width: 77em;
+        width: 100%;
         background-color: hsl(252, 30%, 100%);
+        
     }
+    
     #chat-header-name{
         font-size: 28px;
         color: #525252;
@@ -16,6 +16,7 @@
     #chat-header{
         height: 3rem;
         box-shadow: 10px 0px 30px hsla(252, 75%, 60%, 0.1);;
+        
     }
     #chat-body{
         overflow-y: scroll;
@@ -23,7 +24,8 @@
         display: flex;
         flex-direction: column-reverse;
         padding: 0.5em;
-        height: 85%;
+        height: 100%;
+        
     }
     .message-bar{
         display: flex;
@@ -114,6 +116,6 @@
     <form method="post" id="chat-send-messages">
         <input type="text" name="write_message" id="write_message" placeholder="enter message">
         <button type="submit" name="submit" class="fa-solid fa-paper-plane fa-lg message-send-button"></button>
-    </div>
+    </form>
 </div>
 

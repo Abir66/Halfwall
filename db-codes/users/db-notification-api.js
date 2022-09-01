@@ -1,6 +1,6 @@
 const Database = require('../database');
 const database = new Database();
-
+const {notification_sender} = require('../../middlewares/socketConnect');
 const default_values = require('../default_values');
 
 async function sendNotification(){
@@ -9,7 +9,7 @@ async function sendNotification(){
                 INITCAP(U.NAME) USERNAME, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM NOTIFICATIONS N LEFT JOIN USERS U ON N.SENDER_ID = U.USER_ID
                 WHERE N.SENT = 'NO'
-                ORDER BY N.TIMESTAMP DESC`;
+                ORDER BY N.NOTIFICATION_ID ASC`;
     
     const result = (await database.execute(sql)).rows;
     
@@ -26,7 +26,13 @@ async function sendNotification(){
             last_notification_id : last_notification_id
         };
         await database.execute(sql, binds);
+        console.log("here", result);
+        
+        //send the notifications
+        notification_sender(result);
     }
+
+
 }
 
 
@@ -48,6 +54,7 @@ async function getNotificationForUser(user_id, limit, cursor_id){
         user_id : user_id
     };
     const result = (await database.execute(sql, binds)).rows;
+    console.log(result, 'resulttt');
     return result;
 }
 

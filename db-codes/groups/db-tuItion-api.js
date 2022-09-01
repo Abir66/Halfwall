@@ -40,7 +40,10 @@ async function getPosts(user_id, search_data){
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
-                CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES",
+                (SELECT json_arrayagg(
+                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
+                ) "FILES",
                 TP.CLASS, TP.REMUNERATION, TP.STUDENT_COUNT, TP.PREFERENCE, TP.BOOKED, TP.LOCATION,
                 CURSOR(SELECT TS.SUBJECT FROM TUITION_SUBJECTS TS WHERE TS.POST_ID = P.POST_ID) "SUBJECTS"
                 

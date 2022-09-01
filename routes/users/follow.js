@@ -23,7 +23,7 @@ router.post('/processFollowRequest',verify, async (req,res)=>{
 router.post('/unfollow',verify, async (req,res)=>{
     const follower = req.user.USER_ID;
     const followee = req.body.USER_ID;
-    await DB_follow.DB_follow.processFollow(follower, followee, 'UNFOLLOW');
+    await DB_follow.processFollow(follower, followee, 'UNFOLLOW');
     res.send("success")
 });
 
@@ -31,7 +31,7 @@ router.post('/unfollow',verify, async (req,res)=>{
 router.post('/removeFollower',verify, async (req,res)=>{
     const followee = req.user.USER_ID;
     const follower = req.body.USER_ID;
-    await DB_follow.DB_follow.processFollow(follower, followee, 'REMOVE-FOLLOW');
+    await DB_follow.processFollow(follower, followee, 'REMOVE-FOLLOW');
     res.send("success")
 });
 

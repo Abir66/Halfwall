@@ -37,7 +37,10 @@
     margin-bottom: 1rem;
 }
 
-
+.middle .likes-count{
+    width: 2rem;
+    cursor: pointer;
+}
 
 .middle .post .video{
     width: 100%;

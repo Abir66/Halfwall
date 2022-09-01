@@ -2,7 +2,7 @@ const Database = require('../database');
 const database = new Database();
 const DB_follow = require('../../db-codes/users/db-follow-api');
 const default_values = require('../default_values');
-
+const DB_storage = require('../files/storage-files');
 
 async function insertUser(user){
     const sql = `BEGIN
@@ -135,7 +135,10 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
     const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:viewer_id, P.POST_ID) "USER_LIKED", COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
-	            CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"    
+	            (SELECT json_arrayagg(
+                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
+                ) "FILES"   
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
                 WHERE P.USER_ID = :user_id
                 AND P.GROUP_ID IN (${groups}) ${search_term_str}
@@ -225,22 +228,9 @@ async function updateProfilePicture(user_id, profile_pic){
         user_id : user_id,
         profile_pic : profile_pic
     };
-    return (await database.execute(sql, binds)).rows;
-}
-
-async function test(){
-
-    const sql = `SELECT U.NAME, 
-                
-                CURSOR(SELECT * FROM FOLLOWS 
-                WHERE FOLLOWER_ID = U.USER_ID) as "FOLLOWINGS"
-                
-                FROM USERS U`
-    
-    const binds ={};
     const result = (await database.execute(sql, binds)).rows;
-
-    console.dir(result, {depth : null});
+    DB_storage.storageCleanup();
+    return result;
 }
 
 module.exports = {
@@ -253,7 +243,6 @@ module.exports = {
     getUserProfilePosts,
     updateUser,
     getUserMiniData,
-    test,
     checkPassword,
     updateProfilePicture
 }

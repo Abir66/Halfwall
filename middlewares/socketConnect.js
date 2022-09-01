@@ -7,20 +7,29 @@ exports.socketConnection = (server) => {
         socket.join(data);
     });
     socket.on('disconnect',() => {
-         console.log(socket.id," disconnected");    
+         //console.log(socket.id," disconnected");    
     });
   });
 };
 
 exports.sendMessage = (roomId, key, message) => io.to(roomId).emit(key, message);
 exports.sendNofification = (roomId,key,data) => io.to(roomId).emit(key,data);
-exports.notification = (ar)=>{
-    // console.log("ready to send notification");
-    // for(let i=0;i<ar.length;i++){
-    //     let room = ar[i].RECEIVER_ID;
-    //     let key = "notification";
-    //     console.log(ar[i]);
-    //     //io.to(room).emit(key,ar[i]);
-    // }
+
+
+const notification_sender = async function emitNotifications(notifications){
+console.log("ready to send notification");
+    console.log(notifications, 'hreeeeee');
+    for(let notification of notifications){
+      // convert to string
+
+        let room = notification.RECEIVER_ID.toString();
+        let key = "notification";
+        
+        io.to(room).emit(key,notification);
+    }
+
 }
+
+exports.notification_sender = notification_sender;
+    
 exports.getRooms = () => io.sockets.adapter.rooms;

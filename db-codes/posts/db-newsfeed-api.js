@@ -25,7 +25,10 @@ async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp,
                 INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
-                CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"
+                (SELECT json_arrayagg(
+                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
+                ) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
                 WHERE (P.USER_ID = :user_id 
                 OR P.USER_ID IN (SELECT FOLLOWEE_ID FROM FOLLOWS WHERE FOLLOWER_ID = :user_id AND STATUS = 'FOLLOWING'))
@@ -42,4 +45,36 @@ async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp,
     return result;
 }
 
-module.exports = {getNewsFeedPostsForUserID};
+
+async function getNewsFeedPostsForUserID2(user_id, search_data, limit, timestamp, cursor_id){
+
+    
+    const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
+    INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
+    LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
+    COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
+    (SELECT json_arrayagg(
+        json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+        from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
+    ) "FILES"
+    FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
+    ORDER BY p.post_id asc
+    FETCH FIRST 10 ROWS ONLY
+    `;
+
+    const binds ={
+        user_id : user_id
+    };
+
+
+    result = (await database.execute(sql,binds)).rows;
+    
+    console.log(result)
+    return result;
+}
+
+
+module.exports = {getNewsFeedPostsForUserID,
+                  getNewsFeedPostsForUserID2};
+
+

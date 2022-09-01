@@ -95,6 +95,10 @@
     flex-wrap: wrap;
 }
 
+.middle .create-postfiles-preview-container{
+    margin-bottom: 1rem;
+}
+
 .middle .create-post-big .file-preview{
     width: 20%;
    
@@ -106,16 +110,18 @@
 }
 
 .middle .create-post-big .file-preview{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
-    margin-bottom: 1rem;
 }
 
-.middle .create-post-big .file-preview .previw-close-button{
-    background-color: red;
-    padding: 0 1rem;
-    color: white;
-    font-size: 1rem;
-    font-weight: 500;
+
+
+.middle .create-post-big .file-preview i{
+    font-size: 1.5rem;
+    color: red;
+    cursor: pointer;
     position: absolute;
     top: 0px;
     right: 0px;
@@ -530,9 +536,8 @@
                     img.classList.add("file");
                     fileDiv.appendChild(img);
                     // add a close button that deletes the image
-                    let close = document.createElement("button");
-                    close.classList.add("btn", "previw-close-button");
-                    close.innerHTML = "&times;";
+                    let close = document.createElement("i");
+                    close.classList.add("fa-solid", "fa-rectangle-xmark");
                     fileDiv.appendChild(close);
 
                     // clicking on this button should delete the image
@@ -558,9 +563,8 @@
                 fileDiv.appendChild(video);
 
                 // add a close button that deletes the image
-                let close = document.createElement("button");
-                close.classList.add("btn", "previw-close-button");
-                close.innerHTML = "&times;";
+                let close = document.createElement("i");
+                close.classList.add("fa-solid", "fa-rectangle-xmark");
                 fileDiv.appendChild(close);
 
                 // clicking on this button should delete the image

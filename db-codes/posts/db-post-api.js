@@ -2,6 +2,8 @@ const Database = require('../database');
 const database = new Database();
 const default_values = require('../default_values');
 const constant_values = require('../constant_values');
+const DB_storage = require('../files/storage-files');
+const DB_notification = require('../users/db-notification-api');
 
 async function addLike(post_id, user_id){
     const sql = `INSERT INTO LIKES
@@ -12,6 +14,7 @@ async function addLike(post_id, user_id){
         post_id : post_id,
     }
     await database.execute(sql, binds);
+    DB_notification.sendNotification();
     return;
 }
 
@@ -53,7 +56,7 @@ async function checkUserLiked(post_id,user_id){
 
 async function getLikersList(post_id){
     
-    const sql = `SELECT LIKES.USER_ID, USERS.NAME, NVL(USERS.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
+    const sql = `SELECT LIKES.USER_ID, USERS.NAME, NVL(USERS.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
                 FROM LIKES LEFT JOIN USERS ON LIKES.USER_ID = USERS.USER_ID
                 WHERE POST_ID = :post_id
                 ORDER BY TIMESTAMP DESC`;
@@ -84,7 +87,10 @@ async function getPost(post_id, user_id){
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
-                CURSOR(SELECT FILE_TYPE, FILE_LOCATION FROM POST_FILES PF WHERE PF.POST_ID = P.POST_ID) "FILES"
+                (SELECT json_arrayagg(
+                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
+                ) "FILES"
 
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID LEFT JOIN GROUPS G ON P.GROUP_ID = G.GROUP_ID
                 WHERE P.POST_ID = :post_id`;
@@ -276,6 +282,7 @@ async function deleteComment(comment_id){
 
     try{
         await database.execute(sql, binds);
+        DB_storage.storageCleanup();
         return 'success'
     }catch(err){
         console.log(err);
@@ -323,6 +330,7 @@ async function deletePost(post_id){
 
     try{
         await database.execute(sql, binds);
+        DB_storage.storageCleanup();
         return 'success'
     }catch(err){
         console.log(err);

@@ -94,27 +94,26 @@ router.post('/getUsersList',verify,async (req,res)=>{
 })
 
 router.post('/deleteMessage',verify,async (req,res)=>{
-    console.log(req.body);
+    
     const result = await DB_message.deleteMessage(req.body.message_id);
     const users = await DB_message.getPartnerName(req.body.chat_id,req.user.USER_ID);
-    console.log(users);
+    
     const msg = await DB_message.getMessageByMessageId(req.body.message_id);
     let room = users.USER_ID.toString();
     let key = "message";
-    console.log(msg);
+    
     let m = {
         chat_id: req.body.chat_id,
         message: msg,
 
     }
-    console.log(m);
-    console.log(m);
+
     sendMessage(room,key,m);
     res.send({result:result});
 })
 
 router.post('/getConversationIdByUserId',verify,async (req,res)=>{
-    console.log(req.body);
+    
     const result = (await DB_message.getConversationIdByUserId(req.body.user_id,req.body.currentUser));
     res.send({result:result});
 })

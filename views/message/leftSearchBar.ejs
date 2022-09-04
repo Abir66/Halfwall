@@ -7,15 +7,12 @@
         background: hsl(252, 30%, 95%);
         border-radius: 2rem;
         padding: 0.6rem 1rem;
-    }
-    .message-search-bar input[type="search"] {
-        background: transparent;
-        width:100%;
-        margin-left: 1rem;
+        width: 100%;
         font-size: 0.9rem;
         color: hsl(252, 30%, 17%);
     }
-    .message-search-bar .input[type="search"]::placeholder {
+
+    .message-search-bar::placeholder {
         color: hsl(252, 15%, 65%);
     }
     .message-chats{
@@ -26,7 +23,7 @@
 
 <div class="message-search-palete">
     
-    <h2 class="message-chats">Chats</h2>
+    <h2 class="message-chats" style="font-size: 1.5rem; font-weight: 500;">Chats</h2>
     <input type="search" class="message-search-bar" id="message-search-bar" placeholder="Search User">
     <div id="message-search-results"></div>
 </div>

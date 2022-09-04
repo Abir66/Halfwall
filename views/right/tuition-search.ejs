@@ -1,0 +1,184 @@
+<style>
+
+</style>
+
+
+<div class="right-box">
+    <form action = "/marketplace" method = "get" >
+        <div class="heading" style="display: flex; justify-content: space-between;"> 
+            <h3 style="font-size: 1.1rem;">Search & filter</h3>
+            <% if (data.searched) { %>
+                <a href="/marketplace"><h5 class="text-muted" style="font-size: 1rem;">clear</h5></a>
+            <% } %>            
+        </div>
+
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="display: inblock;"></i>
+            <input type="search" name = "tuition_search_term" placeholder="Search in this profile" <% if (data.search_term) { %> value = <%= data.search_term %> <% } %> >
+        </div>
+
+        <div class="subsection">
+            <div class="dropdown-check-list" id="search-tuition-post-class" tabindex="100" style="position: relative; z-index: 300; ">
+                <div class="dropdown-check-list-anchor">
+                    <div>Classes</div>
+                    <div><i class="fa-solid fa-caret-down"></i></div>
+                </div>
+                <ul class="dropdown-check-list-items" style="display: none ; position: absolute; background-color: white; max-height: 500px; overflow-y: scroll;">
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="Below class 9"> &nbsp;Below class 9</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="9"> &nbsp;Class 9</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="10"> &nbsp;Class 10</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="HSC 1st year"> &nbsp;HSC 1st year</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="HSC 2nd year"> &nbsp;HSC 2nd year</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="Admission test"> &nbsp;Admission test</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium O level"> &nbsp;English Medium O level</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium AS level"> &nbsp;English Medium AS level</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium A level"> &nbsp;English Medium A level</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="others"> &nbsp;others</li>
+                </ul>
+            </div>
+        
+            <script type="text/javascript">
+                var classChecklist = document.getElementById('search-tuition-post-class');
+                classChecklist.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function (evt) {
+                    if (classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+                    else classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
+                }
+            </script>
+        
+        </div>
+
+        <div class="subsection">
+            <div class="dropdown-check-list" id="search-tuition-post-subject" tabindex="200" style="position: relative; z-index: 200; ">
+                <div class="dropdown-check-list-anchor">
+                    <div>Subjects</div>
+                    <div><i class="fa-solid fa-caret-down"></i></div>
+                </div>
+                <ul class="dropdown-check-list-items" style="display: none ; position: absolute; background-color: white; max-height: 500px; overflow-y: scroll;">
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Physics">&nbsp; &nbsp; &nbsp; Physics</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Math">&nbsp; &nbsp; &nbsp; Math</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Chemistry">&nbsp; &nbsp; &nbsp; Chemistry</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Biology">&nbsp; &nbsp; &nbsp; Biology</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="ICT">&nbsp; &nbsp; &nbsp; ICT</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Others">&nbsp; &nbsp; &nbsp; Others</li>
+                </ul>
+            </div>
+
+            <script type="text/javascript">
+                var subjectChecklist = document.getElementById('search-tuition-post-subject');
+                subjectChecklist.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function (evt) {
+                    if (subjectChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') subjectChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+                    else subjectChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
+                }
+            </script>
+
+        </div>
+
+        <div class="subsection" >
+            <div class="dropdown-check-list" id="search-tuition-post-locations" tabindex="100" style="position: relative ;">
+                <div class="dropdown-check-list-anchor">
+                    <div>Locations</div>
+                    <div><i class="fa-solid fa-caret-down"></i></div>
+                </div>
+                <ul class="dropdown-check-list-items" style="display: none ; position: absolute; background-color: white; max-height: 300px; overflow-y: scroll;">
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Agargaon"> &nbsp;Agargaon</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Armanitola"> &nbsp;Armanitola</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Azampur"> &nbsp;Azampur</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Azimpur"> &nbsp;Azimpur</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Bailey Road"> &nbsp;Bailey Road</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Banani"> &nbsp;Banani</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Banasree"> &nbsp;Banasree</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Baridhara"> &nbsp;Baridhara</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Bashundhara Residential Area"> &nbsp;Bashundhara Residential Area</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Cantonment"> &nbsp;Cantonment</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Chowk Bazaar"> &nbsp;Chowk Bazaar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Dhanmondi"> &nbsp;Dhanmondi</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Diabari"> &nbsp;Diabari</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Farmgate"> &nbsp;Farmgate</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Gulshan"> &nbsp;Gulshan</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Hatirpool"> &nbsp;Hatirpool</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Jhigatola"> &nbsp;Jhigatola</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Kallyanpur"> &nbsp;Kallyanpur</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Karwanbazar"> &nbsp;Karwanbazar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Kazipara"> &nbsp;Kazipara</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Lalbagh"> &nbsp;Lalbagh</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Lalmatia"> &nbsp;Lalmatia</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Maghbazar"> &nbsp;Maghbazar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Malibagh"> &nbsp;Malibagh</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Mirpur"> &nbsp;Mirpur</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Mohakhali"> &nbsp;Mohakhali</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Mohammadpur"> &nbsp;Mohammadpur</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Motizheel"> &nbsp;Motizheel</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Narinda"> &nbsp;Narinda</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Nazirabazar"> &nbsp;Nazirabazar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="New Market"> &nbsp;New Market</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Nilkhet"> &nbsp;Nilkhet</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Panthapath"> &nbsp;Panthapath</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Savar"> &nbsp;Savar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Shahbagh"> &nbsp;Shahbagh</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Santinagar"> &nbsp;Santinagar</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Shamoli"> &nbsp;Shamoli</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Tejgaon"> &nbsp;Tejgaon</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Tikatuli"> &nbsp;Tikatuli</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Uttara"> &nbsp;Uttara</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="location" value="Wari"> &nbsp;Wari</li>
+                </ul>
+        </div>
+
+        <script type="text/javascript">
+            var locationChecklist = document.getElementById('search-tuition-post-locations');
+            locationChecklist.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function (evt) {
+                if (locationChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') locationChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+                else locationChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
+            }
+        </script>
+
+            
+        </div>
+
+        
+        <div class="subsection">
+            <h4><i class="fa-solid fa-filter"></i>Remuneration</h4>
+            <div class="number-range">
+                <input type="number" name = "remuneration_min" placeholder="From" <% if (data.remuneration_min) { %> value = <%= data.remuneration_min %> <% } %> >
+                <input type="number" name = "remuneration_max" placeholder="To" <% if (data.remuneration_max) { %> value = <%= data.remuneration_max %> <% } %> >
+            </div> 
+        </div>
+
+        <div class="subsection">
+            <h4><i class="fa-solid fa-filter"></i>Preference</h4>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="preference" value="Male" id="preference_male" <% if (data.preference === "Male") { %> checked <% } %>>
+                <label class="form-check-label" for="preference_male">Male</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="preference" value="Female" id="preference_female" <% if (data.preference === "Female") { %> checked <% } %>>
+                <label class="form-check-label" for="preference_female">Female</label>
+            </div>
+            
+        </div>
+
+        
+
+
+        <div class="subsection">
+            <h4><i class="fa-solid fa-filter"></i>Sort By</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="tution_sort_by" value="time" id="tution_sort_by_Time" <% if (data.sort_by === "time") { %> checked <% } %>>
+                <label class="form-check-label" for="tution_sort_by_Time">
+                  Time
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="tution_search_by" value="remuneration" id="tution_sort_by_remuneration" <% if (data.sort_by === "remuneration") { %> checked <% } %>>
+                <label class="form-check-label" for="tution_sort_by_remuneration">
+                    Remuneration
+                </label>
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100% ; margin-top: 1rem;">Search</button>
+
+    </form>
+</div>

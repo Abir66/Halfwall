@@ -1,231 +1,714 @@
 <style>
 
-    #edit-post-in-modal{
-        margin: 0 1em;
-        padding: 0.6em;
-       
-        border-radius: 2em;
-        background-color: hsl(252, 30%, 95%);;
+    #post-edit-modal{
+        margin-top: 0;
+    }
+
+    #post-edit-modal .modal-footer{
+        display: flex;
+        justify-content: space-between;
+    }
+   
+    .post-edit-modal-body .edit-post {
+        padding: 1rem;
+    }
+
+    .post-edit-modal-body .edit-post .post-info {
+        margin-bottom: 1rem;
+    }
+
+
+    .post-edit-modal-body .edit-post .post-info .user {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
     }
 
 
 
-.post-edit-modal-body .edit-post {
-   padding: 1rem;
-}
+    .post-edit-modal-body .edit-post .post-info .username {
+        font-weight: 500;
+        font-size: 1rem;
+    }
 
-.post-edit-modal-body .edit-post .post-info {
-   margin-bottom: 1rem;
-}
+    .post-edit-modal-body .edit-post .post-info .head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
 
-
-.post-edit-modal-body .edit-post .post-info .user{
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-
-
-.post-edit-modal-body .edit-post .post-info .username {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-.post-edit-modal-body .edit-post .post-info .head{
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
-.post-edit-modal-body .edit-post .post-text  {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid var(--color-light);
-    margin-bottom: 1rem;
-}
+    .post-edit-modal-body .edit-post .post-text {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid var(--color-light);
+        margin-bottom: 1rem;
+    }
 
 
-.post-edit-modal-body .edit-post .post-group select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    margin-left: 0;
-}
+    .post-edit-modal-body .edit-post .post-group select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+        margin-left: 0;
+    }
 
 
-.post-edit-modal-body .edit-post .post-footer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    .post-edit-modal-body .edit-post .post-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.post-edit-modal-body .edit-post .post-footer .btn{
-    font-size: 0.7rem;
-}
+    .post-edit-modal-body .edit-post .post-footer .btn {
+        font-size: 0.7rem;
+    }
 
-.post-edit-modal-body .edit-post .post-footer .btn-blank{
-    border-color: var(--color-gray);
-}
-
-
-.post-edit-modal-body .edit-post #edit-post-files-preview-list{
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.post-edit-modal-body .edit-post .file-preview{
-    width: 20%;
-   
-}
-
-.post-edit-modal-body .edit-post .file-preview .file{
-    width: 100%;
-    
-}
-
-.post-edit-modal-body .edit-post .file-preview{
-    position: relative;
-    margin-bottom: 1rem;
-}
-
-.post-edit-modal-body .edit-post .file-preview .previw-close-button{
-    background-color: red;
-    padding: 0 1rem;
-    color: white;
-    font-size: 1rem;
-    font-weight: 500;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
+    .post-edit-modal-body .edit-post .post-footer .btn-blank {
+        border-color: var(--color-gray);
+    }
 
 
-/* ------------------- sell post ------------------------*/
-.post-edit-modal-body .sell-post-info{
-    margin: 1rem 0;
-    display: flex;
-    align-items: center;
-    gap : 1rem;
-    font-size: 1rem;
-}
+    .post-edit-modal-body .edit-post #edit-post-files-preview-list {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 
-.post-edit-modal-body .sell-post-info label{
-    width: 20%;
-}
+    .post-edit-modal-body .edit-post .file-preview {
+        width: 20%;
 
-.post-edit-modal-body .sell-post-info select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    
-}
+    }
 
-.post-edit-modal-body .sell-post-info input[type='number']{
-    border: 1px solid var(--color-light);
-}
+    .post-edit-modal-body .edit-post .file-preview .file {
+        width: 100%;
 
-/* ------------------- sell post ------------------------*/
-.post-edit-modal-body .tuition-post-info{
-    margin: 1rem 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap : 1rem;
-    font-size: 1rem;
-}
+    }
 
-.post-edit-modal-body .tuition-post-info label{
-    width: 25%;
-}
+    .post-edit-modal-body .edit-post .file-preview {
+        position: relative;
+        margin-bottom: 1rem;
+    }
 
-.post-edit-modal-body .tuition-post-info select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    
-}
-
-.post-edit-modal-body .tuition-post-info input{
-    border: 1px solid var(--color-light);
-    
-}
+    .post-edit-modal-body .edit-post .file-preview .previw-close-button {
+        background-color: red;
+        padding: 0 1rem;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
 
 
-.post-edit-modal-body .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
-    cursor: pointer;
-    padding: 0 0.5rem ;
-    border: 1px solid var(--color-light);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 2rem;
-}
+    /* ------------------- sell post ------------------------*/
+    .post-edit-modal-body .sell-post-info {
+        margin: 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1rem;
+    }
+
+    .post-edit-modal-body .sell-post-info label {
+        width: 20%;
+    }
+
+    .post-edit-modal-body .sell-post-info select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+
+    }
+
+    .post-edit-modal-body .sell-post-info input[type='number'] {
+        border: 1px solid var(--color-light);
+        padding-left: 1rem ;
+    }
+
+    /* ------------------- sell post ------------------------*/
+    .post-edit-modal-body .tuition-post-info {
+        margin: 1rem 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
+        font-size: 1rem;
+    }
+
+    .post-edit-modal-body .tuition-post-info label {
+        width: 25%;
+    }
+
+    .post-edit-modal-body .tuition-post-info select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+
+    }
+
+    .post-edit-modal-body .tuition-post-info input {
+        border: 1px solid var(--color-light);
+
+    }
+
+
+    .post-edit-modal-body .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
+        cursor: pointer;
+        padding: 0 0.5rem;
+        border: 1px solid var(--color-light);
+        display: flex;
+        width: 200px;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .middle .tuition-post-info .dropdown-check-list ul{
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--color-light);
+    }
+
 </style>
 
 <div class="modal fade" id="post-edit-modal" tabindex="" role="dialog" aria-labelledby="postEdit" aria-hidden="true">
-    <div class="modal-dialog " role="document">
-    <div class="modal-content">
-       
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="postEdit">Edit post</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> 
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clearEditModal()"></button>
+            </div>
             <div class="modal-body post-edit-modal-body">
-                
+
                 <form action="" class="edit-post-form">
 
                     <div class="edit-post">
-                        
+
                         <!-- post info -->
                         <div class="post-info">
                             <div class="head">
                                 <div class="user">
-                                <div class="profile-picture">
-                                    <img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>">
-                                </div>
-                                
-                                <div class="info">
-                                    <p class="username"><%= currentUser.NAME%></p>
-                                    
-                                    <div class="post-group">
-                                        
+                                    <div class="profile-picture"><img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>"></div>
+
+                                    <div class="info">
+                                        <p class="username"><%= currentUser.NAME%></p>
+                                        <div class="post-group"></div>
                                     </div>
-                                    
                                 </div>
-                                </div>
-                
                             </div>
                         </div>
-                
-                        <textarea class = "post-text" name="post-text" rows="10"></textarea>
-                        
-                        <div class="edit-postfiles-preview-container">
-                            <input type="file" id="edit-post-file-input" accept="image/png, image/jpeg, video/mp4" onchange="preview()" multiple hidden>
+
+                        <div class="additional-info"></div>
+                        <textarea class="post-text" name="post-text" rows="10"></textarea>
+                        <div class="edit-post-files-preview-container">
+                            <input type="file" id="edit-post-file-input" accept="image/png, image/jpeg, video/mp4" onchange="edit_preview_new_files()" multiple hidden>
                             <div id="edit-post-files-preview-list"></div>
-                        </div>
-                
-                        <div class="post-footer">
-                            <label for="edit-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
-                        </div>
-
+                        </div> 
                     </div>
-                    
-                    
                 </form>
-
 
             </div>
             <div class="modal-footer">
+                <label for="edit-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="update_post()">Save changes</button>
             </div>
-        
-    </div>
+
+        </div>
     </div>
 </div>
+
+
+
+<script>
+
+    // get the modal
+    document.querySelector('#post-edit-modal').addEventListener('hidden.bs.modal', async (e) => { clearEditModal() })
+
+    let post_edit_fileInput = document.getElementById("edit-post-file-input");
+    let post_edit_fileContainer = document.getElementById("edit-post-files-preview-list");
+
+    let edit_post_files = [];
+    let edit_post_removed_files = [];
+    let post_to_edit = undefined;
+
+
+    async function clearEditModal(clear_data = true){
+        let edit_post_form = document.getElementsByClassName("edit-post-form")[0];
+        edit_post_form.reset();
+        post_edit_fileContainer.innerHTML = "";
+
+       
+
+        if(clear_data){
+            edit_post_files = [];
+            edit_post_removed_files = []; 
+            post_to_edit = undefined;
+        }
+        
+    }
+
+
+    async function addTuitionInfo(post){
+
+       
+        // add these info in additional-info div
+        let additional_info = document.getElementsByClassName("additional-info")[0];
+        additional_info.innerHTML = "";
+
+        additional_info.innerHTML += `
+
+        <div class="tuition-post-info">
+            <label for="class">Class</label>
+            <select name="class" id="edit-tuition-post-class" required>
+                <option value="Below class 9">Below class 9</option>
+                <option value="9">Class 9</option>
+                <option value="10">Class 10</option>
+                <option value="HSC 1st year">HSC 1st year</option>
+                <option value="HSC 2nd year">HSC 2nd year</option>
+                <option value="Admission test">Admission test</option>
+                <option value="English Medium O level">English Medium O level</option>
+                <option value="English Medium AS level">English Medium AS level</option>
+                <option value="English Medium A level">English Medium A level</option>
+                <option value="others">others</option>
+            </select>
+        </div>
+
+
+        <div class="tuition-post-info">
+            <label for="subject">Subject</label>
+            <div class="dropdown-check-list" id="edit-tuition-post-subject" tabindex="100" style="position: relative ;">
+                <div class="dropdown-check-list-anchor"><div>Subject</div><div><i class="fa-solid fa-caret-down"></i></div></div>
+                <ul class="dropdown-check-list-items" style="display: none ; position: absolute; background-color: white;">
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Physics"  >&nbsp; &nbsp; &nbsp; Physics</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Math" >&nbsp; &nbsp; &nbsp; Math</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Chemistry"  >&nbsp; &nbsp; &nbsp; Chemistry</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Biology"  >&nbsp; &nbsp; &nbsp; Biology</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="ICT"  >&nbsp; &nbsp; &nbsp; ICT</li>
+                    <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Others"  >&nbsp; &nbsp; &nbsp; Others</li>
+                </ul>
+            </div>    
+        </div>
+
+
+        <div class="tuition-post-info">
+                <label for="location">Location</label>
+                <select name="location" id="edit-tuition-location">  
+                    <option value="Agargaon">Agargaon</option>
+                    <option value="Armanitola">Armanitola</option>
+                    <option value="Azampur">Azampur</option>
+                    <option value="Azimpur">Azimpur</option>
+                    <option value="Bailey Road">Bailey Road</option>
+                    <option value="Banani">Banani</option>
+                    <option value="Banasree">Banasree</option>
+                    <option value="Baridhara">Baridhara</option>
+                    <option value="Bashundhara Residential Area">Bashundhara Residential Area</option>
+                    <option value="Cantonment">Cantonment</option>
+                    <option value="Chowk Bazaar">Chowk Bazaar</option>
+                    <option value="Dhanmondi">Dhanmondi</option>
+                    <option value="Diabari">Diabari</option>
+                    <option value="Farmgate">Farmgate</option>
+                    <option value="Gulshan">Gulshan</option>
+                    <option value="Hatirpool">Hatirpool</option>
+                    <option value="Jhigatola">Jhigatola</option>
+                    <option value="Kallyanpur">Kallyanpur</option>
+                    <option value="Karwanbazar">Karwanbazar</option>
+                    <option value="Kazipara">Kazipara</option>
+                    <option value="Lalbagh">Lalbagh</option>
+                    <option value="Lalmatia">Lalmatia</option>
+                    <option value="Maghbazar">Maghbazar</option>
+                    <option value="Malibagh">Malibagh</option>
+                    <option value="Mirpur">Mirpur</option>
+                    <option value="Mohakhali">Mohakhali</option>
+                    <option value="Mohammadpur">Mohammadpur</option>
+                    <option value="Motizheel">Motizheel</option>
+                    <option value="Narinda">Narinda</option>
+                    <option value="Nazirabazar">Nazirabazar</option>
+                    <option value="New Market">New Market</option>
+                    <option value="Nilkhet">Nilkhet</option>
+                    <option value="Panthapath">Panthapath</option>
+                    <option value="Savar">Savar</option>
+                    <option value="Shahbagh">Shahbagh</option>
+                    <option value="Santinagar">Santinagar</option>
+                    <option value="Shamoli">Shamoli</option>
+                    <option value="Tejgaon">Tejgaon</option>
+                    <option value="Tikatuli">Tikatuli</option>
+                    <option value="Uttara">Uttara</option>
+                    <option value="Wari">Wari</option>
+                </select>
+            </div>
+
+
+
+        <div class="tuition-post-info">
+            <label for="class">Remuneration</label>
+            <input class = "post-data" type="number" name="remuneration" required placeholder="10000" value =${post.REMUNERATION} >
+        </div>
+
+        <div class="tuition-post-info">
+            <label for="preference">Preference</label>
+            <select name="preference" id="edit-tuition-post-preference" required>
+                <option value="N/A" ${post.PREFERENCE == 'N/A' ? 'selected' : ''}>N/A</option>
+                <option value="Male" ${post.PREFERENCE == 'Male' ? 'selected' : ''}>Male</option>
+                <option value="Female" ${post.PREFERENCE == 'Female' ? 'selected' : ''}>Female</option>
+            </select>
+        </div>
+
+        <div class="tuition-post-info">
+            <label for="student_count">No. of students</label>
+            <input class = "post-data" type="number" name="student_count" required value="${post.STUDENT_COUNT}">
+        </div>
+
+        <div class="tuition-post-info">
+            <label for="booked">Booked</label>
+            <select name="booked" id="edit-tuition-booked" required>
+                <option value="Yes" ${post.BOOKED == 'Yes' ? 'selected' : ''}>Yes</option>
+                <option value="No" ${post.BOOKED == 'No' ? 'selected' : ''}>No</option>
+            </select>
+        </div>
+
+
+        `
+        var checkList = document.getElementById('edit-tuition-post-subject');
+        checkList.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function(evt) {
+            if (checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+            else checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
+        }
+
+        // get the edit-tution-post-class element
+        let edit_tuition_post_class = document.getElementById("edit-tuition-post-class");
+        for (let i = 0; i < edit_tuition_post_class.options.length; i++) {
+            if (edit_tuition_post_class.options[i].value == post.CLASS) {
+                edit_tuition_post_class.selectedIndex = i;
+                break;
+            }
+        }
+
+        let edit_tuition_post_location = document.getElementById("edit-tuition-location");
+        for (let i = 0; i < edit_tuition_post_location.options.length; i++) {
+            if (edit_tuition_post_location.options[i].value == post.LOCATION) {
+                edit_tuition_post_location.selectedIndex = i;
+                break;
+            }
+        }
+
+        post.SUBJECTS = post.SUBJECTS.map(a=>a.SUBJECT)
+        let edit_tuition_post_subject = document.getElementById("edit-tuition-post-subject");
+        let checkboxes = edit_tuition_post_subject.querySelectorAll('input[type=checkbox]');
+        for (let i = 0; i < checkboxes.length; i++) 
+            if (post.SUBJECTS.includes(checkboxes[i].value)) checkboxes[i].checked = true;
+            
+    }
+
+
+    async function addSellInfo(post){
+    
+        let additional_info = document.getElementsByClassName("additional-info")[0];
+        additional_info.innerHTML = "";
+        additional_info.innerHTML += `
+            <div class="sell-post-info">
+                <label for="catagory">Catagory</label>
+                <select name="catagory" id="edit-sell-post-catagory" required>
+                    <option value="Clothings" ${post.CATAGORY == 'Clothings' ? 'selected' : ''}>Clothings</option>
+                    <option value="Bicyle" ${post.CATAGORY == 'Bicyle' ? 'selected' : ''}>Bicycle</option>
+                    <option value="Smartphones and Tabs" ${post.CATAGORY == 'Smartphones and Tabs' ? 'selected' : ''}>Smartphones and Tabs</option>
+                    <option value="Computer and accessories" ${post.CATAGORY == 'Computer and accessories' ? 'selected' : ''}>Computer and accessories</option>
+                    <option value="Electronics" ${post.CATAGORY == 'Electronics' ? 'selected' : ''}>Electronics</option>
+                    <option value="Others" ${post.CATAGORY == 'Others' ? 'selected' : ''}>Others</option>
+                </select>
+            </div>
+            <div class="sell-post-info">
+                <label for="condition">Condition</label>
+                <select name="condition" id="edit-sell-post-condition" required>
+                    <option value="New"  ${post.CONDITION== 'New' ? 'selected' : ''}>New</option>
+                    <option value="Used" ${post.CONDITION== 'Used' ? 'selected' : ''}>Used</option>
+                </select>
+            </div>
+            <div class="sell-post-info">
+                <label for="price">Price</label>
+                <input class="post-data" type="number" name="price" id="edit-sell-post-price" value="${post.PRICE}" required/>
+            </div>
+            <div class="sell-post-info">
+                <label for="available">Available</label>
+                <select name="available" id="edit-sell-post-available" required>
+                    <option value="Yes"  ${post.AVAILABLE == 'Yes' ? 'selected' : ''}>Yes</option>
+                    <option value="No" ${post.AVAILABLE == 'No' ? 'selected' : ''}>No</option>
+                </select>
+            </div>
+
+        `;
+    }
+
+
+    async function edit_preview_new_files() {
+
+        // add the files to the list of files
+        for (let i = 0; i < post_edit_fileInput.files.length; i++) edit_post_files.push(post_edit_fileInput.files[i]);
+
+        for (i of post_edit_fileInput.files) {
+
+            // create a div for the file
+            let fileDiv = document.createElement("div");
+            fileDiv.className = "file-preview";
+
+            // if file is an image
+            if (i.type.match("image.*")) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("file");
+                    fileDiv.appendChild(img);
+                    // add a close button that deletes the image
+                    let close = document.createElement("i");
+                    close.classList.add("fa-solid", "fa-rectangle-xmark");
+                    fileDiv.appendChild(close);
+
+                    // clicking on this button should delete the image
+                    close.addEventListener("click", function () {
+                        post_edit_fileContainer.removeChild(fileDiv);
+                        // remove the file from the array of files
+                        edit_post_files.splice(edit_post_files.indexOf(i), 1);
+                    });
+                    post_edit_fileContainer.appendChild(fileDiv);
+                }
+                reader.readAsDataURL(i);
+            }
+
+
+            // else if it is a video
+            else if (i.type.match("video.*")) {
+
+                // add preview of the video
+                let video = document.createElement("video");
+                video.setAttribute("controls", "");
+                video.setAttribute("src", URL.createObjectURL(i));
+                video.classList.add("file");
+                fileDiv.appendChild(video);
+
+                // add a close button that deletes the image
+                let close = document.createElement("i");
+                close.classList.add("fa-solid", "fa-rectangle-xmark");
+                fileDiv.appendChild(close);
+
+                // clicking on this button should delete the image
+                close.addEventListener("click", function () {
+                    post_edit_fileContainer.removeChild(fileDiv);
+                    edit_post_files.splice(edit_post_files.indexOf(i), 1);
+                });
+
+                post_edit_fileContainer.appendChild(fileDiv);
+            }
+        }
+        post_edit_fileInput.value = null;
+    }
+
+
+    async function addMediaPreview(post) {
+
+        // if post.FILES empty return
+        if (!post.FILES || post.FILES == null ||post.FILES.length == 0) return;
+
+        for (let i of post.FILES) {
+
+            // create a div for the file
+            let fileDiv = document.createElement("div");
+            fileDiv.className = "file-preview";
+
+            console.log('huh', i.FILE_TYPE)
+
+            // if file is an image
+            if (i.FILE_TYPE === 'IMAGE') {
+
+                let img = document.createElement("img");
+                img.src = i.FILE_LOCATION;
+                img.classList.add("file");
+                fileDiv.appendChild(img);
+                // add a close button that deletes the image
+                let close = document.createElement("i");
+                close.classList.add("fa-solid", "fa-rectangle-xmark");
+                fileDiv.appendChild(close);
+
+                close.addEventListener("click", function () {
+                    post_edit_fileContainer.removeChild(fileDiv);
+                    edit_post_removed_files.push(i.FILE_ID);
+                });
+                post_edit_fileContainer.appendChild(fileDiv);
+            }
+
+            // else if it is a video
+            else if (i.FILE_TYPE === 'VIDEO') {
+
+                // add preview of the video
+                let video = document.createElement("video");
+                video.setAttribute("controls", "");
+                video.setAttribute("src", i.FILE_LOCATION);
+                video.classList.add("file");
+                fileDiv.appendChild(video);
+
+                // add a close button that deletes the image
+                let close = document.createElement("i");
+                close.classList.add("fa-solid", "fa-rectangle-xmark");
+                fileDiv.appendChild(close);
+
+                close.addEventListener("click", function () {
+                    post_edit_fileContainer.removeChild(fileDiv);
+                    edit_post_removed_files.push(i.POST_FILE_ID);
+                });
+                post_edit_fileContainer.appendChild(fileDiv);
+            }
+        }
+
+    }
+
+
+    async function addDataInEditPost(post) {
+
+        // get the modal
+        const modal = document.getElementById('post-edit-modal');
+
+        // add post.TEXT in textarea
+        const textarea = modal.querySelector('textarea');
+        textarea.value = post.TEXT;
+
+        // set post group
+        const post_group = modal.querySelector('.post-group');
+        let post_group_str = "";
+        //if post.GROUP > 2 then show group name 
+        if (post.GROUP_ID > 2) post_group_str = `<p class="group-name text-muted">in ${post.GROUP_NAME}</p>`;
+
+        // else show a dropdonw list of groups
+        else {
+            post_group_str = `
+                    <div class="form-group">
+                        <select name="privacy" id="post-privacy">
+                            <option value="PRIVATE" ${post.GROUP_ID == 2 ? 'selected' : ''}>Followers only</option>
+                            <option value="PUBLIC" ${post.GROUP_ID == 1 ? 'selected' : ''}>Public</option>
+                        </select>
+                    </div>
+            `
+        }
+
+        post_group.innerHTML = post_group_str;
+
+
+        // add media preview
+        addMediaPreview(post);
+
+    }
+
+
+    async function editPost(post_id) {
+       
+        const res = await axios.get(`/posts/getPostData/post_id=${post_id}`);
+        
+        if (res.data.result !== 'success') return;
+
+        const post = res.data.post;
+       
+        post.FILES = JSON.parse(post.FILES);
+        post_to_edit = post;
+
+        addDataInEditPost(post);
+        console.log(post);
+
+        // if sell post
+        if(post.GROUP_ID == 4) addSellInfo(post)
+        if(post.GROUP_ID == 5) addTuitionInfo(post)
+        
+
+        post_edit_modal.show();
+    }
+
+    async function update_post() {
+
+        // get form element
+        const form = document.querySelector('.edit-post-form');
+
+        // create a new formdata and add info to it
+        const formData = new FormData();
+        formData.append('post_text', form.querySelector('.post-text').value);
+
+
+        // get all input of type text data from form and add it to formdata
+        const inputs = form.querySelectorAll('input.post-data, select');
+        inputs.forEach(input => { formData.append(input.name, input.value); });
+
+
+        var checkboxes = form.querySelectorAll('input.tuition-subject');
+        if (checkboxes && checkboxes.length > 0) {
+            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+            if (!checkedOne) {
+                alert('Please select at least one subject');
+                return;
+            }
+        }
+
+
+        checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) formData.append(checkbox.name, checkbox.value);
+        });
+
+        let group_id = post_to_edit.GROUP_ID
+        if(group_id > 2)formData.append('group_id', post_to_edit.GROUP_ID);
+        else{
+            group_id = form.querySelector('select[name="privacy"]').value == 'PRIVATE' ? 2 : 1;
+            formData.append('group_id', group_id);
+        }
+
+        // get all files from files array and add it to formdata
+        edit_post_files.forEach(file => { formData.append('files', file); });
+
+        console.log(edit_post_removed_files);
+        // get all removed files from removed_files array and add it to formdata
+        edit_post_removed_files.forEach(file => { formData.append('removed_files', file); });
+
+
+
+        if (!(post_to_edit.GROUP_ID === 5 || post_to_edit.GROUP_ID === 4) && group_id === post_to_edit.GROUP_ID && form.querySelector('.post-text').value === post_to_edit.TEXT && edit_post_files.length === 0 && edit_post_removed_files.length === 0) {
+            alert('Nothing changed');
+            return;
+        }
+
+        else  if (!(post_to_edit.GROUP_ID === 5 || post_to_edit.GROUP_ID === 4) && form.querySelector('.post-text').value.trim() === '' && edit_post_files.length === 0 && edit_post_removed_files.length === post_to_edit.FILES.length) {
+            alert('Add something');
+            return;
+        }
+
+        const post_id = post_to_edit.POST_ID
+        
+        // clear modal
+        clearEditModal(true)
+        
+        // send formdata to server via axios 
+        const res = await axios({
+            method: 'post',
+            url: '/posts/edit-post/post_id=' + post_id,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+
+
+        if(res.data.result === 'success'){
+            alert('Post edited successfully');
+            const post_str = await createPostStr(res.data.post);
+        
+            // get post with id
+            const post = document.querySelector(`#post-${post_id}`);
+
+            // replace post with new post
+            post.outerHTML = post_str;
+        }
+    }
+
+</script>

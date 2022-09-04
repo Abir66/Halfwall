@@ -82,6 +82,9 @@
     var notification_modal = new bootstrap.Modal(document.getElementById('notification-modal'), {});
 
     async function showNotifications(){
+
+        // hide notification-dot
+        document.getElementById('notification-dot').style.display = 'none';
         const res = await axios.get("/notification", {params : {}});
         
         const notifications = res.data;
@@ -93,7 +96,7 @@
         notificationList.innerHTML = '';
 
         for (let notification of notifications){
-            console.log(notification);
+
             addNotification(notificationList, notification);
         }
 
@@ -106,8 +109,7 @@
         const last_notification = notification_list.lastElementChild;
         
         last_notification_id = last_notification.id.split('-')[1];
-        console.log("loading more");
-        console.log(last_notification_id);
+
        
         const res = await axios.get("/notification", {params : {last_notification_id : last_notification_id}});
         const notifications = res.data;

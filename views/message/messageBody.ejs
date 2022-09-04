@@ -104,6 +104,58 @@
         cursor: pointer;
         color: hsl(252, 75%, 60%);
     }
+
+    #chat-send-messages i{
+        color: var(--color-primary);
+        font-size: 1.5rem;
+    }
+
+    /* file preview  */
+
+
+    #chat-message-body #message-files-preview-list {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .middle .message-file-preview-container {
+        margin-bottom: 1rem;
+    }
+
+    #chat-message-body .file-preview {
+        width: 5%;
+
+    }
+
+    #chat-message-body .file-preview .file {
+        width: 100%;
+
+    }
+
+    #chat-message-body .file-preview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+
+
+    #chat-message-body .file-preview i {
+        font-size: 1.5rem;
+        color: red;
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+
+
 </style>
 
 <div id="chat-message-body">
@@ -113,9 +165,98 @@
     <div id="chat-body">
         
     </div>
+    <div class="message-file-preview-container">
+        <input type="file" id="message-file-input" accept="image/png, image/jpeg, video/mp4" onchange="preview()" multiple hidden>
+        <div id="message-files-preview-list"></div>
+    </div>
     <form method="post" id="chat-send-messages">
+        <label for="message-file-input"><i class="fa-solid fa-image"></i></label>
         <input type="text" name="write_message" id="write_message" placeholder="enter message">
         <button type="submit" name="submit" class="fa-solid fa-paper-plane fa-lg message-send-button"></button>
     </form>
 </div>
+
+
+
+<script>
+
+let messageFileInput = document.getElementById("message-file-input");
+let messageFileContainer = document.getElementById("message-files-preview-list");
+
+let messageFiles = [];
+
+async function preview() {
+
+    for (let i = 0; i < messageFileInput.files.length; i++) messageFiles.push(messageFileInput.files[i]);
+
+    for (i of messageFileInput.files) {
+
+        // create a div for the file
+        let fileDiv = document.createElement("div");
+        fileDiv.className = "file-preview";
+
+        // if file is an image
+        if (i.type.match("image.*")) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let img = document.createElement("img");
+                img.src = e.target.result;
+                img.classList.add("file");
+                fileDiv.appendChild(img);
+                // add a close button that deletes the image
+                let close = document.createElement("i");
+                close.classList.add("fa-solid", "fa-rectangle-xmark");
+                fileDiv.appendChild(close);
+
+                // clicking on this button should delete the image
+                close.addEventListener("click", function () {
+                    messageFileContainer.removeChild(fileDiv);
+                    // remove the file from the array of files
+                    messageFiles.splice(messageFiles.indexOf(i), 1);
+                });
+                messageFileContainer.appendChild(fileDiv);
+            }
+            reader.readAsDataURL(i);
+        }
+
+
+        // else if it is a video
+        else if (i.type.match("video.*")) {
+
+            // add preview of the video
+            let video = document.createElement("video");
+            video.setAttribute("controls", "");
+            video.setAttribute("src", URL.createObjectURL(i));
+            video.classList.add("file");
+            fileDiv.appendChild(video);
+
+            // add a close button that deletes the image
+            let close = document.createElement("i");
+            close.classList.add("fa-solid", "fa-rectangle-xmark");
+            fileDiv.appendChild(close);
+
+            // clicking on this button should delete the image
+            close.addEventListener("click", function () {
+                messageFileContainer.removeChild(fileDiv);
+
+                // remove the file from the array of files
+                messageFiles.splice(messageFiles.indexOf(i), 1);
+            });
+
+            messageFileContainer.appendChild(fileDiv);
+        }
+    }
+    messageFileInput.value = null;
+}
+
+
+
+
+
+
+</script>
+
+
+
+
 

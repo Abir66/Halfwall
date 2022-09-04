@@ -51,6 +51,9 @@ a:active {
     color: inherit;
     text-decoration: none;
 }
+a:visited{
+    color:inherit;
+}
 
 .btn {
     border: none;
@@ -58,7 +61,6 @@ a:active {
 
 .btn:hover {
     background-color: hsl(252, 75%, 60%);
-    ;
     color: var(--color-white);
     border-color: var(--color-primary);
 }
@@ -88,6 +90,8 @@ p {
 
 .profile-picture img {
     border-radius: 50%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
 }
 
 img {
@@ -395,7 +399,7 @@ main .container .right {
 
   .dropdown-check-list .dropdown-check-list-anchor {
     cursor: pointer;
-    padding: 0.5rem 1rem ;
+    padding: 0.1rem 1rem ;
     border: 1px solid var(--color-gray);
     width: 100%;
     display: flex;
@@ -404,11 +408,16 @@ main .container .right {
   }
   
   .dropdown-check-list ul.dropdown-check-list-items {
-    font-size: 0.9rem;
     padding: 2px;
     display: none;
     border: 1px solid #ccc;
   }
+
+  .dropdown-check-list ul{
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-light);
+}
  
   .dropdown-check-list.visible .dropdown-check-list-items {
     display: block;
@@ -420,70 +429,7 @@ main .container .right {
 }
 
 
-/* ====================================== toast =================================== */
-.toast_notification{
-    position: absolute;
-    top: 25px;
-    right: 30px;
-    border-radius: 12px;
-    background: var(--color-white);
-    padding: 20px 35px 20px 25px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-    border-left: 6px solid var(--color-primary);
-    overflow: hidden;
-    z-index: 500;
-    transform: translateX(calc(100% + 30px));
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
-}
 
-.toast_notification.active{
-    transform: translateX(0%);
-}
-
-.toast_notification .toast-content{
-    display: flex;
-    align-items: center;
-}
-
-#toast_notification_text{
-    margin: 0 1em;
-}
-
-.toast_notification .close{
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    padding: 5px;
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-.toast_notification .close:hover{
-    opacity: 1;
-}
-
-.toast_notification .progress{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    width: 100%;
-    background: #ddd;
-}
-
-.toast_notification .progress:before{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    background-color: var(--color-primary);
-}
-
-.progress.active:before{
-    animation: progress 5s linear forwards;
-}
 
 @keyframes progress {
     100%{
@@ -518,4 +464,13 @@ main .container .right {
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary);; 
+  }
+
+  #message-dot, #notification-dot{
+    position: absolute ; 
+    top: -0.5rem ; 
+    right: -0.5rem; 
+    color: var(--color-danger); 
+    font-size: 0.5rem;
+    display: none;
   }

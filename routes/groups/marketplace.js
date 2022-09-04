@@ -4,7 +4,7 @@ const { verify } = require('../../middlewares/user-verification.js');
 const utils = require('../../routerControllers/utils.js');
 const constant_values = require('../../db-codes/constant_values.js');
 const DB_marletplace = require('../../db-codes/groups/db-marketplace-api.js');
-
+const DB_user = require('../../db-codes/users/db-user-api');
 
 router.get('/:user_id?', verify, async(req, res) => {
 
@@ -29,14 +29,21 @@ router.get('/:user_id?', verify, async(req, res) => {
         search_data.sort_by = req.query.marketplace_sort_by;
     }
 
-    if(req.params.user_id) {search_data.user_id = req.params.user_id;}
+    if(req.params.user_id) {
+        search_data.user_id = req.params.user_id;
+        res.locals.user = await DB_user.getUserById(req.params.user_id);
 
-    
+        if(!res.locals.user){
+            res.status(404).send('user not found');
+            return;
+        }
+        res.locals.middle.push({type : "group_user_profile", location : "groups/group-user-profile"});
+        res.locals.isAdmin = undefined;
+    }
+
 
     const posts = await DB_marletplace.getPosts(req.user.USER_ID, search_data);
     res.locals.middle.push({type : "posts", data : posts})
-
-    
 
     res.render('index', {
         type : "marketplace",
@@ -46,8 +53,6 @@ router.get('/:user_id?', verify, async(req, res) => {
         left : ['left-profile', 'sidebar'],
         right : [{location : 'marketplace-search', data : search_data}],
     });
-
-
 })
 
 

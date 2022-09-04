@@ -5,7 +5,7 @@ const default_values = require('../default_values');
 async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp, cursor_id){
 
     console.log('limit = ',  limit)
-    let order_by = "TIMESTAMP DESC", search_term_str = "", cursor_str = '', limit_str = '';
+    let order_by = "P.TIMESTAMP DESC", search_term_str = "", cursor_str = '', limit_str = '';
 
     if(limit) limit_str = ` FETCH FIRST ${limit} ROWS ONLY`;
     
@@ -26,7 +26,7 @@ async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp,
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 (SELECT json_arrayagg(
-                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
                     from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
                 ) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
@@ -54,7 +54,7 @@ async function getNewsFeedPostsForUserID2(user_id, search_data, limit, timestamp
     LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:user_id, P.POST_ID) "USER_LIKED",
     COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
     (SELECT json_arrayagg(
-        json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+        json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
         from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
     ) "FILES"
     FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID

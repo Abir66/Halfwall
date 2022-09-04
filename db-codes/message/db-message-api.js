@@ -1,6 +1,7 @@
 const Database = require('../database');
 const database = new Database();
 const default_values = require('../default_values');
+const DB_storage = require('../files/storage-files');
 
 
 async function getConversationList(user_id){
@@ -44,7 +45,7 @@ async function getMessagesList(conversation_id, limit, cursor_id ){
 }
 
 async function getPartnerName(convo_id,user_id){
-    console.log(convo_id, user_id)
+    
     const sql = `SELECT INITCAP(USERS.NAME) NAME,NVL(USERS.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",USERS.USER_ID
     FROM CONVERSATIONS,CONVERSATION_MEMBERS,USERS
     WHERE USERS.USER_ID = CONVERSATION_MEMBERS.USER_ID AND CONVERSATION_MEMBERS.USER_ID != :user_id AND CONVERSATIONS.CONVERSATION_ID = CONVERSATION_MEMBERS.CONVERSATION_ID AND CONVERSATIONS.CONVERSATION_ID = :convo_id
@@ -55,10 +56,9 @@ async function getPartnerName(convo_id,user_id){
         convo_id: convo_id
         
     }
-    console.log(binds);
+    
     const result = (await database.execute(sql,binds)).rows[0];
-    console.log("results");
-    console.log(result);
+
 
     return result;
     
@@ -102,7 +102,7 @@ async function deleteMessage(message_id){
         }
     }
     const result = (await database.execute(sql,binds)).outBinds;
-
+    DB_storage.storageCleanup();
     return result.result;
 
 }

@@ -1,0 +1,30 @@
+<div class="subsection">
+    <div class="dropdown-check-list" id="search-tuition-post-class" tabindex="200" style="position: relative; z-index: 200; ">
+        <div class="dropdown-check-list-anchor">
+            <div>Class</div>
+            <div><i class="fa-solid fa-caret-down"></i></div>
+        </div>
+        <ul class="dropdown-check-list-items" style="display: none ; position: absolute; background-color: white; max-height: 500px; overflow-y: scroll;">
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="Below class 9"> &nbsp;Below class 9</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="9"> &nbsp;Class 9</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="10"> &nbsp;Class 10</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="HSC 1st year"> &nbsp;HSC 1st year</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="HSC 2nd year"> &nbsp;HSC 2nd year</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="Admission test"> &nbsp;Admission test</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium O level"> &nbsp;English Medium O level</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium AS level"> &nbsp;English Medium AS level</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="English Medium A level"> &nbsp;English Medium A level</li>
+            <li><input class="form-check-input tuition-subject" type="checkbox" name="class" value="others"> &nbsp;others</li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">
+        var classChecklist = document.getElementById('search-tuition-post-class');
+        classChecklist.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function (evt) {
+            if (classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+            else classChecklist.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
+        }
+    </script>
+
+</div>
+

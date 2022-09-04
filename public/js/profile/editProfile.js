@@ -33,6 +33,7 @@ async function editProfile(user_id) {
     const studentId = document.getElementById('edit-profile-student_id').value.replace(/ +(?= )/g, '');
     const name = document.getElementById('edit-profile-name').value.replace(/ +(?= )/g, '');
     const dof = document.getElementById('edit-profile-dof').value;
+    console.log(dof);
     const hall = document.getElementById('edit-profile-hall').value.replace(/ +(?= )/g, '').trim();
     const attachment = document.getElementById('edit-profile-attachment').value.replace(/ +(?= )/g, '').trim();
     const street = document.getElementById('edit-profile-street').value.replace(/ +(?= )/g, '').trim();

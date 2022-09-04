@@ -14,6 +14,11 @@ async function group_header(req,res,next){
         return;
     }
 
+    if(group_id == constant_values.tuition_group_id){
+        res.redirect('/tuition/' + req.params.user_id);
+        return;
+    }
+
     const group = await DB_group.getGroup(req.params.group_id);
 
     if(!group){
@@ -25,11 +30,6 @@ async function group_header(req,res,next){
     const isMember = await DB_group_member.isMember(group_id, req.user.USER_ID);
     const isAdmin = await DB_group_member.isAdmin(group_id, req.user.USER_ID);
     const isPending = await DB_group_member.isPending(group_id, req.user.USER_ID);
-
-    // const group_membership = await DB_group_member.getGroupMembership(group_id, req.user.USER_ID);
-    // if(group_membership === 'ADMIN') {res.locals.isAdmin = true; res.locals.isMember = true;}
-    // else if(group_membership === 'MEMBER') {res.locals.isMember = true;}
-    // else if(group_membership === 'PENDING') {res.locals.isPending = true;}
 
     res.locals.group = group;
     res.locals.isMember = isMember;

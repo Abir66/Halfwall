@@ -1,196 +1,200 @@
 <style>
+    .middle .create-post {
+        width: 100%;
+        background: var(--color-white);
+        padding: 0.6rem var(--card-padding);
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .middle .create-post .create-post-mini {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .middle .create-post .create-post-mini input[type='text'] {
+        justify-self: start;
+        width: 100%;
+        padding-left: 1rem;
+        background: transparent;
+        color: var(--color-dark);
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
+
+    .middle .create-post-big {
+        padding: 1rem;
+    }
+
+    .middle .create-post-big .post-info {
+        margin-bottom: 1rem;
+    }
 
 
-.middle .create-post {
-    width: 100%;
-    background: var(--color-white);
-    padding: 0.6rem var(--card-padding);
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-}
-
-.middle .create-post .create-post-mini{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.middle .create-post .create-post-mini input[type='text'] {
-    justify-self: start;
-    width: 100%;
-    padding-left: 1rem;
-    background: transparent;
-    color: var(--color-dark);
-    margin-right: 1rem;
-    font-size: 1rem;
-}
-
-.middle .create-post-big {
-   padding: 1rem;
-}
-
-.middle .create-post-big .post-info {
-   margin-bottom: 1rem;
-}
-
-
-.middle .create-post-big .post-info .user{
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-
-
-.middle .create-post-big .post-info .username {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-.middle .create-post-big .post-info .head{
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
-.middle .create-post-big .post-text  {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid var(--color-light);
-    margin-bottom: 1rem;
-}
-
-
-.middle .create-post .post-group select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    margin-left: 0;
-}
-
-
-.middle .create-post-big .post-footer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.middle .create-post .post-footer .btn{
-    font-size: 0.7rem;
-}
-
-.middle .create-post .post-footer .btn-blank{
-    border-color: var(--color-gray);
-}
-
-
-.middle .create-post-big #create-post-files-preview-list{
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.middle .create-postfiles-preview-container{
-    margin-bottom: 1rem;
-}
-
-.middle .create-post-big .file-preview{
-    width: 20%;
-   
-}
-
-.middle .create-post-big .file-preview .file{
-    width: 100%;
-    
-}
-
-.middle .create-post-big .file-preview{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-}
+    .middle .create-post-big .post-info .user {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
 
 
 
-.middle .create-post-big .file-preview i{
-    font-size: 1.5rem;
-    color: red;
-    cursor: pointer;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
+    .middle .create-post-big .post-info .username {
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .middle .create-post-big .post-info .head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .middle .create-post-big .post-text {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid var(--color-light);
+        margin-bottom: 1rem;
+    }
 
 
-/* ------------------- sell post ------------------------*/
-.middle .sell-post-info{
-    margin: 1rem 0;
-    display: flex;
-    align-items: center;
-    gap : 1rem;
-    font-size: 1rem;
-}
-
-.middle .sell-post-info label{
-    width: 20%;
-}
-
-.middle .sell-post-info select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    
-}
-
-.middle .sell-post-info input[type='number']{
-    border: 1px solid var(--color-light);
-}
-
-/* ------------------- sell post ------------------------*/
-.middle .tuition-post-info{
-    margin: 1rem 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap : 1rem;
-    font-size: 1rem;
-}
-
-.middle .tuition-post-info label{
-    width: 25%;
-}
-
-.middle .tuition-post-info select{
-    padding-right: 1rem;
-    display: inline-block;
-    border: 1px solid var(--color-light);
-    box-sizing: border-box;
-    
-}
-
-.middle .tuition-post-info input{
-    border: 1px solid var(--color-light);
-    
-}
+    .middle .create-post .post-group select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+        margin-left: 0;
+    }
 
 
-.middle .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
-    cursor: pointer;
-    padding: 0 0.5rem ;
-    border: 1px solid var(--color-light);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 2rem;
-}
+    .middle .create-post-big .post-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
+    .middle .create-post .post-footer .btn {
+        font-size: 0.7rem;
+    }
+
+    .middle .create-post .post-footer .btn-blank {
+        border-color: var(--color-gray);
+    }
+
+
+    .middle .create-post-big #create-post-files-preview-list {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .middle .create-postfiles-preview-container {
+        margin-bottom: 1rem;
+    }
+
+    .middle .create-post-big .file-preview {
+        width: 20%;
+
+    }
+
+    .middle .create-post-big .file-preview .file {
+        width: 100%;
+
+    }
+
+    .middle .create-post-big .file-preview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+
+
+    .middle .create-post-big .file-preview i {
+        font-size: 1.5rem;
+        color: red;
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+
+    /* ------------------- sell post ------------------------*/
+    .middle .sell-post-info {
+        margin: 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1rem;
+    }
+
+    .middle .sell-post-info label {
+        width: 20%;
+    }
+
+    .middle .sell-post-info select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+
+    }
+
+    .middle .sell-post-info input[type='number'] {
+        border: 1px solid var(--color-light);
+    }
+
+    /* ------------------- tuition ------------------------*/
+    .middle .tuition-post-info {
+        margin: 1rem 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
+        font-size: 1rem;
+    }
+
+    .middle .tuition-post-info label {
+        width: 25%;
+    }
+
+    .middle .tuition-post-info select {
+        padding-right: 1rem;
+        display: inline-block;
+        border: 1px solid var(--color-light);
+        box-sizing: border-box;
+
+    }
+
+    .middle .tuition-post-info input {
+        border: 1px solid var(--color-light);
+
+    }
+
+
+    .middle .tuition-post-info .dropdown-check-list .dropdown-check-list-anchor {
+        cursor: pointer;
+        padding: 0 0.5rem;
+        border: 1px solid var(--color-light);
+        width: 200px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .middle .tuition-post-info .dropdown-check-list ul {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--color-light);
+    }
 </style>
 
 <form action="" class="create-post">
@@ -199,42 +203,46 @@
         <input type="text" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>">
         <input type="submit" value="post" class="btn btn-primary" placeholder="post">
     </div>
-    
+
     <div class="create-post-big" style="display: none ;">
-        
+
         <!-- post info -->
         <div class="post-info">
             <div class="head">
                 <div class="user">
-                <div class="profile-picture">
-                    <img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>">
-                </div>
-                
-                <div class="info">
-                    <p class="username"><%= currentUser.NAME%></p>
-                    
-                    <div class="post-group">
-                        <% if (typeof group !== 'undefined') { %>
-                            <p class="group-name text-muted">in <%=group.GROUP_NAME%></p>
-                        <% } else { %>
-                            <div class="form-group">
-                                <select name="privacy" id="post-privacy">
-                                    <option value="PRIVATE" selected>Followers only</option>
-                                    <option value="PUBLIC">Public</option>
-                                </select>
-                            </div>
-                        <% } %>
+                    <div class="profile-picture">
+                        <img src="<%= currentUser.PROFILE_PIC%>" alt="<%= currentUser.NAME%>">
                     </div>
-                    
-                </div>
+
+                    <div class="info">
+                        <p class="username">
+                            <%= currentUser.NAME%>
+                        </p>
+
+                        <div class="post-group">
+                            <% if (typeof group !=='undefined' ) { %>
+                                <p class="group-name text-muted">in <%=group.GROUP_NAME%>
+                                </p>
+                                <% } else { %>
+                                    <div class="form-group">
+                                        <select name="privacy" id="post-privacy">
+                                            <option value="PRIVATE" selected>Followers only</option>
+                                            <option value="PUBLIC">Public</option>
+                                        </select>
+                                    </div>
+                                    <% } %>
+                        </div>
+
+                    </div>
                 </div>
 
-                <i class="fa-solid fa-xmark" onclick="replacewithmini()" style="font-size: 1.5rem; color: var(--color-gray);"></i>
+                <i class="fa-solid fa-xmark" onclick="replacewithmini()"
+                    style="font-size: 1.5rem; color: var(--color-gray);"></i>
             </div>
         </div>
 
-        <% if ((typeof group !== 'undefined') && group.GROUP_NAME === 'Marketplace') { %>
-        
+        <% if ((typeof group !=='undefined' ) && group.GROUP_ID===4) { %>
+
             <div class="sell-post-info">
                 <label for="catagory">Catagory</label>
                 <select name="catagory" id="sell-post-catagory" required>
@@ -257,144 +265,151 @@
 
             <div class="sell-post-info">
                 <label for="price">Price</label>
-                <input class="post-data" type="number" name="price" id="sell-post-price" required/>
+                <input class="post-data" type="number" name="price" id="sell-post-price" required />
             </div>
-        <%} else if ((typeof group !== 'undefined') && group.GROUP_NAME === 'Tution') { %>
-        
-            <div class="tuition-post-info">
-                <label for="class">Class</label>
-                <select name="class" id="tuition-post-class" required>
-                    <option value="Below class 9">Below class 9</option>
-                    <option value="9">Class 9</option>
-                    <option value="10">Class 10</option>
-                    <option value="HSC 1st year">HSC 1st year</option>
-                    <option value="HSC 2nd year">HSC 2nd year</option>
-                    <option value="Admission test">Admission test</option>
-                    <option value="English Medium O level">English Medium O level</option>
-                    <option value="English Medium AS level">English Medium AS level</option>
-                    <option value="English Medium A level">English Medium A level</option>
-                    <option value="others">others</option>
-                </select>
-            </div>
+            <%} else if ((typeof group !=='undefined' ) && group.GROUP_ID===5) { %>
 
-            <div class="tuition-post-info">
-                <label for="subject">Subject</label>
-                    <div class="dropdown-check-list" id="tuition-post-subject" tabindex="100">
-                        <div class="dropdown-check-list-anchor"><div>Subject</div><div><i class="fa-solid fa-caret-down"></i></div></div>
-                        <ul class="dropdown-check-list-items">
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Physics"  >Physics</li>
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Math" >Math</li>
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Chemistry"  >Chemistry</li>
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Biology"  >Biology</li>
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="ICT"  >ICT</li>
-                          <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Others"  >Others</li>
-                          
-                          </ul>
+                <div class="tuition-post-info">
+                    <label for="class">Class</label>
+                    <select name="class" id="tuition-post-class" required>
+                        <option value="Below class 9">Below class 9</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="HSC 1st year">HSC 1st year</option>
+                        <option value="HSC 2nd year">HSC 2nd year</option>
+                        <option value="Admission test">Admission test</option>
+                        <option value="English Medium O level">English Medium O level</option>
+                        <option value="English Medium AS level">English Medium AS level</option>
+                        <option value="English Medium A level">English Medium A level</option>
+                        <option value="others">others</option>
+                    </select>
+                </div>
+
+
+                <div class="tuition-post-info">
+                    <label for="subject">Subject</label>
+                    <div class="dropdown-check-list" id="tuition-post-subject" tabindex="100"
+                        style="position: relative ;">
+                        <div class="dropdown-check-list-anchor">
+                            <div>Subject</div>
+                            <div><i class="fa-solid fa-caret-down"></i></div>
+                        </div>
+                        <ul class="dropdown-check-list-items"
+                            style="display: none ; position: absolute; background-color: white;">
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Physics">&nbsp; &nbsp; &nbsp; Physics</li>
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Math">&nbsp; &nbsp; &nbsp; Math</li>
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Chemistry">&nbsp; &nbsp; &nbsp; Chemistry</li>
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Biology">&nbsp; &nbsp; &nbsp; Biology</li>
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="ICT">&nbsp; &nbsp; &nbsp; ICT</li>
+                            <li><input class="form-check-input tuition-subject" type="checkbox" name="subjects" value="Others">&nbsp; &nbsp; &nbsp; Others</li>
+                        </ul>
                     </div>
-                
+
                     <script type="text/javascript">
                         var checkList = document.getElementById('tuition-post-subject');
-                        checkList.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function(evt) {
-                            if (checkList.classList.contains('visible')) checkList.classList.remove('visible');
-                            else checkList.classList.add('visible');
+                        checkList.getElementsByClassName('dropdown-check-list-anchor')[0].onclick = function (evt) {
+                            if (checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display == 'none') checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'block';
+                            else checkList.getElementsByClassName('dropdown-check-list-items')[0].style.display = 'none';
                         }
                     </script>
-        
-                
-            </div>
-
-            <div class="tuition-post-info">
-                <label for="location">Location</label>
-                <select name="location" id="tution-location">  
-        <option value="Agargaon">Agargaon</option>
-        <option value="Armanitola">Armanitola</option>
-        <option value="Azampur">Azampur</option>
-        <option value="Azimpur">Azimpur</option>
-        <option value="Bailey Road">Bailey Road</option>
-        <option value="Banani">Banani</option>
-        <option value="Banasree">Banasree</option>
-        <option value="Baridhara">Baridhara</option>
-        <option value="Bashundhara Residential Area">Bashundhara Residential Area</option>
-        <option value="Cantonment">Cantonment</option>
-        <option value="Chowk Bazaar">Chowk Bazaar</option>
-        <option value="Dhanmondi">Dhanmondi</option>
-        <option value="Diabari">Diabari</option>
-        <option value="Farmgate">Farmgate</option>
-        <option value="Gulshan">Gulshan</option>
-        <option value="Hatirpool">Hatirpool</option>
-        <option value="Jhigatola">Jhigatola</option>
-        <option value="Kallyanpur">Kallyanpur</option>
-        <option value="Karwanbazar">Karwanbazar</option>
-        <option value="Kazipara">Kazipara</option>
-        <option value="Lalbagh">Lalbagh</option>
-        <option value="Lalmatia">Lalmatia</option>
-        <option value="Maghbazar">Maghbazar</option>
-        <option value="Malibagh">Malibagh</option>
-        <option value="Mirpur">Mirpur</option>
-        <option value="Mohakhali">Mohakhali</option>
-        <option value="Mohammadpur">Mohammadpur</option>
-        <option value="Motizheel">Motizheel</option>
-        <option value="Narinda">Narinda</option>
-        <option value="Nazirabazar">Nazirabazar</option>
-        <option value="New Market">New Market</option>
-        <option value="Nilkhet">Nilkhet</option>
-        <option value="Panthapath">Panthapath</option>
-        <option value="Savar">Savar</option>
-        <option value="Shahbagh">Shahbagh</option>
-        <option value="Santinagar">Santinagar</option>
-        <option value="Shamoli">Shamoli</option>
-        <option value="Tejgaon">Tejgaon</option>
-        <option value="Tikatuli">Tikatuli</option>
-        <option value="Uttara">Uttara</option>
-        <option value="Wari">Wari</option>
-                </select>
-            </div>
+                </div>
 
 
+                <div class="tuition-post-info">
+                    <label for="location">Location</label>
+                    <select name="location" id="tuition-location">
+                        <option value="Agargaon">Agargaon</option>
+                        <option value="Armanitola">Armanitola</option>
+                        <option value="Azampur">Azampur</option>
+                        <option value="Azimpur">Azimpur</option>
+                        <option value="Bailey Road">Bailey Road</option>
+                        <option value="Banani">Banani</option>
+                        <option value="Banasree">Banasree</option>
+                        <option value="Baridhara">Baridhara</option>
+                        <option value="Bashundhara Residential Area">Bashundhara Residential Area</option>
+                        <option value="Cantonment">Cantonment</option>
+                        <option value="Chowk Bazaar">Chowk Bazaar</option>
+                        <option value="Dhanmondi">Dhanmondi</option>
+                        <option value="Diabari">Diabari</option>
+                        <option value="Farmgate">Farmgate</option>
+                        <option value="Gulshan">Gulshan</option>
+                        <option value="Hatirpool">Hatirpool</option>
+                        <option value="Jhigatola">Jhigatola</option>
+                        <option value="Kallyanpur">Kallyanpur</option>
+                        <option value="Karwanbazar">Karwanbazar</option>
+                        <option value="Kazipara">Kazipara</option>
+                        <option value="Lalbagh">Lalbagh</option>
+                        <option value="Lalmatia">Lalmatia</option>
+                        <option value="Maghbazar">Maghbazar</option>
+                        <option value="Malibagh">Malibagh</option>
+                        <option value="Mirpur">Mirpur</option>
+                        <option value="Mohakhali">Mohakhali</option>
+                        <option value="Mohammadpur">Mohammadpur</option>
+                        <option value="Motizheel">Motizheel</option>
+                        <option value="Narinda">Narinda</option>
+                        <option value="Nazirabazar">Nazirabazar</option>
+                        <option value="New Market">New Market</option>
+                        <option value="Nilkhet">Nilkhet</option>
+                        <option value="Panthapath">Panthapath</option>
+                        <option value="Savar">Savar</option>
+                        <option value="Shahbagh">Shahbagh</option>
+                        <option value="Santinagar">Santinagar</option>
+                        <option value="Shamoli">Shamoli</option>
+                        <option value="Tejgaon">Tejgaon</option>
+                        <option value="Tikatuli">Tikatuli</option>
+                        <option value="Uttara">Uttara</option>
+                        <option value="Wari">Wari</option>
+                    </select>
+                </div>
 
-            <div class="tuition-post-info">
-                <label for="class">Remuneration</label>
-                <input class = "post-data" type="number" name="remuneration" required placeholder="10000">
-            </div>
 
-            <div class="tuition-post-info">
-                <label for="preference">preference</label>
-                <select name="preference" id="tuition-post-preference" required>
-                    <option value="N/A" selected>N/A</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
+                <div class="tuition-post-info">
+                    <label for="class">Remuneration</label>
+                    <input class="post-data" type="number" name="remuneration" required placeholder="10000">
+                </div>
 
-            <div class="tuition-post-info">
-                <label for="student_count">No. of students</label>
-                <input class = "post-data" type="number" name="student_count" required value="1">
-            </div>
-        
-        <% } %>
+                <div class="tuition-post-info">
+                    <label for="preference">preference</label>
+                    <select name="preference" id="tuition-post-preference" required>
+                        <option value="N/A" selected>N/A</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+                <div class="tuition-post-info">
+                    <label for="student_count">No. of students</label>
+                    <input class="post-data" type="number" name="student_count" required value="1">
+                </div>
+
+                <% } %>
 
 
-        <textarea class = "post-text" name="post-text" rows="10" placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>"></textarea>
-        
-        <div class="create-postfiles-preview-container">
-            <input type="file" id="create-post-file-input" accept="image/png, image/jpeg, video/mp4" onchange="preview()" multiple hidden>
-            <div id="create-post-files-preview-list"></div>
-        </div>
+                    <textarea class="post-text" name="post-text" rows="10"
+                        placeholder="What's on your mind?, <%= currentUser.NAME.split(' ')[0]; %>"></textarea>
 
-        <div class="post-footer">
-            <label for="create-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
-            <input class="btn btn-primary" type = "submit" value="post" class="btn btn-primary" placeholder="post">
-        </div>
+                    <div class="create-postfiles-preview-container">
+                        <input type="file" id="create-post-file-input" accept="image/png, image/jpeg, video/mp4"
+                            onchange="preview()" multiple hidden>
+                        <div id="create-post-files-preview-list"></div>
+                    </div>
+
+                    <div class="post-footer">
+                        <label for="create-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i>
+                            Attach image</label>
+                        <input class="btn btn-primary" type="submit" value="post" class="btn btn-primary"
+                            placeholder="post">
+                    </div>
 
     </div>
-    
-    
+
+
 </form>
 
 
 <script>
 
-    async function replacewithBig(){
+    async function replacewithBig() {
 
         let create_post = document.querySelector('.create-post');
         // hide create-post-mini
@@ -407,7 +422,7 @@
 
     }
 
-    async function replacewithmini(clear_form = true){
+    async function replacewithmini(clear_form = true) {
         let create_post = document.querySelector('.create-post');
         // hide create-post-big
         const create_post_big = create_post.querySelector('.create-post-big');
@@ -417,87 +432,78 @@
         create_post_mini.style.display = 'flex';
 
 
-        if(clear_form){
+        if (clear_form) {
             create_post.reset();
             const create_post_files_preview_list = create_post.querySelector('.create-postfiles-preview-container #create-post-files-preview-list');
             create_post_files_preview_list.innerHTML = '';
             files = [];
         }
-        
-    }
 
+    }
 
     // prevent default form action
     document.querySelector('.create-post').addEventListener('submit', async (e) => {
         e.preventDefault();
         // check validity of form
-        if(!document.querySelector('.create-post').checkValidity()){
+        if (!document.querySelector('.create-post').checkValidity()) {
             return;
         }
-        post(<% if (typeof group !== 'undefined') {%><%=group.GROUP_ID%><%}%>);
-        
-        
+        post(<% if (typeof group !== 'undefined') {%><%=group.GROUP_ID %><%}%>);
         
     } );
-
 
     let fileInput = document.getElementById("create-post-file-input");
     let fileContainer = document.getElementById("create-post-files-preview-list");
 
-    const files = [];
-    
-    async function post(group_id){   
-        
+    let files = [];
+
+    async function post(group_id) {
+
         // get form element
         const form = document.querySelector('.create-post');
 
         // create a new formdata and add info to it
         const formData = new FormData();
         formData.append('post_text', form.querySelector('.post-text').value);
-        
+
 
         // get all input of type text data from form and add it to formdata
         const inputs = form.querySelectorAll('input.post-data, select');
-        inputs.forEach(input => { formData.append(input.name, input.value);} );
+        inputs.forEach(input => { formData.append(input.name, input.value); });
 
 
-        var checkboxes = document.querySelectorAll('input.tuition-subject');
-        if(checkboxes && checkboxes.length > 0){
+        var checkboxes =  form.querySelectorAll('input.tuition-subject');
+        console.log('chec', checkboxes.length)
+        if (checkboxes && checkboxes.length > 0) {
             var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-            if(!checkedOne){
+            if (!checkedOne) {
                 alert('Please select at least one subject');
                 return;
             }
         }
 
-               
+
         checkboxes = form.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
-            if(checkbox.checked){
-                formData.append(checkbox.name, checkbox.value);
-            }
-        } );
+            if (checkbox.checked) formData.append(checkbox.name, checkbox.value);
+        });
 
 
-        
-    
-        if(!group_id) group_id = form.querySelector('#post-privacy').value === 'PUBLIC' ? 1 : 2;
+
+
+        if (!group_id) group_id = form.querySelector('#post-privacy').value === 'PUBLIC' ? 1 : 2;
         formData.append('group_id', group_id);
 
         // get all files from files array and add it to formdata
-        files.forEach(file => { formData.append('files', file);} );
-        
+        files.forEach(file => { formData.append('files', file); });
 
-        // print the values
-        for(const [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
 
-        if(!(group_id && group_id===5) && form.querySelector('.post-text').value === '' && files.length === 0){
+
+        if (!(group_id && group_id === 5) && form.querySelector('.post-text').value === '' && files.length === 0) {
             alert('Please enter text or upload files');
             return;
         }
-        
+
         // replace with mini form
         replacewithmini();
 
@@ -511,10 +517,19 @@
             }
         });
 
-        console.log(res);
+        if(res.data.result === 'success'){
+            alert('Post created successfully');
+            const post_str = await createPostStr(res.data.post);
+           
+            const first_post = document.querySelector('.post');
+            if(first_post && first_post != null) first_post.insertAdjacentHTML('beforebegin', post_str);
+            else{
+                const create_post = document.querySelector('.create-post');
+                create_post.insertAdjacentHTML('afterend', post_str);
+            }
+        }
     }
 
-    
 
     async function preview() {
 
@@ -570,13 +585,13 @@
                 // clicking on this button should delete the image
                 close.addEventListener("click", function () {
                     fileContainer.removeChild(fileDiv);
-                    
+
                     // remove the file from the array of files
                     files.splice(files.indexOf(i), 1);
                 });
 
                 fileContainer.appendChild(fileDiv);
-            } 
+            }
         }
         fileInput.value = null;
     }

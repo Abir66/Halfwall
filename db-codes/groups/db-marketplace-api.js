@@ -10,9 +10,7 @@ const constant_values = require('../constant_values');
 
 async function getPosts(user_id, search_data){
 
-    console.log('getPosts', search_data);
-
-    let orderby = '', search_term_str = '', post_user = '', price_search = '', condition_search = '', available_search = '', catagory_search = '';
+    let orderby = '', search_term_str = '', post_user = '', price_search = '', condition_search = '', available_search = '', catagory_search = '', post_id_str = '';
     
     // sorting
     orderby = ` ORDER BY P.TIMESTAMP DESC`;
@@ -34,6 +32,7 @@ async function getPosts(user_id, search_data){
 
     if(search_data.user_id) post_user = ' AND P.USER_ID = ' + search_data.user_id;
     
+    if(search_data.post_id) post_id_str = ` AND P.POST_ID = ${search_data.post_id}`;
     
     const sql = `SELECT P.POST_ID, P.USER_ID, P.GROUP_ID, P.TEXT, TO_CHAR(P.TIMESTAMP, 'HH:MM DD-MON-YYYY') "TIMESTAMP",
                 INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
@@ -41,7 +40,7 @@ async function getPosts(user_id, search_data){
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
                 (SELECT json_arrayagg(
-                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
                     from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
                 ) "FILES",
                 SP.CATAGORY, SP.PRICE, SP.CONDITION, SP.AVAILABLE
@@ -49,6 +48,7 @@ async function getPosts(user_id, search_data){
                 LEFT JOIN GROUPS G ON P.GROUP_ID = G.GROUP_ID LEFT JOIN SELL_POSTS SP ON P.POST_ID = SP.POST_ID
                 
                 WHERE P.GROUP_ID = :group_id
+                ${post_id_str}
                 ${post_user}
                 ${catagory_search}
                 ${condition_search}
@@ -64,6 +64,7 @@ async function getPosts(user_id, search_data){
     };
 
     result = (await database.execute(sql,binds)).rows;
+    if(search_data.post_id) return result[0];
     return result;
 }
 

@@ -89,13 +89,28 @@
         height: 15vw;
         aspect-ratio: 16/6;
         border-radius: 0.6em ;
+        overflow: hidden;
     }
     .group-cover-container-inside-modal{
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 16/6;
+        overflow: hidden;
         height: 15vW;
-        width: auto;
+        width: 100%;
         margin: 2vw;
     }
+
+    
+    .group-cover-container-inside-modal img{
+      aspect-ratio: 16/6;
+      object-fit: cover;
+    }
+
+
+
     .group-cover-preview-remove{
         position: absolute;
         top: 0;
@@ -374,7 +389,7 @@
 
     async function leaveGroup(group_id){
         const response = await axios.post(`/groups/group_id=${group_id}/leave-group`);
-        console.log(response.data);
+
         if (response.data === 'success') window.location.reload();
         else if(response.data === 'only admin'){
             // get the modal

@@ -46,7 +46,7 @@ async function getUserByStudentId(student_id){
         student_id : student_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    // console.log("result : ", result)
+    
     return result[0];
 }
 
@@ -63,8 +63,8 @@ async function checkPassword(user_id, password){
 }
 
 async function getUserById(user_id){
-    const sql = `SELECT USER_ID, STUDENT_ID, NAME, EMAIL, DEPARTMENT, 
-                DATE_OF_BIRTH, HALL, HALL_ATTACHMENT, BATCH, 
+    const sql = `SELECT USER_ID, STUDENT_ID, initcap(NAME) NAME, EMAIL, DEPARTMENT, 
+                DATE_OF_BIRTH, initcap(HALL) HALL, HALL_ATTACHMENT, BATCH, 
                 STREET, CITY, POSTCODE,
                 NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC" 
                 FROM users
@@ -136,7 +136,7 @@ async function getUserProfilePosts(viewer_id, user_id, followed, search_data, so
                 INITCAP(U.NAME) "USERNAME", NVL(U.PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC",
                 LIKE_COUNT(P.POST_ID) "LIKES_COUNT", USER_LIKED_THIS_POST(:viewer_id, P.POST_ID) "USER_LIKED", COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
 	            (SELECT json_arrayagg(
-                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
                     from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
                 ) "FILES"   
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
@@ -183,11 +183,12 @@ async function updateUser(user, user_id){
 
 async function searchProfile(search_data){
 
-    const sql = `SELECT USER_ID, STUDENT_ID, NAME, PROFILE_PIC, DEPARTMENT
+    const sql = `SELECT USER_ID, STUDENT_ID, initcap(NAME) NAME, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC", DEPARTMENT
                 FROM users
                 WHERE ((UPPER(NAME) LIKE UPPER('%'||:search_input||'%')
                 OR UPPER(EMAIL) LIKE UPPER('%'||:search_input||'%'))
-                OR STUDENT_ID = :student_id)
+                OR STUDENT_ID = :student_id
+                OR STUDENT_ID like UPPER('%'||:search_input ||'%') )
                 AND NVL(HALL, ' ') like UPPER('%'||:hall ||'%')
                 AND NVL(HALL_ATTACHMENT, ' ') like UPPER('%'||:hall_attachment ||'%')
                 AND NVL(DEPARTMENT, ' ') like UPPER('%'||:department ||'%')
@@ -220,7 +221,7 @@ async function getUserMiniData(user_id){
 }
 
 async function updateProfilePicture(user_id, profile_pic){
-    console.log(user_id, profile_pic);
+    
     const sql = `UPDATE users
                 SET PROFILE_PIC = :profile_pic
                 WHERE USER_ID = :user_id`;
@@ -231,6 +232,32 @@ async function updateProfilePicture(user_id, profile_pic){
     const result = (await database.execute(sql, binds)).rows;
     DB_storage.storageCleanup();
     return result;
+}
+
+async function deleteAccount(user_id, password){
+
+    const sql = `BEGIN
+                    DELETE_USER(:user_id, :password, :result);
+                END;`;
+
+    const binds ={
+        user_id : user_id,
+        password : password,
+        result: {
+            dir: oracledb.BIND_OUT,
+            type: oracledb.VARCHAR2
+        }
+    }
+
+    console.log(binds);
+    console.log(sql);
+
+    const result = (await database.execute(sql, binds)).outBinds;
+    DB_storage.storageCleanup();
+    return result;
+
+
+
 }
 
 module.exports = {
@@ -244,5 +271,6 @@ module.exports = {
     updateUser,
     getUserMiniData,
     checkPassword,
-    updateProfilePicture
+    updateProfilePicture,
+    deleteAccount
 }

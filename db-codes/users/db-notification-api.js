@@ -26,7 +26,7 @@ async function sendNotification(){
             last_notification_id : last_notification_id
         };
         await database.execute(sql, binds);
-        console.log("here", result);
+        
         
         //send the notifications
         notification_sender(result);
@@ -54,7 +54,7 @@ async function getNotificationForUser(user_id, limit, cursor_id){
         user_id : user_id
     };
     const result = (await database.execute(sql, binds)).rows;
-    console.log(result, 'resulttt');
+    
     return result;
 }
 
@@ -94,10 +94,36 @@ async function clearAllNotificationForUser(user_id, last_notification_id){
 }
 
 
+async function sendTuitionNotification(receivers, post_id, sender){
+
+    const text = 'There is a new post in tuition that might interest you.';
+    const link = `/posts/post_id=${post_id}`;
+
+    let notification_insert_sql = 'INSERT ALL';
+    for(let receiver of receivers){
+        notification_insert_sql += ` INTO NOTIFICATIONS (RECEIVER_ID, SENDER_ID, LINK, TEXT, NOTIFICATION_TYPE, TYPE_ID)
+                                    VALUES(${receiver}, :sender_id, :link, :text, :notification_type, :type_id)`;
+    }
+
+    notification_insert_sql += ' SELECT 1 FROM DUAL';
+    const notification_insert_binds = {
+        sender_id : sender,
+        link : link,
+        text : text,
+        notification_type : 'POST',
+        type_id : post_id
+    }
+
+    await database.execute(notification_insert_sql, notification_insert_binds);
+    sendNotification();
+}
+
+
 module.exports = {
     sendNotification,
     getNotificationForUser,
     getNotificationCountForUser,
     clearNotificationForUser,
-    clearAllNotificationForUser
+    clearAllNotificationForUser,
+    sendTuitionNotification
 };

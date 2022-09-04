@@ -80,9 +80,22 @@
             display: flex;
         }
         .message-profile-picture{
-            height: 3.5em;
-            width: 3.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 3.5rem;
+            aspect-ratio: 1/1;
+            overflow: hidden;
             margin: 0 1em;
+        }
+
+        .message-profile-picture img{
+
+            border-radius: 50%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+
         }
         .message-delete-message-own{
             background: none;
@@ -157,20 +170,6 @@
         
     </div>
     
-    
-    <!-- toast -->
-    <a class="toast_notification" id="toast_notification">
-        <div class="toast-content">
-            <img src="" class="toast_nofivication_image" id="toast_nofivication_image" alt="">
-
-            <div id="toast_notification_text">
-            </div>
-        </div>
-        <i class="fa-solid fa-xmark close"></i>
-
-        <div class="progress"></div>
-    </a>
-
 
     <%-include('middle/toast-notification')  %> 
 
@@ -196,7 +195,7 @@
            updateAfterSocketResponse(msg); 
     });
     socket.on("notification",data=>{
-        console.log(data.SENDER_ID," liked something ");
+        
     })
     const flag = <%= recever_id %>;
     const chat_list = <%- JSON.stringify(chat_list) %>;
@@ -247,7 +246,7 @@
             let divData = `
             <div id="found_users_search" onclick="loadMessageFromSearchBar(${userList[index].USER_ID})">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src=${userList[index].PROFILE_PIC} alt="pfp">
+                    <img  src=${userList[index].PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="found-user-description">
                     <div class="found-user-name">${userList[index].NAME}</div>
@@ -261,9 +260,9 @@
     }
 
     async function loadMessageFromSearchBar(user_id){
-        console.log("inside loadmessage");
+        
         let conversationId = (await axios.post('/message/getConversationIdByUserId',{user_id:user_id,currentUser:cUser.USER_ID})).data.result;
-        console.log("loaded from search bar ",conversationId);
+        
         if(conversationId.length === 0){
             updateChatList();
             loadedConversationId = -3;
@@ -297,17 +296,16 @@
     
 
     messageForm.addEventListener('submit',async function(e){
-        console.log(loadedConversationId);
+        
         e.preventDefault();
-        console.log(loadedConversationId);
+        
         let text = textMessage.value;
         if(text.length === 0)
             return;
         if(loadedConversationId === -3){
-            console.log("sending axios data for -3");
-            console.log(blankUserId,cUser.USER_ID);
+
             let new_conversation_id = (await axios.post('/message/createConversation',{user_id:blankUserId,currentUser:cUser.USER_ID})).data.result;
-            console.log(new_conversation_id);
+
             currentChatId = new_conversation_id;
             loadedConversationId = -1;
         }
@@ -316,9 +314,7 @@
             user_id : cUser.USER_ID,
             text : text,
         }
-        console.log("after submiting to new public");
-        console.log(loadedConversationId);
-        console.log(message);
+
         const data = (await axios.post("/message/insertMessage",{message:message})).data;
         if(data.result !== -1){
             textMessage.value = '';
@@ -328,7 +324,7 @@
             let html = `
             <div class="message-bar message-bar-own" id="message-id-${data.result}">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src=${cUser.PROFILE_PIC} alt="pfp">
+                    <img  src=${cUser.PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="message-details-own message-detail">
                     <p class="chat-user-name-own">YOU</p><p class="chat-user-text chat-text-own">${text}</p>
@@ -359,7 +355,7 @@
             let s = `
             <div class="message-conversation-head message-conversation-head-hover" id="chat-thumbnail-${new_chat_list[index].CONVERSATION_ID}" onclick="openchat(${new_chat_list[index].CONVERSATION_ID})">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src=${new_image_list[index]} alt="pfp">
+                    <img  src=${new_image_list[index]} alt="pfp">
                 </div>
                 <div class="message-head-description">
                     <label>${new_chat_list[index].NAME}</label>
@@ -396,7 +392,7 @@
             document.getElementById(thumbnail_id).classList.remove("message-conversation-head-hover");
         }
         currentChatId = chat_id;
-        console.log(currentChatId);
+
         document.getElementById("chat-header-name").innerHTML = getChatName(chat_id);
         const data = (await axios.post("/message/getMessages",{chat_id: chat_id})).data;
         const currentUser = data.currentUser;
@@ -443,7 +439,7 @@
             let html = `
             <div class="message-bar ${separateClass} " id="message-id-${chatData[i].MESSAGE_ID}">
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src=${chatData[i].PROFILE_PIC} alt="pfp">
+                    <img  src=${chatData[i].PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="${separateDeatails} message-detail">
                     <p class="${chatUserName}">${title}</p><p class="chat-user-text ${chatText}">${chatData[i].TEXT}</p>
@@ -481,7 +477,7 @@
             const message_plate = document.getElementById(message_to_be_deleted);
             message_plate.innerHTML = `
                 <div class="message-profile-picture">
-                    <img class="" style="border-radius: 2em;" src=${cUser.PROFILE_PIC} alt="pfp">
+                    <img  src=${cUser.PROFILE_PIC} alt="pfp">
                 </div>
                 <div class="message-bar-deleted-own message-detail">
                     <p class="chat-user-name-deleted">YOU</p><p class="chat-user-text chat-text-deleted">This message has been deleted</p>
@@ -493,7 +489,7 @@
     }
 
     async function updateAfterSocketResponse(msg){
-        console.log(msg.oponent," ",cUser);
+
         if(msg.message.CONVERSATION_ID === currentChatId){
             let message_to_be_updated = "message-id-"+msg.message.MESSAGE_ID;
             message_to_be_updated = document.getElementById(message_to_be_updated);
@@ -502,7 +498,7 @@
                 if(msg.message.TYPE === "DELETED"){
                     html = `
                     <div class="message-profile-picture">
-                        <img class="" style="border-radius: 2em;" src=${msg.message.PROFILE_PIC} alt="pfp">
+                        <img  src=${msg.message.PROFILE_PIC} alt="pfp">
                     </div>
                     <div class="message-bar-deleted message-detail">
                         <p class="chat-user-name-deleted">${msg.message.NAME}</p><p class="chat-user-text chat-text-deleted">This message has been deleted</p>
@@ -516,7 +512,7 @@
                 html = `
                         <div class="message-bar message-bar-others " id="message-id-${msg.message.MESSAGE_ID}">
                             <div class="message-profile-picture">
-                                <img class="" style="border-radius: 2em;" src=${msg.message.PROFILE_PIC} alt="pfp">
+                                <img  src=${msg.message.PROFILE_PIC} alt="pfp">
                             </div>
                             <div class=" message-detail">
                                 <p class="chat-user-name">${msg.message.NAME}</p><p class="chat-user-text chat-text">${msg.message.TEXT}</p>

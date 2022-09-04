@@ -77,7 +77,7 @@ async function processGroupMember(group_id, admin_id, user_id, action){
         }
     }
     const result = (await database.execute(sql, binds)).outBinds;
-    console.log(result);
+    
     return result;
 
 }

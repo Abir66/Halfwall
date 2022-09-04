@@ -118,8 +118,7 @@
 
         
         if(response.data.result === 'success'){
-            // remove buttons
-            console.log('group_member_' + user_id)
+
             const member = document.getElementById('group_member_' + user_id);
             const buttons = member.getElementsByClassName('group-member-action-buttons')[0];
             buttons.innerHTML = '';

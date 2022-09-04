@@ -71,6 +71,15 @@ router.get('/user_id=:user_id', verify, async (req, res) => {
         }
     }
 
+
+    // check if the user has followed the current user
+    if(req.user.USER_ID != req.params.user_id){
+        requested = await DB_follow.requestedToFollowUser(req.params.user_id, req.user.USER_ID);
+        if(requested) {
+            right.push({location : 'profile-follow-request', data : {}});
+        }
+    }
+
     right.push({location : 'profile-search', data : search_data});
     
     res.render('index', {
@@ -98,7 +107,7 @@ router.get('/editProfile', verify, async(req,res)=>{
         currentUser : req.user,
         title : 'Edit Profile',
         left : ['left-profile', 'sidebar'],
-        right : [],
+        right : [{location : 'delete-profile', data : {}}],
         middle : middle
     });
 });
@@ -128,7 +137,7 @@ router.get('/find-users',verify,async(req,res)=>{
     let users = undefined;
     if(Object.keys(req.query).length > 0){
         searched = true;
-        console.log(req.query);
+
 
         const matches = req.query.search_input.replace(/\s+/g, " ").trim().match(/(\d+)/);
         let student_id = undefined;
@@ -200,6 +209,14 @@ router.post('/update-profile-picture', verify, profile_picture_upload.single('pr
     res.send('success');
 })
 
+
+router.post('/deleteAccount', verify, async (req, res) => {
+
+   
+    const result = await DB_user.deleteAccount(req.user.USER_ID, req.body.password);
+    res.send(result.result);
+
+})
 
 
 module.exports = router;

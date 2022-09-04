@@ -27,7 +27,7 @@ async function createGroup(group, admin_id){
             type: oracledb.NUMBER
         }
     }
-    console.log(binds);
+    
     const result =  (await database.execute(sql, binds)).outBinds;
     return result;
 }
@@ -170,7 +170,7 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
                 (SELECT json_arrayagg(
-                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
                     from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
                 ) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID LEFT JOIN GROUPS G ON P.GROUP_ID = G.GROUP_ID
@@ -193,7 +193,7 @@ async function getGroupPosts(group_id, user_id, search_data = {}){
 
 
 async function updateGroupCover(group_id, cover_photo){
-    console.log(group_id, cover_photo);
+    
     const sql = `UPDATE GROUPS 
                 SET COVER_PHOTO = :cover_photo 
                 WHERE GROUP_ID = :group_id`;

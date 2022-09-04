@@ -5,6 +5,7 @@ const DB_user = require('../db-codes/users/db-user-api');
 
 //middleware function to verify the jwt token and find the user who is currently logged in
 async function verify(req,res,next){
+    
     const cookie  = req.header('cookie');
     if(!cookie) return res.redirect('/signin?status=Access Denied');
     const token = cookie.slice(11);

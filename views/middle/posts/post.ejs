@@ -12,15 +12,19 @@
                 <% if (postData.GROUP_ID > 2) { %> > <a href="/groups/group_id=<%= postData.GROUP_ID %>"><%= postData.GROUP_NAME %></a><% } %>
                 </p>
 
-                <small><%= postData.TIMESTAMP %></small>
+                <small><%= postData.TIMESTAMP %>
+                <% if (postData.GROUP_ID !== 2) { %> <i class="fa-sharp fa-solid fa-earth-americas"></i>
+                <% } else { %> <i class="fa-solid fa-user-group"></i>
+                <% } %>
+                </small>
             </div>
         </div>
         <span class="edit dropdown show">
-            <button class="fa-solid fa-ellipsis" style="background-color: transparent;"></button>
+            
             <button class="fa-solid fa-ellipsis dropdown-toggle" style="background-color: transparent;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
             
                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink"> 
-                <a id="copy-link" class="dropdown-item" href="#"><i class="fa-solid fa-link"></i> &nbsp Copy Link</a>
+                <div id="copy-link" class="dropdown-item"  onclick="copyToClipBoard('<%= `localhost:5000/posts/post_id=${postData.POST_ID}` %>')"><i class="fa-solid fa-link"></i> &nbsp Copy Link</div>
                 <% if (currentUser.USER_ID === postData.USER_ID) { %> 
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#" onclick="editPost(<%=postData.POST_ID%>)"><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</a>
@@ -38,7 +42,7 @@
         <div class="product-info"><strong>Available : </strong><%= postData.AVAILABLE%></div>
     </div>
 
-    <% } else if (postData.GROUP_NAME === 'Tution') { %>
+    <% } else if (postData.GROUP_NAME === 'Tuition') { %>
         <div class="marketplace-info-container">
             <div class="product-info"><strong>Class : </strong><%= postData.CLASS%></div>
             <div class="product-info"><strong>Subjects : </strong><%= postData.SUBJECTS.map( a => a.SUBJECT).join(', ')%></div>
@@ -46,7 +50,7 @@
             <div class="product-info"><strong>Renumeration : </strong><%= postData.REMUNERATION %></div>
             <% if (postData.STUDENT_COUNT > 1) { %><div class="product-info"><strong>Students : </strong><%= postData.STUDENT_COUNT%></div><% } %>
             <% if (postData.PREFERENCE != 'N/A') { %> <div class="product-info"><strong>Preference : </strong><%= postData.PREFERENCE%></div> <% } %>
-            <% if (postData.BOOKED==='Yes') { %><div class="product-info"><strong style="color: var(--color-danger);">Booked</strong></div><% } %>
+            <% if (postData.BOOKED ==='Yes') { %><div class="product-info"><strong style="color: var(--color-danger);">Booked</strong></div><% } %>
         </div>
     <% } %>
 
@@ -136,3 +140,20 @@
 
 
 </div>
+
+
+
+
+<script>
+    async function showInitialComment(){
+        <% if (postData.initialComment) { %>
+            let initialComment =  <%-JSON.stringify(postData.initialComment)%>
+            const post = document.getElementById(`post-<%= postData.POST_ID%>`);
+            const comments = post.querySelector('.comments');
+            comments.style.display = "block";
+            const comments_list = post.querySelector('.comments-list');
+            await addComment(comments_list, initialComment, <%= postData.GROUP_ID%>, <%=currentUser.USER_ID%> , true);
+        <% } %>
+    }
+</script>
+

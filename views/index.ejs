@@ -29,13 +29,14 @@
 
 <body>
 
-    <%- include('middle/modals/user-modal')%> 
-    <%- include('middle/modals/comment-edit-modal')%>
-    <%- include('middle/modals/post-edit-modal')%>
+    <%- include('middle/modals/user-modal')%>
+    <%- include('middle/modals/notification-modal')%>
+    <%- include('middle/modals/tuition-notification-modal')%>
+    
 
     
      
-    <% let bodyObjects = {css :[], js:[]} %>
+    <% let bodyObjects = {css :[], js:[], modals :[]} %>
 
 
     <!--- Navbar -->
@@ -66,7 +67,9 @@
                             bodyObjects.post = true; 
                             bodyObjects.css.push("/css/post.css")
                             bodyObjects.js.push("/js/posts/post.js");
-                            bodyObjects.js.push("/js/posts/comment.js");}%>
+                            bodyObjects.js.push("/js/posts/comment.js");
+                            bodyObjects.modals.push('middle/modals/comment-edit-modal');
+                            bodyObjects.modals.push('middle/modals/post-edit-modal');}%>
                         <%- include('middle/posts/post', {postData : middle[index].data}); -%>
 
                     <% } else if (middle[index].type === 'posts') { %>
@@ -74,7 +77,9 @@
                             bodyObjects.post = true; 
                             bodyObjects.css.push("/css/post.css")
                             bodyObjects.js.push("/js/posts/post.js");
-                            bodyObjects.js.push("/js/posts/comment.js");}%>
+                            bodyObjects.js.push("/js/posts/comment.js");
+                            bodyObjects.modals.push('middle/modals/comment-edit-modal');
+                            bodyObjects.modals.push('middle/modals/post-edit-modal');}%>
                         <% for( let post of middle[index].data) { %> <%- include('middle/posts/post', {postData : post}); -%><% } %>
                     
                     <% } else { %>
@@ -99,16 +104,23 @@
     </main>
 
 
-    <!--  notification modal  -->
-    <%- include('middle/modals/notification-modal')%>
     
+    <% for (let modal_path of bodyObjects.modals) { %> <%- include(modal_path) %> <% } %>
     <% for( let css of bodyObjects.css  ) { %> <link rel="stylesheet" href="<%= css %>"> <% } %>
     <% for( let js of bodyObjects.js  ) { %> <script src="<%= js %>"></script> <% } %>
+    
+
+    <script src="/js/utils/create-post-str.js"></script>
 
 </body>
-<!-- notification script -->
-<script src="/js/notification.js"></script>
+
+
 <script>
+
+    async function copyToClipBoard(text){
+        console.log(text);
+        navigator.clipboard.writeText(text);
+    }
 
 let count = 0;
     const socket = io();
@@ -119,12 +131,20 @@ let count = 0;
          
     });
     socket.on("message",msg=>{
-           updateAfterSocketResponse(msg); 
+        showToastNotification('Message', msg.message.NAME + 'sent you a message', '/message/'+msg.message.USER_ID);
+        // message-dot display block
+        let message_dot = document.getElementById('message-dot');
+        message_dot.style.display = 'block';
     });
     socket.on("notification",data=>{
-        showToastNotification('Notification', data.TEXT, data.LINK)
-        console.log(data);
+        showToastNotification('Notification', data.TEXT, data.LINK);
+        // notification-dot display block
+        let notification_dot = document.getElementById('notification-dot');
+        notification_dot.style.display = 'block';
+        
     })
+
+    
 
 
 </script>

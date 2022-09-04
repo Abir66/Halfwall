@@ -1,0 +1,87 @@
+<style>
+
+    .profile-follow-request{
+
+        padding: var(--card-padding);
+        border-radius: var(--card-border-radius);
+        background-color: var(--card-background-color);
+    }
+
+    .profile-follow-request .user{
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-follow-request .profile-picture{
+        width: 30%;
+    }
+
+    .profile-follow-request .action-buttons{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .profile-follow-request .action-buttons .btn{
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+</style>
+
+
+<div class="right-box profile-follow-request">
+
+        <div class="user">
+            <div class="profile-picture">
+                <img  src="<%= user.PROFILE_PIC %>" alt="<%= user.NAME %>" >
+            </div>
+
+            <div class="user-info">
+                <p><strong><%= user.NAME %></strong> has requested to follow you</p>
+            </div>
+        </div>
+
+        <div class = "action-buttons">
+            <button class="followRequest-list-accept btn btn-primary"  onclick = "processFollowRequest(<%= user.USER_ID %>, 'ACCEPT-FOLLOW')">Accept</button>
+            <button class="followRequest-list-remove btn btn-blank"  onclick = "processFollowRequest(<%= user.USER_ID %>, 'REMOVE-FOLLOW')">Remove</button>
+        </div>
+
+
+</div>
+
+
+<script>
+
+async function processFollowRequest(user_id, action) {
+    const response = await axios.post("/follow/processFollowRequest", {
+        USER_ID: user_id,
+        ACTION : action
+    });
+
+    if (response.data = 'success') {
+        if (action === 'ACCEPT-FOLLOW'){
+            // increasing following count
+            const following = document.querySelector("#numberOfFollowing");
+            const following_count = following.querySelector('.follow-number');
+            const following_count_value = parseInt(following_count.innerHTML);
+            following_count.innerHTML = following_count_value + 1;
+        } 
+    }
+    
+    // remove the profile-follow-request div
+    const profileFollowRequest = document.querySelector(".profile-follow-request");
+    profileFollowRequest.style.display = "none";
+
+    
+    
+}
+
+
+</script>

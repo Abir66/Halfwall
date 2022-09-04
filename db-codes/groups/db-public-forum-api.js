@@ -10,7 +10,7 @@ const constant_values = require('../constant_values');
 
 async function getPosts(user_id, search_data){
 
-    console.log('getPosts', search_data);
+    
 
     let orderby = '', search_term_str = '', post_user = '';
     
@@ -33,7 +33,7 @@ async function getPosts(user_id, search_data){
                 COMMENT_COUNT(P.POST_ID) "COMMENT_COUNT",
                 G.GROUP_ID, G.GROUP_NAME, G.GROUP_PRIVACY,
                 (SELECT json_arrayagg(
-                    json_object('FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
+                    json_object('FILE_ID' value PF.POST_FILE_ID, 'FILE_LOCATION' value PF.FILE_LOCATION, 'FILE_TYPE' value PF.FILE_TYPE)) "FILES"
                     from POST_FILES pf WHERE pf.POST_ID = P.POST_ID
                 ) "FILES"
                 FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID

@@ -42,8 +42,14 @@
             ACTION : action
         });
         if (response.data = 'success') {
-            // increase follower count
-        }
+        if (action === 'ACCEPT-FOLLOW'){
+            // increasing following count
+            const following = document.querySelector("#numberOfFollwers");
+            const following_count = following.querySelector('.follow-number');
+            const following_count_value = parseInt(following_count.innerHTML);
+            following_count.innerHTML = following_count_value + 1;
+        } 
+    }
         
         // remove the action buttons
         const modalUserlistUser = document.getElementById(`modal-userlist-user-${user_id}`);

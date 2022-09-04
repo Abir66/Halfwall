@@ -7,12 +7,19 @@
     
     <!---------------------------Messages---------------------------------->
     <a href="/message" class="menu-item" id="messages">
-        <span><i class="fa-solid fa-message"></i><h3>Messages</h3></span>
+        <span>
+            <i class="fa-solid fa-message" style="position: relative;"><i class="fa-solid fa-circle" id="message-dot"></i></i>
+            <h3>Messages</h3>
+        </span>
     </a>
     
     <!---------------------------Notifications---------------------------------->
     <a href="#" class="menu-item" id="notifications" onclick="showNotifications()">
-        <span><i class="fa-solid fa-bell"></i><h3>Notifications</h3></span>
+        <span>
+            <i class="fa-solid fa-bell" style="position: relative;"><i class="fa-solid fa-circle" id="notification-dot"></i></i>
+            <h3>Notifications</h3>
+        </span>
+       
     </a>
     
     <!---------------------------Find users--------------------------------->
@@ -35,9 +42,9 @@
         <span><i class="fa-solid fa-cart-shopping"></i><h3>Marketplace</h3></span>
     </a>
     
-    <!---------------------------Tution---------------------------------->
+    <!---------------------------Tuition---------------------------------->
     <a href="/tuition" class="menu-item <% if (type==='tuition') { %> active <% } %>">
-        <span><i class="fa-solid fa-book"></i><h3>Tution</h3></span>
+        <span><i class="fa-solid fa-book"></i><h3>Tuition</h3></span>
     </a>
 
     <!---------------------------Events---------------------------------->

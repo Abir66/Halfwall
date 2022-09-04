@@ -90,7 +90,7 @@ router.post('/signup', async (req, res) => {
             batch: idInfo.year,
         }
     } catch (err) {
-        console.log("problem here in router.post(/signup)");
+        
         res.send("Invalid input");
         return;
     }

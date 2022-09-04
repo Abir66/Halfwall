@@ -2,14 +2,13 @@
 var post_edit_modal = new bootstrap.Modal(document.getElementById('post-edit-modal'), {});
 
 async function like(post_id){
-    console.log('like')
     const res = await axios.post(`/posts/like/post_id=${post_id}`, {post_id: post_id});
     fixLikes(res.data, post_id);
 }
 
 // unlike post
 async function unlike(post_id){
-    console.log("unlike")
+    
     const res = await axios.post(`/posts/unlike/post_id=${post_id}`, {post_id: post_id});
     fixLikes(res.data, post_id);
 }
@@ -22,7 +21,7 @@ function fixLikes(data, post_id){
 }
 
 async function deletePost(post_id){
-    console.log("delete post", post_id)
+    
     const res = await axios.post(`/posts/delete/post_id=${post_id}`, {post_id: post_id});
     if(res.data === 'success') {
         // hide the post
@@ -54,54 +53,7 @@ async function getLikersList(post_id){
         user_modal.show();
 }
 
-
-document.querySelector('.create-post').addEventListener('submit', async (e) => {
-    e.preventDefault();
-} );
+const create_post = document.querySelector('.create-post')
+if(create_post) create_post.addEventListener('submit', async (e) => {e.preventDefault();} );
 
 
-async function addDataInEditPost(post){
-
-    // get the modal
-    const modal = document.getElementById('post-edit-modal');
-
-    // add post.TEXT in textarea
-    const textarea = modal.querySelector('textarea');
-    textarea.value = post.TEXT;
-
-    // set post group
-    const post_group = modal.querySelector('.post-group');
-    let post_group_str = "";
-    //if post.GROUP > 2 then show group name 
-    if(post.GROUP > 2) post_group_str = `<p class="group-name text-muted">in ${post.GROUP_NAME}</p>`;
-    
-    // else show a dropdonw list of groups
-    else{
-        post_group_str = `
-            <div class="form-group">
-                <select name="privacy" id="post-privacy">
-                    <option value="PRIVATE" ${post.GROUP_ID == 2 ? 'selected' : ''}>Followers only</option>
-                    <option value="PUBLIC" ${post.GROUP_ID == 1 ? 'selected' : ''}>Public</option>
-                </select>
-            </div>
-        `
-    }
-
-    post_group.innerHTML = post_group_str;
-
-  
-}
-
-
-async function editPost(post_id){
-    
-    const res = await axios.get(`/posts/getPostData/post_id=${post_id}`);
-    if(res.data.result !== 'success') return;
-
-    const post = res.data.post;
-    post.FILES = JSON.parse(post.FILES);
-    console.log(post)
-    addDataInEditPost(post);
-
-    post_edit_modal.show();
-}

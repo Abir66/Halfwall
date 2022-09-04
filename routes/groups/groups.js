@@ -168,7 +168,7 @@ router.get('/group_id=:group_id/user/user_id=:user_id', verify, group_header, as
     const user_id = req.params.user_id;
 
     if(!isMember && privacy == 'PRIVATE' && user_id != req.user.USER_ID) {
-        console.log("Can't see posts");
+        
         res.send('okay');
         return;
     }
@@ -239,7 +239,7 @@ router.get('/group_id=:group_id/posts', verify, group_header, async(req, res) =>
 
     
     // get posts
-    console.log(privacy);
+
     let posts;
     if(privacy == 'PRIVATE' && !isMember) {
         search_data.post_user_id = req.user.USER_ID;
@@ -362,9 +362,9 @@ router.post('/group_id=:group_id/leave-group', verify, async(req, res) => {
 
 router.post('/group_id=:group_id/update-group-cover', verify, verifyAdmin, group_cover_upload.single('group_cover'), async(req, res) => {
 
-    console.log(req.body.action)
+    
     if(req.body.action === 'remove-group-cover'){
-        console.log(res.locals.group.COVER_PHOTO, default_values.default_group_cover )
+       
         if(res.locals.group.COVER_PHOTO === default_values.default_group_cover){
             res.send("Can't remove default cover");
             return;

@@ -2,7 +2,6 @@ let io;
 exports.socketConnection = (server) => {
   io = require('socket.io')(server);
   io.on('connection', (socket) => {
-    console.info(`Client connected`);
     socket.on('handshake', function(data) {
         socket.join(data);
     });
@@ -17,8 +16,7 @@ exports.sendNofification = (roomId,key,data) => io.to(roomId).emit(key,data);
 
 
 const notification_sender = async function emitNotifications(notifications){
-console.log("ready to send notification");
-    console.log(notifications, 'hreeeeee');
+
     for(let notification of notifications){
       // convert to string
 

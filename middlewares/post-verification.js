@@ -29,6 +29,8 @@ async function verifyAccessToViewPost(req,res,next){
         const isFollower = await DB_follow.followedUser(req.user.USER_ID, post_metaData.USER_ID);
         if(isFollower) res.locals.postViewAccess = true;  
     }
+
+    res.locals.post_group_id = post_metaData.GROUP_ID;
     next()
 }
 

@@ -7,6 +7,7 @@ let current_comment_edit_post_id = -1;
 
 async function addComment(comment_list, comment, group_id,currentUser_id, add_to_top){
     let div = "";
+    console.log(comment.COMMENT_ID, comment.USER_ID);
     if(currentUser_id === comment.USER_ID){ 
         div = `
         <span class="edit dropdown show icon_pointer">
@@ -14,7 +15,7 @@ async function addComment(comment_list, comment, group_id,currentUser_id, add_to
                 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <div id="delete-comment" class="dropdown-item" onclick=deleteComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-trash"></i> &nbsp Delete</div>
-                    <div id="edit-comment" class="dropdown-item" onclick=editComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Post</div>
+                    <div id="edit-comment" class="dropdown-item" onclick=editComment(${comment.COMMENT_ID},${comment.POST_ID})><i class="fa-solid fa-pen-to-square"></i> &nbsp Edit Comment</div>
                 </div>
         </span>
         `;
@@ -55,8 +56,7 @@ async function deleteComment(comment_id,post_id){
         const cmt = document.getElementById("comment-id-"+comment_id);
         cmt.remove();
         
-        // get post element
-        console.log(post_id);
+
         const post = document.getElementById("post-"+post_id);
         
         const comments_count = post.querySelector('.comments-count');
@@ -187,6 +187,8 @@ async function update_comment(){
         const comment_div = document.getElementById(`comment-id-${comment.COMMENT_ID}`);
         comment_div.innerHTML = "";
         addComment(comment_div, comment, comment.GROUP_ID, comment.USER_ID, false);
+
+        showToastNotification('Notification', 'Comment updated', `/posts/post_id=${res.data.comment.POST_ID}/comment/comment_id=${res.data.comment.COMMENT_ID}`);
     }
     else alert(res.data);
 
@@ -372,10 +374,9 @@ async function send_comment(post_id, group_id,currentUser_id){
 
     // increment comments count
     const comments_count = post.querySelector('.comments-count');
-    console.log("before", comments_count.innerHTML);
     const comments_count_value = parseInt(comments_count.innerHTML.trim().split(' ')[0]);
     comments_count.innerHTML = `${comments_count_value + 1} comments`;
-    console.log("after", comments_count.innerHTML);
+
 
 
 
@@ -391,3 +392,5 @@ async function send_comment(post_id, group_id,currentUser_id){
     await addComment(comments_list, res.data.comment, group_id,currentUser_id, true);
 
 }
+
+showInitialComment();

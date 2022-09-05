@@ -141,6 +141,13 @@
         .refresh_message_icon{
             cursor: pointer;
         }
+
+        .message-video{
+            width: 100%;
+           
+            object-fit: cover;
+        }
+
     </style>
 </head>
 
@@ -173,15 +180,15 @@
 
     <%-include('middle/toast-notification')  %> 
 
-
-
     </div>
+
     
 </body>
 <script src="/socket.io/socket.io.js" ></script>
 <!-- notification script -->
 
-<script>  
+<script> 
+
     // setting up client side socket
     let count = 0;
     const socket = io();
@@ -436,6 +443,17 @@
                 chatUserName = "chat-user-name-deleted";
 
             }
+
+            if(chatData[i].TYPE === "IMAGE"){
+                chatText = 'chat-text-image';
+                chatData[i].TEXT = `<img src="${chatData[i].TEXT}" alt="image" class="message-image">`
+            }
+
+            else if(chatData[i].TYPE === 'VIDEO'){
+                chatText = 'chat-text-video';
+                chatData[i].TEXT = `<video src="${chatData[i].TEXT}" controls class="message-video"></video>`
+            }
+
             let html = `
             <div class="message-bar ${separateClass} " id="message-id-${chatData[i].MESSAGE_ID}">
                 <div class="message-profile-picture">

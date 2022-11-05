@@ -41,7 +41,7 @@ async function getNotificationForUser(user_id, limit, cursor_id){
     let limit_str = '', cursor_str = '';
     if(limit) limit_str = `FETCH FIRST ${limit} ROWS ONLY`;
     
-    if(cursor_id) cursor_str = ` AND NOTIFICATION_ID > ${cursor_id}`;
+    if(cursor_id) cursor_str = ` AND NOTIFICATION_ID < ${cursor_id}`;
 
     const sql = `SELECT N.NOTIFICATION_ID, N.RECEIVER_ID, N.SENDER_ID, N.LINK, N.TEXT, N.NOTIFICATION_TYPE, N.TIMESTAMP,
                 INITCAP(U.NAME) USERNAME, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"

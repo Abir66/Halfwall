@@ -1,6 +1,7 @@
 <style>
     .modal {
         margin-top: 50px;
+        padding-bottom: 50px;
     }
     
 
@@ -99,7 +100,7 @@
 
             addNotification(notificationList, notification);
         }
-
+        document.getElementById('notification-modal').querySelector('.load-more-notification').style.display = 'block';
         notification_modal.show();
     }
 
@@ -109,7 +110,7 @@
         const last_notification = notification_list.lastElementChild;
         
         last_notification_id = last_notification.id.split('-')[1];
-
+       
        
         const res = await axios.get("/notification", {params : {last_notification_id : last_notification_id}});
         const notifications = res.data;

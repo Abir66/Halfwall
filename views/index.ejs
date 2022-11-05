@@ -131,17 +131,11 @@ let count = 0;
          
     });
     socket.on("message",msg=>{
-        showToastNotification('Message', msg.message.NAME + 'sent you a message', '/message/'+msg.message.USER_ID);
-        // message-dot display block
-        let message_dot = document.getElementById('message-dot');
-        message_dot.style.display = 'block';
+        showToastNotification('Message', msg.message.NAME + ' sent you a message', '/message/'+msg.message.USER_ID);
+       
     });
     socket.on("notification",data=>{
         showToastNotification('Notification', data.TEXT, data.LINK);
-        // notification-dot display block
-        let notification_dot = document.getElementById('notification-dot');
-        notification_dot.style.display = 'block';
-        
     })
 
     

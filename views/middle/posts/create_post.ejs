@@ -396,7 +396,7 @@
 
                     <div class="post-footer">
                         <label for="create-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i>
-                            Attach image</label>
+                            Attach Media</label>
                         <input class="btn btn-primary" type="submit" value="post" class="btn btn-primary"
                             placeholder="post">
                     </div>
@@ -518,7 +518,9 @@
         });
 
         if(res.data.result === 'success'){
-            alert('Post created successfully');
+            showToastNotification('System', 'Post added successfully', '/posts/post_id=' + res.data.post_id);
+            //alert('Post created successfully');
+            console.log('herer, ', res.data.post)
             const post_str = await createPostStr(res.data.post);
            
             const first_post = document.querySelector('.post');

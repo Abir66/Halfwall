@@ -36,7 +36,7 @@ async function insertUser(user){
 }
 
 async function getUserByStudentId(student_id){
-    const sql = `SELECT USER_ID, STUDENT_ID, NAME, EMAIL, DEPARTMENT, 
+    const sql = `SELECT USER_ID, STUDENT_ID, initcap(NAME), EMAIL, DEPARTMENT, 
                 DATE_OF_BIRTH, HALL, HALL_ATTACHMENT, BATCH, 
                 STREET, CITY, POSTCODE,
                 NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC"
@@ -182,24 +182,26 @@ async function updateUser(user, user_id){
 }
 
 async function searchProfile(search_data){
-
+    
     const sql = `SELECT USER_ID, STUDENT_ID, initcap(NAME) NAME, NVL(PROFILE_PIC, '${default_values.default_pfp}') "PROFILE_PIC", DEPARTMENT
                 FROM users
                 WHERE ((UPPER(NAME) LIKE UPPER('%'||:search_input||'%')
                 OR UPPER(EMAIL) LIKE UPPER('%'||:search_input||'%'))
                 OR STUDENT_ID = :student_id
                 OR STUDENT_ID like UPPER('%'||:search_input ||'%') )
-                AND NVL(HALL, ' ') like UPPER('%'||:hall ||'%')
-                AND NVL(HALL_ATTACHMENT, ' ') like UPPER('%'||:hall_attachment ||'%')
-                AND NVL(DEPARTMENT, ' ') like UPPER('%'||:department ||'%')
-                AND NVL(CITY, ' ') like UPPER('%'||:city ||'%')
+                AND UPPER(NVL(HALL, ' ')) like UPPER('%'||:hall ||'%')
+                AND UPPER(NVL(HALL_ATTACHMENT, ' ')) like UPPER('%'||:hall_attachment ||'%')
+                AND UPPER(NVL(DEPARTMENT, ' ')) like UPPER('%'||:department ||'%')
+                AND BATCH LIKE UPPER('%'||:batch)
+                AND UPPER(NVL(CITY, ' ')) like UPPER('%'||:city ||'%')
+                ORDER BY name
                 `;
     const binds ={
         search_input : search_data.search_input,
         student_id : search_data.student_id,
         hall : search_data.hall,
         hall_attachment : search_data.hall_attachment,
-        // batch : search_data.batch,
+        batch : search_data.batch,
         department : search_data.department,
         city : search_data.city
     };

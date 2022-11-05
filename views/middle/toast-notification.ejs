@@ -41,7 +41,17 @@
             toast_body.innerText = text;
 
             const toast = new bootstrap.Toast(toast_notification)
-            toast.show()
+            toast.show();
+
+
+            if(notification_type === 'Message'){
+                let message_dot = document.getElementById('message-dot');
+                message_dot.style.display = 'block';
+            }
+            else if(notification_type === 'Notification'){
+                let notification_dot = document.getElementById('notification-dot');
+                notification_dot.style.display = 'block';
+            }
         
     }
 

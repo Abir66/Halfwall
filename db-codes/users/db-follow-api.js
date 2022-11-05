@@ -4,7 +4,7 @@ const default_values = require('../default_values');
 
 
 async function processFollow(follower, followee, action){
-
+    console.log(follower, followee, action);
     const sql = `BEGIN
                     PROCESS_FOLLOW(:follower, :followee, :action, :result);
                 END;`;

@@ -17,9 +17,7 @@ router.post('/like/post_id=:post_id', verify, async (req, res) => {
 
     const data = { likes_count : likes_count.LIKES_COUNT}
     if(user_liked) data.user_liked = true;
-    const result = await dp_notification.sendNotification();
-    
-
+    dp_notification.sendNotification();
     res.send(data);
 })
 
@@ -44,8 +42,8 @@ router.get('/post_id=:post_id', verify, verifyAccessToViewPost, async (req, res)
     if(!res.locals.postViewAccess) return res.status(403).send('Access denied');
     
     let post = undefined
-    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.params.post_id, {post_id : req.params.post_id});
-    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.params.post_id, {post_id : req.params.post_id});
+    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
+    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
     else post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
    
     res.render('index', {
@@ -62,8 +60,8 @@ router.get('/getPostData/post_id=:post_id', verify, verifyAccessToViewPost, asyn
     
     
     let post = undefined
-    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.params.post_id, {post_id : req.params.post_id});
-    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.params.post_id, {post_id : req.params.post_id});
+    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
+    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
     else post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
     
     console.log(post);
@@ -105,20 +103,25 @@ router.post('/create-post', verify, posts_upload.array('files',100), async (req,
         }
     }
 
-    data.post_text = data.post_text.replace(/\s+/g, " ").trim();
+    data.post_text = data.post_text.trim();
     
     
     
     const result = await db_post.createPost(req.user.USER_ID, data, files);
 
-    result.post = await db_post.getPost(result.post_id, req.user.USER_ID);
+    let post = undefined
+    if(req.body.group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.user.USER_ID, {post_id : result.post_id});
+    else if(req.body.group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.user.USER_ID, {post_id : result.post_id});
+    else post = await db_post.getPost(result.post_id, req.user.USER_ID);
+    result.post = post;
+
+    
     res.send(result);
 } )
 
 
 router.post('/edit-post/post_id=:post_id', verify, posts_upload.array('files',100), async (req, res) => {
     
-
 
     const data = req.body;
     data.post_id = req.params.post_id;
@@ -147,7 +150,7 @@ router.post('/edit-post/post_id=:post_id', verify, posts_upload.array('files',10
         }
     }
 
-    data.post_text = data.post_text.replace(/\s+/g, " ").trim();
+    data.post_text = data.post_text.trim();
     data.removed_files = utils.to_array(data.removed_files);
     
     console.log(data, files)
@@ -157,8 +160,8 @@ router.post('/edit-post/post_id=:post_id', verify, posts_upload.array('files',10
 
     const result = {result : 'success'};
     let post = undefined
-    if(req.body.group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.params.post_id, {post_id : req.params.post_id});
-    else if(req.body.group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.params.post_id, {post_id : req.params.post_id});
+    if(req.body.group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
+    else if(req.body.group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
     else post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
     result.post = post;
     
@@ -248,8 +251,8 @@ router.get('/post_id=:post_id/comment/comment_id=:comment_id', verify, verifyAcc
     }
 
     let post = undefined
-    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.params.post_id, {post_id : req.params.post_id});
-    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.params.post_id, {post_id : req.params.post_id});
+    if(res.locals.post_group_id == constant_values.marketplace_group_id) post = await db_marketplace.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
+    else if(res.locals.post_group_id == constant_values.tuition_group_id) post = await db_tuition.getPosts(req.user.USER_ID, {post_id : req.params.post_id});
     else post = await db_post.getPost(req.params.post_id, req.user.USER_ID);
     
     post.initialComment = comment;

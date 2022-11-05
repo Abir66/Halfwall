@@ -13,8 +13,8 @@
                 </p>
 
                 <small><%= postData.TIMESTAMP %>
-                <% if (postData.GROUP_ID !== 2) { %> <i class="fa-sharp fa-solid fa-earth-americas"></i>
-                <% } else { %> <i class="fa-solid fa-user-group"></i>
+                <% if (postData.GROUP_ID === 1) { %> <i class="fa-sharp fa-solid fa-earth-americas"></i>
+                <% } else if (postData.GROUP_ID === 2) { %> <i class="fa-solid fa-user-group"></i>
                 <% } %>
                 </small>
             </div>
@@ -54,9 +54,9 @@
         </div>
     <% } %>
 
-
     <div class="post-text">
-        <p><%= postData.TEXT %></p>
+        <p ><%- postData.TEXT && postData.TEXT != null ? postData.TEXT.replace(/(?:\r\n|\r|\n)/g, "<br>") : '' %></p>
+        
     </div> 
     <% if (postData.FILES && postData.FILES != null) {
         postData.FILES = JSON.parse(postData.FILES); %>

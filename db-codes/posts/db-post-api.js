@@ -4,6 +4,9 @@ const default_values = require('../default_values');
 const constant_values = require('../constant_values');
 const DB_storage = require('../files/storage-files');
 const DB_notification = require('../users/db-notification-api');
+const utils = require('../../routerControllers/utils');
+
+
 
 async function addLike(post_id, user_id){
     const sql = `INSERT INTO LIKES
@@ -132,7 +135,7 @@ async function getComments(post_id, limit, cursor_id){
 
 
 async function createPost(user_id, post_data, files){
-
+    console.log(post_data)
     const sql = `BEGIN
                     CREATE_POST(:user_id, :group_id, :text, :result, :post_id);
                 END;`;
@@ -152,7 +155,7 @@ async function createPost(user_id, post_data, files){
     }
 
     const result =  (await database.execute(sql, binds)).outBinds;
-
+   
     if(result.result != 'success') return result;
 
 
@@ -197,6 +200,7 @@ async function createPost(user_id, post_data, files){
         await database.execute(sql, binds);
 
         // insert all subjects into tuition_subjects table
+        post_data.subjects = utils.to_array(post_data.subjects);
         if(post_data.subjects.length > 0){
             let subject_insert_sql = 'INSERT ALL';
             for(let subject of post_data.subjects) {
@@ -306,6 +310,8 @@ async function updatePost(post_data, files, removed_files){
         await database.execute(sql2, binds2);
 
         // insert all subjects into tuition_subjects table
+        //
+        post_data.subjects = utils.to_array(post_data.subjects);
         if(post_data.subjects.length > 0){
             let subject_insert_sql = 'INSERT ALL';
             for(let subject of post_data.subjects) {

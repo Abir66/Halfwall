@@ -89,18 +89,41 @@
                     placeholder="Name, Email or Student ID">
             </div>
 
+            <div class="find-users-item">
+                <label for="find-users-department">Department</label>
+                <select name="department" class="find-users-box" id="find-users-department">
+                    <option value="">None</option>
+                    <option value="CSE" selected>Computer Science and Engineering</option>
+                    <option value="EEE" selected>Electrical and Electronics Engineering</option>
+                    <option value="BME" selected>Biomedical Engineering</option>
+                    <option value="CE" selected>Civil Engineering</option>
+                    <option value="ME" selected>Mechanical Engineering</option>
+                    <option value="ChE" selected>Chemical Engineering</option>
+                    <option value="WRE" selected>Water Resources Engineering</option>
+                    <option value="MME" selected>Materials and Metallurgical Engineering</option>
+                    <option value="URP" selected>Urban and Regional Planning</option>
+                    <option value="IPE" selected>Industrial and Production Engineering</option>
+                    <option value="ARCHI" selected>Architecture</option>
+                    <option value="" disabled hidden selected></option>
+                </select>
+            </div>
+
+            <div class="find-users-item">
+                <label for="find-users-batch">Batch</label>
+                <input type="number" class="find-users-box" name="batch" id="find-users-batch">
+            </div>
 
             <div class="find-users-item">
                 <label for="find-users-hall-name">Hall</label>
                 <select name="hall" class="find-users-box" id="find-users-hall">
                     <option value="">None</option>
-                    <option value="SHUHRAWARDY" selected>Suhrawardy hall</option>
-                    <option value="SHER-E-BANGLA" selected>Sher-e-Bangla hall</option>
-                    <option value="Ahsanullah" selected>Ahsanullah hall</option>
-                    <option value="CHAATTRI" selected>Chattri hall</option>
-                    <option value="Nazrul" selected>Kazi Nazrul hall</option>
-                    <option value="TITUMIR" selected>Titumir hall</option>
-                    <option value="RASHID" selected>Rashid hall</option>
+                    <option value="Suhrawardy Hall" selected>Suhrawardy Hall</option>
+                    <option value="Sher-e-Bangla Hall" selected>Sher-e-Bangla Hall</option>
+                    <option value="Ahsan Ullah Hall" selected>Ahsan Ullah Hall</option>
+                    <option value="Chattri Hall" selected>Chattri Hall</option>
+                    <option value="Kazi Nazrul Islam Hall" selected>Kazi Nazrul Islam Hall</option>
+                    <option value="Titumir Hall" selected>Titumir Hall</option>
+                    <option value="Dr. M. A. Rashid Hall" selected>Dr. M. A. Rashid Hall</option>
                     <option value="" disabled hidden selected></option>
                 </select>
             </div>
@@ -200,10 +223,14 @@
         const city = document.getElementById("find-users-city").value.trim();
         const attached = document.getElementById("find-users-hall-attachment-resident").checked;
         const resident = document.getElementById("find-users-hall-attachment-attached").checked;
+        const department= document.getElementById("find-users-department").value.trim();
+        const batch= document.getElementById("find-users-batch").value.trim();
         var hall_attachment = attached || resident;
 
+        console.log(search_input, hall, city, hall_attachment, department, batch);
 
-        if ((!search_input || search_input === '') && (!hall || hall === '') && (!city || city === '') && !hall_attachment) return true;
+
+        if ((!search_input || search_input === '') && (!hall || hall === '') && (!department || department === '') && (!batch || batch === '') && (!city || city === '') && !hall_attachment) return true;
         
         else return false;
     }
@@ -213,6 +240,8 @@
         document.getElementById("search_user_search_input").value = "";
         document.getElementById("find-users-hall").value = "";
         document.getElementById("find-users-city").value = "";
+        document.getElementById("find-users-department").value = "";
+        document.getElementById("find-users-batch").value = "";
         document.getElementById("find-users-hall-attachment-resident").checked = false;
         document.getElementById("find-users-hall-attachment-attached").checked = false;
         document.getElementById("empty-form-error-message").hidden = true;

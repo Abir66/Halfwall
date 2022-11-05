@@ -469,7 +469,7 @@
             innerData += html;
         }
         
-        let refresh_message_button = `<div id="refresh_message" class="refresh_message" onclick="refreshMessage(${chat_id},${top_message_id})"><i class="fa-solid fa-rotate-right refresh_message_icon"></i></div>`;
+        let refresh_message_button = `<div id="refresh_message" class="refresh_message" onclick="refreshMessage(${chat_id},${top_message_id})"> &nbsp; </div>`;
         if(chatData.length !== 0)
             innerData+=refresh_message_button;
         

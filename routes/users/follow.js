@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const DB_follow = require('../../db-codes/users/db-follow-api');
 const { verify } = require('../../middlewares/user-verification');
+const dp_notification = require('../../db-codes/users/db-notification-api')
 
 
 router.post('/requestFollow',verify, async (req,res)=>{
@@ -8,6 +9,8 @@ router.post('/requestFollow',verify, async (req,res)=>{
     const following = req.body.USER_ID;
     await DB_follow.processFollow(follower, following, 'start-follow');
     res.send("success")
+    dp_notification.sendNotification();
+
 });
 
 
@@ -17,6 +20,7 @@ router.post('/processFollowRequest',verify, async (req,res)=>{
     const action = req.body.ACTION;
     const result = await DB_follow.processFollow(follower, followee, action);
     res.send(result);
+    dp_notification.sendNotification();
 });
 
 

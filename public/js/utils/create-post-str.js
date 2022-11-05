@@ -32,6 +32,7 @@ async function createPostStr(post) {
 </span>
 </div>`
 
+
   if(post.GROUP_ID === 4){
       post_str += `
       <div class="marketplace-info-container">
@@ -59,7 +60,7 @@ async function createPostStr(post) {
 
 
   post_str +=`<div class="post-text">
-                  <p>${post.TEXT != null ? post.TEXT : ''}</p>
+                  <p>${post.TEXT != null ? post.TEXT.replace(/(?:\r\n|\r|\n)/g, "<br>") : ''}</p>
               </div> `
 
   if (post.FILES && post.FILES != null) {

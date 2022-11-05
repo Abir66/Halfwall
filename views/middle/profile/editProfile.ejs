@@ -93,20 +93,20 @@
                 
                 %>
                 <!--change date time to timezone utc+06:00 then add the value-->
-                <input type="date" name="dob" id="edit-profile-dof" value="<%- dateString  %>" required>
+                <input type="date" name="dob" id="edit-profile-dof" value="<%- dateString  %>">
                 
             </div>
             <div class="form-group">
                 <label for="hall">Hall</label>
                 <select name="hall" id="edit-profile-hall">
                     <option value="" disable hidden <% if(currentUser.HALL === null){ %>selected<% } %> ></option>
-                    <option value="SHUHRAWARDY" <% if(currentUser.HALL === 'SHUHRAWARDY'){ %>selected<% } %>  >Suhrawardy hall</option>
-                    <option value="SHER-E-BANGLA" <% if(currentUser.HALL === 'SHER-E-BANGLA'){ %>selected<% } %> >Sher-e-Bangla hall</option>
-                    <option value="Ahsanullah" <% if(currentUser.HALL === 'AHSANULLAH'){ %>selected<% } %> >Ahsanullah hall</option>
-                    <option value= "CHAATTRI" <% if(currentUser.HALL === 'CHAATTRI'){ %>selected<% } %>>Chattri hall</option>
-                    <option value="Nazrul" <% if(currentUser.HALL === 'KAZI NAZRUL'){ %>selected<% } %>>Kazi Nazrul hall</option>
-                    <option value="TITUMIR" <% if(currentUser.HALL === 'TITUMIR'){ %>selected<% } %>>Titumir hall</option>
-                    <option value="RASHID" <% if(currentUser.HALL === 'RASHID'){ %>selected<% } %>>Rashid hall</option>
+                    <option value="Suhrawardy Hall" <% if(currentUser.HALL === 'Suhrawardy Hall'){ %>selected<% } %>  >Suhrawardy Hall</option>
+                    <option value="Sher-e-Bangla Hall" <% if(currentUser.HALL === 'Sher-e-Bangla Hall'){ %>selected<% } %> >Sher-e-Bangla Hall</option>
+                    <option value="Ahsan Ullah Hall" <% if(currentUser.HALL === 'Ahsan Ullah Hall'){ %>selected<% } %> >Ahsan Ullah Hall</option>
+                    <option value= "Chattri Hall" <% if(currentUser.HALL === 'Chattri Hall'){ %>selected<% } %>>Chattri Hall</option>
+                    <option value="Kazi Nazrul Islam Hall" <% if(currentUser.HALL === 'Kazi Nazrul Islam Hall'){ %>selected<% } %>>Kazi Nazrul Islam Hall</option>
+                    <option value="Titumir Hall" <% if(currentUser.HALL === 'Titumir Hall'){ %>selected<% } %>>Titumir Hall</option>
+                    <option value="Dr. M. A. Rashid Hall" <% if(currentUser.HALL === 'Dr. M. A. Rashid Hall'){ %>selected<% } %>>Dr. M. A. Rashid Hall</option>
                 </select>
             </div>
             <div class="form-group">

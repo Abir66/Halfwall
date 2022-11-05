@@ -216,7 +216,7 @@
 
             </div>
             <div class="modal-footer">
-                <label for="edit-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach image</label>
+                <label for="edit-post-file-input" class="btn btn-blank"><i class="fa-solid fa-paperclip"></i> Attach Media</label>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="update_post()">Save changes</button>
             </div>
 
@@ -700,7 +700,8 @@
 
 
         if(res.data.result === 'success'){
-            alert('Post edited successfully');
+            showToastNotification('System', 'Post updated', '/posts/post_id=' + post_id);
+
             const post_str = await createPostStr(res.data.post);
         
             // get post with id

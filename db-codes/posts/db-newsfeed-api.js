@@ -42,6 +42,7 @@ async function getNewsFeedPostsForUserID(user_id, search_data, limit, timestamp,
     };
 
     result = (await database.execute(sql,binds)).rows;
+    
     return result;
 }
 
@@ -59,7 +60,7 @@ async function getNewsFeedPostsForUserID2(user_id, search_data, limit, timestamp
     ) "FILES"
     FROM POSTS P LEFT JOIN USERS U ON P.USER_ID = U.USER_ID
     ORDER BY p.post_id asc
-    FETCH FIRST 10 ROWS ONLY
+    
     `;
 
     const binds ={
